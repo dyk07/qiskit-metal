@@ -58,6 +58,7 @@ DSL 顶层结构
 from __future__ import annotations
 
 import importlib
+import json
 import re
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Union
@@ -69,10 +70,18 @@ __all__ = [
     "register_component",
     "register_design",
     "clear_user_registry",
+    "schema_path",
+    "load_schema",
+    "validate_against_schema",
     "BUILTIN_COMPONENTS",
     "BUILTIN_DESIGNS",
     "DesignDslError",
 ]
+
+
+# DSL 版本：随 schema 文件名（design_dsl_schema_v<N>.json）和 YAML 顶层
+# ``schema:`` 字段里的版本号同步。bumping 时新增一份 v<N+1> 文件，旧版本保留。
+CURRENT_DSL_VERSION = 1
 
 
 # ---------------------------------------------------------------------------
@@ -153,6 +162,63 @@ def clear_user_registry() -> None:
     """清空用户注册的组件/设计映射，便于在测试间隔离状态。"""
     _USER_COMPONENTS.clear()
     _USER_DESIGNS.clear()
+
+
+# ---------------------------------------------------------------------------
+# JSON Schema —— 编辑器 hover/补全/校验 + 可选运行期 strict 校验
+# ---------------------------------------------------------------------------
+
+
+def schema_path(version: int = CURRENT_DSL_VERSION) -> Path:
+    """返回随包安装的 JSON Schema 绝对路径。
+
+    用户在自己的 YAML 顶部加这一行 yaml-language-server 指令即可让 VS Code
+    （Red Hat YAML 扩展）/ JetBrains 等编辑器拿到 hover、补全、报错：
+
+        # yaml-language-server: $schema=<schema_path() 返回值>
+
+    在 shell 里查询：
+
+        python -c "from qiskit_metal.toolbox_metal.design_dsl import schema_path; print(schema_path())"
+    """
+    candidate = Path(__file__).parent / f"design_dsl_schema_v{version}.json"
+    if not candidate.exists():
+        raise DesignDslError(
+            f"未找到 DSL schema v{version} 文件：{candidate}")
+    return candidate
+
+
+def load_schema(version: int = CURRENT_DSL_VERSION) -> dict:
+    """读取并返回 schema 字典。"""
+    return json.loads(schema_path(version).read_text(encoding="utf-8"))
+
+
+def validate_against_schema(payload: Mapping[str, Any],
+                            version: int = CURRENT_DSL_VERSION) -> list[str]:
+    """对一份已经解析的 DSL 文档做严格 schema 校验。
+
+    Returns:
+        错误信息列表（空列表表示通过）。如果环境里没装 ``jsonschema``，
+        返回单元素 list 提示。
+
+    备注：runtime ``build_design`` **不会** 自动调用这个；schema 主要服务于
+    编辑器 DX，且对 ``${var}`` 未替换形态比 loader 自身要严。需要 fail-fast
+    校验时显式调用本函数。
+    """
+    try:
+        from jsonschema import Draft7Validator
+    except ImportError:
+        return [
+            "jsonschema 未安装；运行 `pip install jsonschema` 以启用 schema 校验。"
+        ]
+
+    schema = load_schema(version)
+    validator = Draft7Validator(schema)
+    errors = []
+    for err in validator.iter_errors(dict(payload)):
+        path = "/".join(str(p) for p in err.absolute_path) or "<root>"
+        errors.append(f"{path}: {err.message}")
+    return errors
 
 
 # ---------------------------------------------------------------------------
