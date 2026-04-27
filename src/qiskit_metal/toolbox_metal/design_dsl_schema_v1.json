@@ -1,0 +1,279 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://qiskit-metal.local/schemas/design-dsl/v1.json",
+  "title": "Qiskit Metal Design DSL (v1)",
+  "description": "声明式 YAML DSL，用于在不写 Python 的前提下完整构建一个 QDesign。\n\n配套 loader: src/qiskit_metal/toolbox_metal/design_dsl.py",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["design"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "pattern": "^qiskit-metal/design-dsl/\\d+$",
+      "markdownDescription": "DSL 版本声明，loader 会校验前缀必须是 `qiskit-metal/design-dsl/`。\n\n例：`qiskit-metal/design-dsl/1`"
+    },
+    "design": {
+      "$ref": "#/$defs/designSpec"
+    },
+    "vars": {
+      "type": "object",
+      "additionalProperties": { "type": ["string", "number", "boolean"] },
+      "markdownDescription": "DSL 内部插值变量表。仅供 `${name}` 引用，**不会**写入 `design.variables`。\n\n例：\n```yaml\nvars:\n  qx: 1.55mm\n  qy: 1.55mm\n```"
+    },
+    "templates": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/templateSpec" },
+      "markdownDescription": "可被 `$extend` 引用的复用模板。模板自身也可以 `$extend` 形成链。"
+    },
+    "components": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/componentItem" },
+      "markdownDescription": "组件实例列表。每项可以是单个组件、`$for` 循环块、或 `$include` 引入。"
+    },
+    "routes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/routeItem" },
+      "markdownDescription": "路由实例列表。`from: \"Q1.bus\"` / `to: \"Q2.bus\"` 简记会自动展为 `pin_inputs`。`class` 缺省为 `RouteMeander`。"
+    }
+  },
+
+  "$defs": {
+
+    "designSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": {
+          "$ref": "#/$defs/designClass",
+          "markdownDescription": "QDesign 子类。短名见枚举，也可写完整 dotted path。"
+        },
+        "overwrite_enabled": {
+          "type": "boolean",
+          "markdownDescription": "重名组件是否允许覆盖。建议构建期写 `true`。"
+        },
+        "enable_renderers": {
+          "type": "boolean",
+          "markdownDescription": "构造时是否一并加载默认 renderer 列表（GDS/HFSS 等）。"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true,
+          "markdownDescription": "design.metadata，自由字段。"
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number"] },
+          "markdownDescription": "**design.variables**，会被 Metal 的符号 parser 用来替换 options 中的字符串引用（如 options 写 `cpw_width` 会被解析成这里定义的值）。注意它和 DSL 顶层的 `vars` 是两个不同的东西。"
+        },
+        "chip": { "$ref": "#/$defs/chipSpec" }
+      }
+    },
+
+    "chipSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "main",
+          "markdownDescription": "Chip 名，缺省 `main`。"
+        },
+        "size": {
+          "oneOf": [
+            { "type": "string",
+              "markdownDescription": "形如 `10mm x 10mm`（也接受 `×` 全角符号）。" },
+            { "type": "array",
+              "items": { "type": ["string", "number"] },
+              "minItems": 2, "maxItems": 2,
+              "markdownDescription": "`[size_x, size_y]`" },
+            { "type": "object", "additionalProperties": true,
+              "markdownDescription": "完整 size dict（含 size_x/size_y/size_z 等）" }
+          ],
+          "markdownDescription": "Chip 尺寸的便捷写法。三种形态等价。"
+        },
+        "size_x": { "type": ["string", "number"] },
+        "size_y": { "type": ["string", "number"] },
+        "size_z": { "type": ["string", "number"] },
+        "center_x": { "type": ["string", "number"] },
+        "center_y": { "type": ["string", "number"] },
+        "center_z": { "type": ["string", "number"] }
+      }
+    },
+
+    "designClass": {
+      "anyOf": [
+        {
+          "enum": ["DesignPlanar", "DesignFlipChip", "DesignMultiPlanar"],
+          "description": "内置 design 短名"
+        },
+        {
+          "type": "string",
+          "pattern": "\\.[A-Za-z_][A-Za-z0-9_]*$",
+          "description": "完整 dotted path"
+        }
+      ]
+    },
+
+    "componentClass": {
+      "anyOf": [
+        {
+          "enum": [
+            "TransmonPocket", "TransmonPocketCL", "TransmonPocket6",
+            "TransmonPocketTeeth", "TransmonCross", "TransmonCrossFL",
+            "TransmonConcentric", "TransmonInterdigitated", "StarQubit",
+            "RouteMeander", "RouteStraight", "RouteAnchors",
+            "RoutePathfinder", "RouteMixed", "RouteFramed",
+            "OpenToGround", "ShortToGround",
+            "LaunchpadWirebond", "LaunchpadWirebondCoupled",
+            "LaunchpadWirebondDriven",
+            "CoupledLineTee", "LineTee", "CapNInterdigitalTee",
+            "TunableCoupler01", "TunableCoupler02"
+          ],
+          "description": "内置组件短名（见 BUILTIN_COMPONENTS）"
+        },
+        {
+          "type": "string",
+          "pattern": "\\.[A-Za-z_][A-Za-z0-9_]*$",
+          "description": "完整 dotted path（如 my_pkg.module.MyClass）"
+        }
+      ],
+      "markdownDescription": "组件类。**用户用 `register_component()` 注册的自定义短名**在 runtime 仍可用，但不会出现在 schema 枚举里——编辑器会给出『不在枚举内』的信息级提示，可以忽略。"
+    },
+
+    "templateSpec": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "class": { "$ref": "#/$defs/componentClass" },
+        "options": {
+          "type": "object",
+          "additionalProperties": true,
+          "markdownDescription": "组件 options 字典，自由字段。会被 `$extend` 链合并到使用方。"
+        },
+        "$extend": {
+          "type": "string",
+          "markdownDescription": "继承另一份模板（同级 templates 中的 key）。"
+        }
+      }
+    },
+
+    "componentSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "markdownDescription": "组件实例名。可以包含 `${var}` 插值。"
+        },
+        "class": {
+          "$ref": "#/$defs/componentClass"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": true,
+          "markdownDescription": "组件 options。深合并 `$extend` 模板的 options 后传给组件构造器。"
+        },
+        "make": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "构造时是否调用 `make()`。"
+        },
+        "init_kwargs": {
+          "type": "object",
+          "additionalProperties": true,
+          "markdownDescription": "传给组件构造器的额外 kwargs（除 design / name / options / make 之外）。"
+        },
+        "$extend": {
+          "type": "string",
+          "markdownDescription": "继承一份 templates 中的模板。"
+        }
+      },
+      "not": { "required": ["$for"] }
+    },
+
+    "forLoop": {
+      "type": "object",
+      "required": ["$for"],
+      "additionalProperties": true,
+      "properties": {
+        "$for": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "markdownDescription": "每轮的局部变量集合。在循环体里以 `${name}` 引用。"
+          },
+          "markdownDescription": "循环展开列表。每个元素是一组键值对，定义本轮的局部变量；本节点其余键即循环体。"
+        },
+        "$extend": { "type": "string" },
+        "name": { "type": "string" },
+        "class": { "$ref": "#/$defs/componentClass" },
+        "options": { "type": "object", "additionalProperties": true },
+        "make": { "type": "boolean" },
+        "init_kwargs": { "type": "object" },
+        "from": { "$ref": "#/$defs/endpointRef" },
+        "to": { "$ref": "#/$defs/endpointRef" }
+      }
+    },
+
+    "includeRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["$include"],
+      "properties": {
+        "$include": {
+          "type": "string",
+          "markdownDescription": "嵌入另一份 YAML 文件的内容。路径相对当前文件解析。"
+        }
+      }
+    },
+
+    "componentItem": {
+      "oneOf": [
+        { "$ref": "#/$defs/forLoop" },
+        { "$ref": "#/$defs/includeRef" },
+        { "$ref": "#/$defs/componentSpec" }
+      ]
+    },
+
+    "endpointRef": {
+      "type": "string",
+      "markdownDescription": "形如 `Component.pin`，例如 `Q1.bus_h`。允许包含 `${var}`。"
+    },
+
+    "routeSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "class": {
+          "$ref": "#/$defs/componentClass",
+          "markdownDescription": "路由组件类。缺省 `RouteMeander`。"
+        },
+        "from": {
+          "$ref": "#/$defs/endpointRef",
+          "markdownDescription": "起点 pin，简记 `Component.pin`。会被自动展为 `options.pin_inputs.start_pin`。"
+        },
+        "to": {
+          "$ref": "#/$defs/endpointRef",
+          "markdownDescription": "终点 pin，同 from。"
+        },
+        "options": { "type": "object", "additionalProperties": true },
+        "make": { "type": "boolean" },
+        "init_kwargs": { "type": "object" },
+        "$extend": { "type": "string" }
+      },
+      "not": { "required": ["$for"] }
+    },
+
+    "routeItem": {
+      "oneOf": [
+        { "$ref": "#/$defs/forLoop" },
+        { "$ref": "#/$defs/includeRef" },
+        { "$ref": "#/$defs/routeSpec" }
+      ]
+    }
+  }
+}

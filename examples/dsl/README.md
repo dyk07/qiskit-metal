@@ -3,8 +3,10 @@
 把"用 Python 一行行 `TransmonPocket(design, ...)` 拼出芯片"换成"写一份 YAML 描述文件"。这不是导入/导出工具——它是 Python 构建路径的**第二条**入口，与原 API 平等共存。
 
 - 实现：`src/qiskit_metal/toolbox_metal/design_dsl.py`
-- 示例：`examples/dsl/2x2_4qubit.metal.yaml`（4-qubit 2x2 阵列，70 行 YAML 顶替原 230 行 Python）
+- JSON Schema：`src/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json`（**与 loader 同住源码树，随 wheel 一起装**）
+- 示例：`examples/dsl/2x2_4qubit.metal.yaml`（4-qubit 2x2 阵列，~95 行 YAML 顶替原 230 行 Python）
 - 跑通脚本：`examples/dsl/run_2x2_demo.py`
+- 测试：`tests/test_design_dsl.py`（30 个 case，含端到端实例化与 schema 校验）
 
 ## 与现有路径的关系
 
@@ -163,6 +165,72 @@ components:
 - **带号字符串建议加引号**：`loc_W: "+1"` 比 `loc_W: +1`（→ int 1，丢符号）更稳。
 - **flow 风格里 `${var}` 必须加引号**。`{pos_x: ${qx}}` 会因为 `{` 撞 flow-map 分隔符而 YAML 解析失败；写 `{pos_x: "${qx}"}` 或换 block 风格。block 风格 `pos_x: ${qx}` 不需要引号。
 - **`avoid_collision`** 写真 bool（`avoid_collision: false`）能正好绕过 upstream 那个字符串 truthy bug；这是 DSL 自带的副作用，不需要额外注意。
+
+## 编辑器集成（hover / 补全 / 语法报错）
+
+Schema 文件是 **package data**，跟 loader 一起住在 `src/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json`，pip 安装后照样能找到。本仓库 `examples/dsl/2x2_4qubit.metal.yaml` 顶部用相对路径直接指向源码树：
+
+```yaml
+# yaml-language-server: $schema=../../src/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json
+```
+
+写自己的 YAML 时，先拿到绝对路径：
+
+```bash
+python -c "from qiskit_metal.toolbox_metal.design_dsl import schema_path; print(schema_path())"
+# 输出形如：
+# C:\...\site-packages\qiskit_metal\toolbox_metal\design_dsl_schema_v1.json
+```
+
+把它塞进 YAML 文件头：
+
+```yaml
+# yaml-language-server: $schema=file:///C:/.../site-packages/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json
+```
+
+或塞进 VS Code 的 `.vscode/settings.json`（一次搞定整个工程）：
+
+```json
+{
+  "yaml.schemas": {
+    "file:///C:/.../site-packages/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json": [
+      "**/*.metal.yaml"
+    ]
+  }
+}
+```
+
+### VS Code
+
+装 [Red Hat YAML 扩展](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)（`redhat.vscode-yaml`），打开 `*.metal.yaml`：
+
+- **hover**：鼠标停在任意 key 上看到字段说明（`templates` / `$for` / `from` / `chip.size` 等都写了 `markdownDescription`）。
+- **autocomplete**：`class:` 后面 Ctrl-Space 会列出 25 个内置组件短名 + 3 个 design 短名。
+- **语法报错**：未知顶层 key、`design.class` 缺失、`componentSpec` 出现 `$for`、`class` 既不在枚举也不是 dotted path 等都会被红线标出来。
+
+### JetBrains（PyCharm 等）
+
+`Settings → Languages & Frameworks → Schemas and DTDs → JSON Schema Mappings` → 新增映射，schema file 选 `schema_path()` 输出的那条绝对路径，pattern 写 `*.metal.yaml`。
+
+### 命令行/Python 校验
+
+loader 自带 helper（不依赖编辑器）：
+
+```python
+from qiskit_metal.toolbox_metal.design_dsl import validate_against_schema
+import yaml
+
+doc = yaml.safe_load(open("my_design.yaml", encoding="utf-8"))
+errors = validate_against_schema(doc)
+for e in errors:
+    print(e)
+```
+
+`validate_against_schema()` 不强依赖 jsonschema——没装就返回一条提示而不是抛异常。runtime ``build_design`` **不**自动调用它（schema 比 loader 自身严，且无法处理 ``${var}`` 未替换的形态），需要 fail-fast 校验时手动调。
+
+### 自定义短名与 schema 的关系
+
+`register_component()` 注册的自定义短名**不会出现在 schema 枚举里**，编辑器会给个『不在 enum 内』的信息级提示——runtime 仍然正常工作。如果你希望它也消失，可以拷一份 schema、把 enum 加上去，再让 `# yaml-language-server: $schema=` 指向你的私有副本。
 
 ## 与 Python 端继续协作
 

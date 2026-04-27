@@ -1,4 +1,8 @@
-# yaml-language-server: $schema=qiskit-metal/design-dsl/1
+# yaml-language-server: $schema=../../src/qiskit_metal/toolbox_metal/design_dsl_schema_v1.json
+#
+# Schema 与 loader 同住源码树，随 wheel 一起安装。在自己的 YAML 里写：
+#   python -c "from qiskit_metal.toolbox_metal.design_dsl import schema_path; print(schema_path())"
+# 拿到绝对路径塞进文件头或 VS Code 的 yaml.schemas。
 #
 # 4-qubit 2x2 transmon array —— DSL 版示例
 #
