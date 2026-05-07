@@ -268,7 +268,7 @@ class QMplRenderer:
             if len(table1) > 0:
                 table1["geometry"] = table1[["geometry", "width"]].apply(
                     lambda x: x.iloc[0].buffer(
-                        distance=float(x.iloc[1]) / 2.0,
+                        distance=float(x[1]) / 2.0,
                         cap_style=CAP_STYLE.flat,
                         join_style=JOIN_STYLE.mitre,
                         quad_segs=int(self.options["resolution"]),

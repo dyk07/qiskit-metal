@@ -21,29 +21,52 @@
 DSL 顶层结构
 ============
 
+v1（兼容）结构：
+
 ::
 
-    schema: qiskit-metal/design-dsl/1
-    design:
-      class: DesignPlanar         # 短名或完整 import 路径
-      overwrite_enabled: true
-      enable_renderers: true
-      variables: {cpw_width: 12um, cpw_gap: 7um}
-      chip:
-        size: 10mm x 10mm         # 也可写 {size_x: 10mm, size_y: 10mm}
-    vars: {qx: 1.55mm}            # 仅供 ${...} 插值，不进入 design.variables
-    templates:                    # 可被 $extend 引用的复用块
-      qubit:
-        class: TransmonPocket
-        options: {pad_width: 425um, ...}
-    components:                   # 顺序实例化
-      - {name: Q1, $extend: qubit, options: {pos_x: -${qx}}}
-      - $for: [{name: Q2, x: 1mm}, {name: Q3, x: 2mm}]
-        $extend: qubit
-        name: ${name}
-        options: {pos_x: ${x}}
-    routes:                       # 默认 class=RouteMeander，from/to 简记自动展开
-      - {name: bus, from: Q1.bus, to: Q2.bus, options: {total_length: 5mm}}
+        schema: qiskit-metal/design-dsl/1
+        design:
+            class: DesignPlanar         # 短名或完整 import 路径
+            overwrite_enabled: true
+            enable_renderers: true
+            variables: {cpw_width: 12um, cpw_gap: 7um}
+            chip:
+                size: 10mm x 10mm         # 也可写 {size_x: 10mm, size_y: 10mm}
+        vars: {qx: 1.55mm}            # 仅供 ${...} 插值，不进入 design.variables
+        templates:                    # 可被 $extend 引用的复用块
+            qubit:
+                class: TransmonPocket
+                options: {pad_width: 425um, ...}
+        components:                   # 顺序实例化
+            - {name: Q1, $extend: qubit, options: {pos_x: -${qx}}}
+            - $for: [{name: Q2, x: 1mm}, {name: Q3, x: 2mm}]
+                $extend: qubit
+                name: ${name}
+                options: {pos_x: ${x}}
+        routes:                       # 默认 class=RouteMeander，from/to 简记自动展开
+            - {name: bus, from: Q1.bus, to: Q2.bus, options: {total_length: 5mm}}
+
+v2（Hamiltonian/Circuit/Netlist/Geometry 链）结构：
+
+::
+
+        schema: qiskit-metal/design-dsl/2
+        vars:
+            qx: 1.55mm                  # 全层共享插值变量
+        hamiltonian:
+            subsystems: {Q1: {EJ: 18GHz, EC: 250MHz}}
+        circuit:
+            Q1: {C: 65fF, L: 8nH}
+        netlist:
+            connections: [{from: Q1.bus, to: Q2.bus}]
+        geometry:
+            design: {class: DesignPlanar, chip: {size: 10mm x 10mm}}
+            templates: {qubit: {class: TransmonPocket, options: {pad_width: 425um}}}
+            components:
+                - {name: Q1, $extend: qubit, options: {pos_x: -${qx}}}
+            routes:
+                - {name: bus, from: Q1.bus, to: Q2.bus, options: {total_length: 5mm}}
 
 保留 key
 ========
@@ -52,13 +75,13 @@ DSL 顶层结构
 - ``$for``：循环，列表元素是每轮的局部变量；本节点的其他兄弟键即为循环体。
 - ``$include``：把另一份 YAML 文件的内容嵌入当前位置。
 - ``$ref``：保留位（v1 未启用）。
-- ``${name}``：字符串插值，按"循环局部变量 → vars"的优先级查找。
+- ``${name}``：字符串插值，按"循环局部变量 → vars → hamiltonian/circuit/netlist"优先级查找。
+    支持点路径，如 ``${circuit.Q1.C}``。
 """
 
 from __future__ import annotations
 
 import importlib
-import json
 import re
 from pathlib import Path
 from typing import Any, Callable, Mapping, Optional, Union
@@ -70,18 +93,10 @@ __all__ = [
     "register_component",
     "register_design",
     "clear_user_registry",
-    "schema_path",
-    "load_schema",
-    "validate_against_schema",
     "BUILTIN_COMPONENTS",
     "BUILTIN_DESIGNS",
     "DesignDslError",
 ]
-
-
-# DSL 版本：随 schema 文件名（design_dsl_schema_v<N>.json）和 YAML 顶层
-# ``schema:`` 字段里的版本号同步。bumping 时新增一份 v<N+1> 文件，旧版本保留。
-CURRENT_DSL_VERSION = 1
 
 
 # ---------------------------------------------------------------------------
@@ -165,63 +180,6 @@ def clear_user_registry() -> None:
 
 
 # ---------------------------------------------------------------------------
-# JSON Schema —— 编辑器 hover/补全/校验 + 可选运行期 strict 校验
-# ---------------------------------------------------------------------------
-
-
-def schema_path(version: int = CURRENT_DSL_VERSION) -> Path:
-    """返回随包安装的 JSON Schema 绝对路径。
-
-    用户在自己的 YAML 顶部加这一行 yaml-language-server 指令即可让 VS Code
-    （Red Hat YAML 扩展）/ JetBrains 等编辑器拿到 hover、补全、报错：
-
-        # yaml-language-server: $schema=<schema_path() 返回值>
-
-    在 shell 里查询：
-
-        python -c "from qiskit_metal.toolbox_metal.design_dsl import schema_path; print(schema_path())"
-    """
-    candidate = Path(__file__).parent / f"design_dsl_schema_v{version}.json"
-    if not candidate.exists():
-        raise DesignDslError(
-            f"未找到 DSL schema v{version} 文件：{candidate}")
-    return candidate
-
-
-def load_schema(version: int = CURRENT_DSL_VERSION) -> dict:
-    """读取并返回 schema 字典。"""
-    return json.loads(schema_path(version).read_text(encoding="utf-8"))
-
-
-def validate_against_schema(payload: Mapping[str, Any],
-                            version: int = CURRENT_DSL_VERSION) -> list[str]:
-    """对一份已经解析的 DSL 文档做严格 schema 校验。
-
-    Returns:
-        错误信息列表（空列表表示通过）。如果环境里没装 ``jsonschema``，
-        返回单元素 list 提示。
-
-    备注：runtime ``build_design`` **不会** 自动调用这个；schema 主要服务于
-    编辑器 DX，且对 ``${var}`` 未替换形态比 loader 自身要严。需要 fail-fast
-    校验时显式调用本函数。
-    """
-    try:
-        from jsonschema import Draft7Validator
-    except ImportError:
-        return [
-            "jsonschema 未安装；运行 `pip install jsonschema` 以启用 schema 校验。"
-        ]
-
-    schema = load_schema(version)
-    validator = Draft7Validator(schema)
-    errors = []
-    for err in validator.iter_errors(dict(payload)):
-        path = "/".join(str(p) for p in err.absolute_path) or "<root>"
-        errors.append(f"{path}: {err.message}")
-    return errors
-
-
-# ---------------------------------------------------------------------------
 # 异常
 # ---------------------------------------------------------------------------
 
@@ -277,7 +235,30 @@ def _resolve_class(name_or_path: str, table: Mapping[str, Any],
             f"模块 '{module_path}' 没有 {kind} 类 '{attr_name}'") from exc
 
 
-_VAR_RE = re.compile(r"\$\{([a-zA-Z_][a-zA-Z0-9_]*)\}")
+_VAR_RE = re.compile(
+    r"\$\{([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z0-9_]+)*)\}")
+
+
+def _resolve_path(ctx: Mapping[str, Any], path: str) -> Any:
+    """从 ctx 里解析点路径（如 ``circuit.Q1.C``）。"""
+    if path in ctx:
+        return ctx[path]
+    current: Any = ctx
+    for part in path.split("."):
+        if isinstance(current, Mapping) and part in current:
+            current = current[part]
+            continue
+        if isinstance(current, list) and part.isdigit():
+            index = int(part)
+            try:
+                current = current[index]
+            except IndexError as exc:
+                raise DesignDslError(
+                    f"索引越界: ${{{path}}} -> {index}") from exc
+            continue
+        raise DesignDslError(
+            f"未知 ${{{path}}}（可用顶层：{sorted(ctx)}）")
+    return current
 
 
 def _substitute_string(value: str, ctx: Mapping[str, Any]) -> str:
@@ -285,9 +266,7 @@ def _substitute_string(value: str, ctx: Mapping[str, Any]) -> str:
 
     def _repl(match: re.Match) -> str:
         name = match.group(1)
-        if name not in ctx:
-            raise DesignDslError(f"未知 ${{{name}}}（可用变量：{sorted(ctx)}）")
-        return str(ctx[name])
+        return str(_resolve_path(ctx, name))
 
     return _VAR_RE.sub(_repl, value)
 
@@ -364,6 +343,16 @@ def _expand_includes(node: Any, base_dir: Optional[Path]) -> Any:
     return node
 
 
+def _extract_geometry_spec(spec: Mapping[str, Any]) -> Mapping[str, Any]:
+    """允许 v2 把几何层放到 geometry 下，v1 仍直接在顶层。"""
+    if "geometry" not in spec:
+        return spec
+    geometry = spec["geometry"]
+    if not isinstance(geometry, dict):
+        raise DesignDslError("geometry 必须是 mapping")
+    return geometry
+
+
 # ---------------------------------------------------------------------------
 # 模板（$extend）与循环（$for）展开
 # ---------------------------------------------------------------------------
@@ -437,6 +426,38 @@ def _expand_list(items: list, ctx: Mapping[str, Any],
     for item in items:
         out.extend(_expand_node(item, ctx, templates))
     return out
+
+
+def _apply_netlist_connections(design, netlist_spec: Mapping[str, Any]) -> None:
+    """根据 netlist.connections 显式连接 pin。"""
+    connections = netlist_spec.get("connections") or []
+    if not connections:
+        return
+    if not isinstance(connections, list):
+        raise DesignDslError("netlist.connections 必须是列表")
+    for index, connection in enumerate(connections):
+        if not isinstance(connection, dict):
+            raise DesignDslError(
+                f"netlist.connections[{index}] 必须是 mapping")
+        from_ep = connection.get("from")
+        to_ep = connection.get("to")
+        if not from_ep or not to_ep:
+            raise DesignDslError(
+                f"netlist.connections[{index}] 需要 from/to")
+        from_pin = _split_endpoint(from_ep, f"netlist.connections[{index}].from")
+        to_pin = _split_endpoint(to_ep, f"netlist.connections[{index}].to")
+
+        comp1_id = design.name_to_id.get(from_pin["component"])
+        comp2_id = design.name_to_id.get(to_pin["component"])
+        if comp1_id is None:
+            raise DesignDslError(
+                f"netlist 未找到组件 '{from_pin['component']}'")
+        if comp2_id is None:
+            raise DesignDslError(
+                f"netlist 未找到组件 '{to_pin['component']}'")
+
+        design.connect_pins(comp1_id, from_pin["pin"],
+                            comp2_id, to_pin["pin"])
 
 
 # ---------------------------------------------------------------------------
@@ -597,28 +618,80 @@ def build_design(
         raise DesignDslError(
             f"schema 字段不识别（期望 'qiskit-metal/design-dsl/<n>'）：{schema!r}")
 
-    if "design" not in spec:
+    geometry_spec = _extract_geometry_spec(spec)
+    if "design" not in geometry_spec:
         raise DesignDslError("DSL 顶层缺少 'design' 段")
 
     vars_table = dict(spec.get("vars") or {})
-    templates = dict(spec.get("templates") or {})
+    if geometry_spec is not spec:
+        vars_table = _deep_merge(vars_table, dict(geometry_spec.get("vars") or {}))
 
-    design = _instantiate_design(spec["design"])
+    circuit_spec = spec.get("circuit")
+    hamiltonian_spec = spec.get("hamiltonian")
+    netlist_spec = spec.get("netlist")
 
-    raw_components = spec.get("components") or []
-    raw_routes = spec.get("routes") or []
+    resolved_circuit = (
+        _walk_substitute(circuit_spec, vars_table) if circuit_spec else None)
+    resolved_hamiltonian = (
+        _walk_substitute(hamiltonian_spec,
+                         {**vars_table, "circuit": resolved_circuit})
+        if hamiltonian_spec else None)
+    resolved_netlist = (
+        _walk_substitute(netlist_spec,
+                         {**vars_table, "circuit": resolved_circuit,
+                          "hamiltonian": resolved_hamiltonian})
+        if netlist_spec else None)
+
+    ctx: dict[str, Any] = dict(vars_table)
+    if resolved_circuit is not None:
+        ctx["circuit"] = resolved_circuit
+    if resolved_hamiltonian is not None:
+        ctx["hamiltonian"] = resolved_hamiltonian
+    if resolved_netlist is not None:
+        ctx["netlist"] = resolved_netlist
+
+    design_spec = geometry_spec["design"]
+    if not isinstance(design_spec, dict):
+        raise DesignDslError("design 段必须是 mapping")
+    design_spec = _walk_substitute(design_spec, ctx)
+
+    templates = dict(geometry_spec.get("templates") or {})
+
+    design = _instantiate_design(design_spec)
+
+    raw_components = geometry_spec.get("components") or []
+    raw_routes = geometry_spec.get("routes") or []
     if not isinstance(raw_components, list):
         raise DesignDslError("'components' 必须是列表")
     if not isinstance(raw_routes, list):
         raise DesignDslError("'routes' 必须是列表")
 
-    component_specs = _expand_list(raw_components, vars_table, templates)
-    route_specs = _expand_list(raw_routes, vars_table, templates)
+    component_specs = _expand_list(raw_components, ctx, templates)
+    route_specs = _expand_list(raw_routes, ctx, templates)
 
     for spec_item in component_specs:
         _instantiate_component(design, spec_item)
     for spec_item in route_specs:
         _instantiate_component(design, _inflate_route(spec_item))
+
+    if resolved_netlist and isinstance(resolved_netlist, Mapping):
+        _apply_netlist_connections(design, resolved_netlist)
+
+    if any(value is not None for value in
+           (resolved_hamiltonian, resolved_circuit, resolved_netlist)):
+        design.metadata["dsl_chain"] = {
+            "schema": schema,
+            "vars": vars_table,
+            "hamiltonian": resolved_hamiltonian,
+            "circuit": resolved_circuit,
+            "netlist": resolved_netlist,
+            "geometry": {
+                "design": design_spec,
+                "templates": templates,
+                "components": component_specs,
+                "routes": route_specs,
+            },
+        }
 
     if post_build is not None:
         post_build(design)

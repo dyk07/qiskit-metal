@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/2
+#
+# Hamiltonian -> Circuit -> Netlist -> Geometry (full chain) example.
+# Netlist is derived from routes in geometry (no explicit connections here).
+
+schema: qiskit-metal/design-dsl/2
+
+vars:
+  qx: 1.2mm
+  pad_w: 420um
+  pad_h: 90um
+  cpw_w: 12um
+  cpw_g: 7um
+  c_q: 65fF
+  ej_q: 18GHz
+
+hamiltonian:
+  subsystems:
+    Q1: {model: transmon, EJ: "${ej_q}", C: "${circuit.Q1.C}"}
+    Q2: {model: transmon, EJ: "${ej_q}", C: "${circuit.Q2.C}"}
+  couplings:
+    - {from: Q1, to: Q2, g: 12MHz}
+
+circuit:
+  Q1: {type: transmon, C: "${c_q}", pad_width: "${pad_w}"}
+  Q2: {type: transmon, C: "${c_q}", pad_width: "${pad_w}"}
+
+netlist:
+  notes: "Netlist is derived from routes in geometry; use connections only when no routes."
+
+geometry:
+  design:
+    class: DesignPlanar
+    variables: {cpw_width: "${cpw_w}", cpw_gap: "${cpw_g}"}
+    chip: {size: 6mm x 6mm}
+
+  templates:
+    qubit:
+      class: TransmonPocket
+      options:
+        pad_width: ${circuit.Q1.pad_width}
+        pad_height: ${pad_h}
+        pad_gap: 30um
+        pocket_width: 650um
+        pocket_height: 650um
+        connection_pads:
+          bus: {loc_W: "-1", loc_H: "0", pad_width: 80um, pad_gap: 30um}
+
+    bus_route:
+      class: RouteMeander
+      options:
+        trace_width: ${cpw_w}
+        trace_gap: ${cpw_g}
+        fillet: 60um
+
+  components:
+    - {name: Q1, $extend: qubit, options: {pos_x: "-${qx}", pos_y: 0mm}}
+    - {name: Q2, $extend: qubit, options: {pos_x: "${qx}", pos_y: 0mm,
+      connection_pads: {bus: {loc_W: "1", loc_H: "0"}}}}
+
+  routes:
+    - {$extend: bus_route, name: bus, from: Q1.bus, to: Q2.bus,
+       options: {total_length: 3.2mm}}

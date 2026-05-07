@@ -1,0 +1,25 @@
+# Circuit layer for 2x2 4-qubit example.
+
+Q1:
+  type: transmon
+  C: ${c_q}
+  pad_width: ${pad_w}
+  pad_height: ${pad_h}
+
+Q2:
+  type: transmon
+  C: ${c_q}
+  pad_width: ${pad_w}
+  pad_height: ${pad_h}
+
+Q3:
+  type: transmon
+  C: ${c_q}
+  pad_width: ${pad_w}
+  pad_height: ${pad_h}
+
+Q4:
+  type: transmon
+  C: ${c_q}
+  pad_width: ${pad_w}
+  pad_height: ${pad_h}
