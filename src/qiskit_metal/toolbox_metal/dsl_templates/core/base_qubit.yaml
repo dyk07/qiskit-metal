@@ -1,0 +1,13 @@
+schema: qiskit-metal/component-template/1
+id: base_qubit
+extends: qcomponent
+options:
+  connection_pads: {}
+  _default_connection_pads: {}
+metadata:
+  short_name: Q
+merge_rules:
+  connection_pads:
+    each_entry_extends: _default_connection_pads
+    remove_from_resolved_options:
+      - _default_connection_pads

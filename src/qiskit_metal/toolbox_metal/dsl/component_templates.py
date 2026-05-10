@@ -72,25 +72,57 @@ def expand_component_template(
     expanded["template"] = chain[-1].id
     expanded["inherited"] = [template.id for template in chain]
 
-    template_operations = dict(geometry.get("operations", {}) or {})
-    instance_operations = dict(component_spec.get("operations", {}) or {})
+    template_operations = _optional_mapping_value(
+        geometry.get("operations", {}),
+        f"component template {template_type!r}.geometry.operations",
+    )
+    instance_operations = _optional_mapping_value(
+        component_spec.get("operations", {}),
+        f"component {component_spec.get('name')}.operations",
+    )
     expanded["operations"] = _deep_merge(template_operations,
                                          instance_operations)
-    if "generators" in geometry:
-        raise DesignDslError(
-            f"component template {template_type!r} geometry.generators are "
-            "not supported yet")
+    template_generators = _optional_mapping_value(
+        geometry.get("generators", {}),
+        f"component template {template_type!r}.geometry.generators",
+    )
+    instance_generators = _optional_mapping_value(
+        component_spec.get("generators", {}),
+        f"component {component_spec.get('name')}.generators",
+    )
+    expanded["generators"] = _deep_merge(template_generators,
+                                         instance_generators)
 
-    template_primitives = list(geometry.get("primitives", []))
-    template_pins = list(geometry.get("pins", []))
-    instance_primitives = list(component_spec.get("primitives", []) or [])
-    instance_pins = list(component_spec.get("pins", []) or [])
+    template_primitives = _optional_list_value(
+        geometry.get("primitives", []),
+        f"component template {template_type!r}.geometry.primitives",
+    )
+    template_pins = _optional_list_value(
+        geometry.get("pins", []),
+        f"component template {template_type!r}.geometry.pins",
+    )
+    instance_primitives = _optional_list_value(
+        component_spec.get("primitives", []),
+        f"component {component_spec.get('name')}.primitives",
+    )
+    instance_pins = _optional_list_value(
+        component_spec.get("pins", []),
+        f"component {component_spec.get('name')}.pins",
+    )
     expanded["primitives"] = template_primitives + instance_primitives
     expanded["pins"] = template_pins + instance_pins
 
     if "transform" in geometry:
-        expanded["transform"] = _deep_merge(geometry["transform"],
-                                            component_spec.get("transform", {}))
+        template_transform = _optional_mapping_value(
+            geometry["transform"],
+            f"component template {template_type!r}.geometry.transform",
+        )
+        instance_transform = _optional_mapping_value(
+            component_spec.get("transform", {}),
+            f"component {component_spec.get('name')}.transform",
+        )
+        expanded["transform"] = _deep_merge(template_transform,
+                                            instance_transform)
 
     return ComponentTemplateExpansion(
         spec=expanded,
@@ -108,6 +140,22 @@ def _deep_merge(base: Any, override: Any) -> Any:
             out[key] = _deep_merge(out.get(key), value) if key in out else value
         return out
     return override
+
+
+def _optional_mapping_value(value: Any, owner: str) -> dict[str, Any]:
+    if value is None:
+        return {}
+    if not isinstance(value, Mapping):
+        raise DesignDslError(f"{owner} must be a mapping")
+    return dict(value)
+
+
+def _optional_list_value(value: Any, owner: str) -> list[Any]:
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise DesignDslError(f"{owner} must be a list")
+    return list(value)
 
 
 def _merge_geometry(base: Mapping[str, Any],

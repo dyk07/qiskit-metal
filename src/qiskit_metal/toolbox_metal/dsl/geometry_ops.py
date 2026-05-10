@@ -56,13 +56,14 @@ def evaluate_geometry_operations(
         variables: Mapping[str, Any],
         *,
         registry: Optional[GeometryOperationRegistry] = None,
+        initial_outputs: Optional[Mapping[str, Any]] = None,
         owner: str = "component") -> dict[str, Any]:
     """Evaluate ordered operation specs into local geometry outputs."""
     if not isinstance(operation_specs, Mapping):
         raise DesignDslError(f"{owner}.operations must be a mapping")
 
     registry = registry or DEFAULT_GEOMETRY_OPERATIONS
-    outputs: dict[str, Any] = {}
+    outputs: dict[str, Any] = dict(initial_outputs or {})
     for operation_name, spec in operation_specs.items():
         if not isinstance(operation_name, str) or not operation_name:
             raise DesignDslError(f"{owner}.operations keys must be strings")
@@ -397,6 +398,73 @@ def _op_last_segment(spec: Mapping[str, Any], variables: Mapping[str, Any],
     return LineString(coords[-2:])
 
 
+def _op_transform_group(spec: Mapping[str, Any], variables: Mapping[str, Any],
+                        outputs: Mapping[str, Any], owner: str) -> dict[str, Any]:
+    _reject_unknown_keys(spec, {"op", "sources", "steps"}, owner)
+    sources = spec.get("sources")
+    if isinstance(sources, Mapping):
+        source_items = list(sources.items())
+    elif isinstance(sources, list):
+        source_items = []
+        for index, source_ref in enumerate(sources):
+            if not isinstance(source_ref, str) or not source_ref:
+                raise DesignDslError(
+                    f"{owner}.sources[{index}] must be an operation reference")
+            source_items.append((source_ref.rsplit(".", 1)[-1], source_ref))
+    else:
+        raise DesignDslError(f"{owner}.sources must be a mapping or list")
+
+    steps = spec.get("steps")
+    if not isinstance(steps, list) or not steps:
+        raise DesignDslError(f"{owner}.steps must be a non-empty list")
+
+    transformed: dict[str, Any] = {}
+    for source_name, source_ref in source_items:
+        if not isinstance(source_name, str) or not source_name:
+            raise DesignDslError(f"{owner}.sources keys must be strings")
+        if source_name in transformed:
+            raise DesignDslError(
+                f"{owner}.sources has duplicate output key {source_name!r}")
+        current = (resolve_operation_reference(outputs, source_ref, owner)
+                   if isinstance(source_ref, str) else source_ref)
+        for index, step in enumerate(steps):
+            if not isinstance(step, Mapping):
+                raise DesignDslError(
+                    f"{owner}.steps[{index}] must be a mapping")
+            if "source" in step:
+                raise DesignDslError(
+                    f"{owner}.steps[{index}] must not define source")
+            op_name = step.get("op")
+            if not isinstance(op_name, str) or not op_name:
+                raise DesignDslError(
+                    f"{owner}.steps[{index}].op must be a non-empty string")
+            try:
+                handler = _TRANSFORM_GROUP_STEP_OPERATIONS[op_name]
+            except KeyError as exc:
+                raise DesignDslError(
+                    f"Unknown geometry operation {op_name!r} for "
+                    f"{owner}.steps[{index}]") from exc
+            current = handler(
+                {
+                    **dict(step),
+                    "source": current,
+                },
+                variables,
+                outputs,
+                f"{owner}.steps[{index}]",
+            )
+        transformed[source_name] = current
+    return transformed
+
+
+_TRANSFORM_GROUP_STEP_OPERATIONS = {
+    "scale": _op_scale,
+    "translate": _op_translate,
+    "rotate": _op_rotate,
+    "rotate_position": _op_rotate_position,
+}
+
+
 DEFAULT_GEOMETRY_OPERATIONS = GeometryOperationRegistry()
 DEFAULT_GEOMETRY_OPERATIONS.register("rectangle", _op_rectangle)
 DEFAULT_GEOMETRY_OPERATIONS.register("polyline", _op_polyline)
@@ -408,6 +476,7 @@ DEFAULT_GEOMETRY_OPERATIONS.register("translate", _op_translate)
 DEFAULT_GEOMETRY_OPERATIONS.register("rotate", _op_rotate)
 DEFAULT_GEOMETRY_OPERATIONS.register("rotate_position", _op_rotate_position)
 DEFAULT_GEOMETRY_OPERATIONS.register("last_segment", _op_last_segment)
+DEFAULT_GEOMETRY_OPERATIONS.register("transform_group", _op_transform_group)
 
 
 __all__ = [

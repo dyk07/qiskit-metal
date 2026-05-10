@@ -28,7 +28,10 @@ from qiskit_metal.toolbox_metal.parsing import parse_value
 
 from .component_templates import expand_component_template
 from .errors import DesignDslError
-from .expression import walk_substitute as _walk_substitute
+from .expression import (
+    evaluate_expression as _evaluate_expression,
+    walk_substitute as _walk_substitute,
+)
 from .geometry_ops import (
     evaluate_geometry_operations,
     resolve_operation_reference,
@@ -65,7 +68,7 @@ DESIGN_KEYS = {
 TRANSFORM_KEYS = {"translate", "rotate", "origin"}
 COMPONENT_KEYS = {
     "name", "primitives", "pins", "metadata", "transform", "translate",
-    "rotate", "origin", "type", "options", "operations",
+    "rotate", "origin", "type", "options", "operations", "generators",
 }
 PRIMITIVE_KEYS = {
     "name", "kind", "shape", "type", "primitive", "points", "center", "size",
@@ -76,6 +79,7 @@ PIN_KEYS = {
     "name", "points", "width", "gap", "chip", "transform", "mode",
     "from_operation", "operation", "segment",
 }
+GENERATOR_KEYS = {"for_each", "as", "operations", "primitives", "pins"}
 NETLIST_KEYS = {"connections"}
 NETLIST_CONNECTION_KEYS = {"from", "to"}
 CHIP_KEYS = {
@@ -651,10 +655,9 @@ def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
 
 def _points_from_normal_segment(component_name: str, name: str,
                                 spec: Mapping[str, Any],
-                                width: float,
                                 variables: Mapping[str, Any],
                                 operations: Mapping[str, Any]
-                                ) -> tuple[list[list[float]], list[list[float]]]:
+                                ) -> list[list[float]]:
     operation = spec.get("from_operation", spec.get("operation"))
     if operation is None:
         raise DesignDslError(
@@ -680,6 +683,13 @@ def _points_from_normal_segment(component_name: str, name: str,
         _parse_point(list(coords[-2]), variables),
         _parse_point(list(coords[-1]), variables),
     ]
+    _points_from_normal_points(component_name, name, normal_points, 1.0)
+    return normal_points
+
+
+def _points_from_normal_points(component_name: str, name: str,
+                               normal_points: list[list[float]],
+                               width: float) -> list[list[float]]:
     start = np.array(normal_points[0], dtype=float)
     end = np.array(normal_points[1], dtype=float)
     normal = end - start
@@ -691,7 +701,7 @@ def _points_from_normal_segment(component_name: str, name: str,
     normal = normal / norm
     point_a = np.round(draw.Vector.rotate(normal, np.pi / 2)) * width / 2 + end
     point_b = np.round(draw.Vector.rotate(normal, -np.pi / 2)) * width / 2 + end
-    return [point_a.tolist(), point_b.tolist()], normal_points
+    return [point_a.tolist(), point_b.tolist()]
 
 
 def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
@@ -730,8 +740,9 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
             raise DesignDslError(
                 f"Pin {component_name}.{name} normal_segment does not accept "
                 "points")
-        points, normal_points = _points_from_normal_segment(
-            component_name, name, spec, width, variables, operations or {})
+        normal_points = _points_from_normal_segment(
+            component_name, name, spec, variables, operations or {})
+        points = normal_points
         input_as_norm = True
     else:
         raise DesignDslError(
@@ -747,6 +758,8 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
         normal_points = _apply_transform_to_points(normal_points,
                                                    merged_transform,
                                                    variables)
+        points = _points_from_normal_points(component_name, name,
+                                            normal_points, width)
 
     return PinIR(component=component_name,
                  name=name,
@@ -758,6 +771,146 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
                  input_as_norm=input_as_norm,
                  normal_points=normal_points,
                  source=dict(spec))
+
+
+def _generator_items(value: Any, owner: str) -> list[tuple[Any, Any]]:
+    if isinstance(value, Mapping):
+        return list(value.items())
+    if isinstance(value, list):
+        return list(enumerate(value))
+    raise DesignDslError(f"{owner}.for_each must resolve to a mapping or list")
+
+
+def _resolve_generator_iterator(value: Any,
+                                ctx: Mapping[str, Any],
+                                owner: str) -> Any:
+    if isinstance(value, str) and "${" not in value:
+        try:
+            return _evaluate_expression(value, ctx)
+        except DesignDslError as exc:
+            raise DesignDslError(f"{owner}.for_each is invalid: {exc}") from exc
+    return _walk_substitute(value, ctx)
+
+
+def _expand_component_generators(
+        component_name: str,
+        generators: Mapping[str, Any],
+        component_ctx: Mapping[str, Any],
+        templates: Mapping[str, Any],
+        variables: Mapping[str, Any],
+        operation_outputs: Mapping[str, Any]) -> tuple[list[Any], list[Any],
+                                                       dict[str, Any]]:
+    if not isinstance(generators, Mapping):
+        raise DesignDslError(f"component {component_name}.generators must be a mapping")
+
+    generated_primitives: list[Any] = []
+    generated_pins: list[Any] = []
+    generated_operations: dict[str, Any] = {}
+    for generator_name, generator_spec in generators.items():
+        if not isinstance(generator_name, str) or not generator_name:
+            raise DesignDslError(
+                f"component {component_name}.generators keys must be strings")
+        owner = f"component {component_name}.generators.{generator_name}"
+        if not isinstance(generator_spec, Mapping):
+            raise DesignDslError(f"{owner} must be a mapping")
+        _reject_unknown_keys(generator_spec, GENERATOR_KEYS, owner)
+        if generator_name in operation_outputs:
+            raise DesignDslError(
+                f"{owner} conflicts with component operation "
+                f"{generator_name!r}")
+        if generator_name in generated_operations:
+            raise DesignDslError(
+                f"Duplicate generator operation namespace: "
+                f"{component_name}.{generator_name}")
+        generated_operations[generator_name] = {}
+
+        iterator_expr = generator_spec.get("for_each")
+        if iterator_expr is None:
+            raise DesignDslError(f"{owner}.for_each is required")
+        iterator = _resolve_generator_iterator(iterator_expr, component_ctx,
+                                               owner)
+        local_name = generator_spec.get("as", "item")
+        if not isinstance(local_name, str) or not local_name:
+            raise DesignDslError(f"{owner}.as must be a non-empty string")
+
+        operation_specs = _optional_mapping(generator_spec, "operations")
+        primitive_specs = _optional_list(generator_spec, "primitives")
+        pin_specs = _optional_list(generator_spec, "pins")
+        for item_key, item_value in _generator_items(iterator, owner):
+            item_key_text = str(item_key)
+            if "." in item_key_text:
+                raise DesignDslError(
+                    f"{owner} item key {item_key_text!r} cannot contain '.'")
+            if item_key_text in generated_operations[generator_name]:
+                raise DesignDslError(
+                    f"Duplicate generator item key: "
+                    f"{component_name}.{generator_name}.{item_key_text}")
+            local_ctx = {
+                **component_ctx,
+                local_name: {
+                    "key": item_key,
+                    "value": item_value,
+                },
+            }
+            expanded_operations = _walk_substitute(operation_specs, local_ctx)
+            operation_conflicts = (
+                set(expanded_operations) & set(operation_outputs)
+                if isinstance(expanded_operations, Mapping) else set())
+            if operation_conflicts:
+                raise DesignDslError(
+                    f"{owner}.{item_key_text}.operations conflict with "
+                    f"component operation(s): {sorted(operation_conflicts)}")
+            iteration_owner = f"{owner}.{item_key}"
+            iteration_outputs = evaluate_geometry_operations(
+                expanded_operations,
+                variables,
+                initial_outputs=operation_outputs,
+                owner=iteration_owner,
+            )
+            local_operation_outputs = {
+                key: value
+                for key, value in iteration_outputs.items()
+                if key not in operation_outputs
+            }
+            generated_operations[generator_name][item_key_text] = (
+                local_operation_outputs)
+
+            namespace = f"{generator_name}.{item_key_text}"
+            generated_primitives.extend(
+                _namespace_generated_operation_refs(
+                    spec,
+                    local_operation_outputs,
+                    namespace,
+                )
+                for spec in _expand_list(primitive_specs, local_ctx, templates)
+            )
+            generated_pins.extend(
+                _namespace_generated_operation_refs(
+                    spec,
+                    local_operation_outputs,
+                    namespace,
+                )
+                for spec in _expand_list(pin_specs, local_ctx, templates)
+            )
+
+    return generated_primitives, generated_pins, generated_operations
+
+
+def _namespace_generated_operation_refs(spec: Any,
+                                        local_operation_outputs: Mapping[str,
+                                                                         Any],
+                                        namespace: str) -> Any:
+    if not isinstance(spec, Mapping):
+        return spec
+    out = dict(spec)
+    for key in ("operation", "from_operation"):
+        reference = out.get(key)
+        if not isinstance(reference, str) or not reference:
+            continue
+        head = reference.split(".", 1)[0]
+        if head in local_operation_outputs:
+            out[key] = f"{namespace}.{reference}"
+    return out
 
 
 def _components_as_list(raw_components: Any) -> list[dict[str, Any]]:
@@ -927,18 +1080,36 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
             },
             "options": template_options,
         }
-        comp_spec = _walk_substitute(comp_spec, component_ctx)
+        generator_specs = _optional_mapping(comp_spec, "generators")
+        comp_spec_without_generators = dict(comp_spec)
+        comp_spec_without_generators.pop("generators", None)
+        comp_spec = _walk_substitute(comp_spec_without_generators,
+                                     component_ctx)
+        if generator_specs:
+            comp_spec["generators"] = generator_specs
         transform = _transform_spec(comp_spec, geometry_spec, name)
         operation_outputs = evaluate_geometry_operations(
             _optional_mapping(comp_spec, "operations"),
             variables,
             owner=f"component {name}",
         )
+        generated_primitive_specs, generated_pin_specs, generated_operations = (
+            _expand_component_generators(
+                name,
+                _optional_mapping(comp_spec, "generators"),
+                component_ctx,
+                templates,
+                variables,
+                operation_outputs,
+            ))
+        operation_outputs = _deep_merge(operation_outputs, generated_operations)
 
         primitive_specs = _expand_list(_optional_list(comp_spec, "primitives"),
                                        component_ctx, templates)
+        primitive_specs.extend(generated_primitive_specs)
         pin_specs = _expand_list(_optional_list(comp_spec, "pins"),
                                  component_ctx, templates)
+        pin_specs.extend(generated_pin_specs)
         primitives = []
         primitive_names: set[str] = set()
         for primitive in primitive_specs:
@@ -1040,11 +1211,7 @@ def _validate_design_spec(design_spec: Mapping[str, Any]) -> None:
         _validate_chip_spec(_optional_mapping(design_spec, "chip"))
 
 
-def _instantiate_design(design_spec: Mapping[str, Any]):
-    _validate_design_spec(design_spec)
-    class_name = design_spec.get("class", "DesignPlanar")
-    design_cls = _resolve_class(class_name, BUILTIN_DESIGNS, _USER_DESIGNS,
-                                "design")
+def _design_init_kwargs(design_spec: Mapping[str, Any]) -> dict[str, Any]:
     init_kwargs: dict[str, Any] = {}
     init_kwargs["enable_renderers"] = False
     if "metadata" in design_spec:
@@ -1055,8 +1222,39 @@ def _instantiate_design(design_spec: Mapping[str, Any]):
     if "enable_renderers" in design_spec:
         init_kwargs["enable_renderers"] = _as_bool(
             design_spec["enable_renderers"], "geometry.design.enable_renderers")
+    return init_kwargs
 
+
+def _resolve_design_class(design_spec: Mapping[str, Any]):
+    class_name = design_spec.get("class", "DesignPlanar")
+    return _resolve_class(class_name, BUILTIN_DESIGNS, _USER_DESIGNS, "design")
+
+
+def _design_variable_context(design_spec: Mapping[str, Any],
+                             root_vars: Mapping[str, Any]) -> dict[str, Any]:
+    """Return variables visible to DSL numeric parsing.
+
+    Metal components can leave option defaults as symbolic names such as
+    ``cpw_width``.  Resolve those names the same way qlibrary components do:
+    start with the selected design's variables, then apply design-level and
+    root DSL overrides.
+    """
+    _validate_design_spec(design_spec)
+    design_cls = _resolve_design_class(design_spec)
+    init_kwargs = _design_init_kwargs(design_spec)
+    init_kwargs["enable_renderers"] = False
     design = design_cls(**init_kwargs)
+    return {
+        **dict(design.variables),
+        **_optional_mapping(design_spec, "variables"),
+        **dict(root_vars),
+    }
+
+
+def _instantiate_design(design_spec: Mapping[str, Any]):
+    _validate_design_spec(design_spec)
+    design_cls = _resolve_design_class(design_spec)
+    design = design_cls(**_design_init_kwargs(design_spec))
     for key, value in _optional_mapping(design_spec, "variables").items():
         design.variables[key] = value
 
@@ -1145,11 +1343,19 @@ def build_ir(source: Union[str, Path],
             geometry_spec["transforms"], ctx)
     design_spec = dict(resolved_geometry["design"])
     _validate_design_spec(design_spec)
+    variable_context = _design_variable_context(design_spec, vars_table)
+    component_ctx = {
+        **variable_context,
+        "vars": variable_context,
+        "circuit": circuit,
+        "hamiltonian": hamiltonian,
+        "netlist": netlist,
+    }
     templates = _deep_merge(_optional_mapping(spec, "templates"),
                             _optional_mapping(resolved_geometry, "templates"))
     template_registry = ComponentTemplateRegistry(templates, base_dir=base_dir)
-    components = _parse_components(resolved_geometry, ctx, templates,
-                                   template_registry, vars_table)
+    components = _parse_components(resolved_geometry, component_ctx, templates,
+                                   template_registry, variable_context)
     derived = _derive(components, netlist)
     _validate_netlist_endpoints(components, derived["netlist"]["connections"])
 

@@ -438,7 +438,7 @@ geometry:
 
 
 def test_normal_segment_pin_mode_applies_component_transform():
-    ir = build_ir("""
+    source = """
 schema: qiskit-metal/design-dsl/3
 vars: {}
 hamiltonian: {}
@@ -459,11 +459,57 @@ geometry:
           mode: normal_segment
           from_operation: wire
           width: 20um
-""")
+"""
+
+    ir = build_ir(source)
 
     pin = ir.components[0].pins[0]
     np.testing.assert_allclose(pin.normal_points, [[1.0, 2.0], [1.0, 2.1]])
     np.testing.assert_allclose(pin.points, [[0.99, 2.1], [1.01, 2.1]])
+
+    design = build_design(source)
+    exported_pin = design.components["Q1"].pins["readout"]
+    np.testing.assert_allclose(exported_pin.points, pin.points)
+
+
+def test_normal_segment_pin_mode_matches_export_for_non_right_angle_transform():
+    source = """
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      rotate: 45
+      translate: [1mm, 2mm]
+      operations:
+        wire:
+          op: polyline
+          points: [[0um, 0um], [100um, 0um]]
+      pins:
+        - name: readout
+          mode: normal_segment
+          from_operation: wire
+          width: 20um
+"""
+
+    ir = build_ir(source)
+    pin = ir.components[0].pins[0]
+    derived_pin = ir.derived["circuit"]["geometry"]["Q1"]["pins"]["readout"]
+    design = build_design(source)
+    exported_pin = design.components["Q1"].pins["readout"]
+
+    np.testing.assert_allclose(pin.normal_points,
+                               [[1.0, 2.0],
+                                [1.0707106781186548, 2.0707106781186546]])
+    np.testing.assert_allclose(pin.points, exported_pin.points)
+    np.testing.assert_allclose(derived_pin["points"], exported_pin.points)
+    np.testing.assert_allclose(exported_pin.middle, pin.normal_points[-1])
+    np.testing.assert_allclose(exported_pin.normal,
+                               [0.70710678, 0.70710678])
 
 
 @pytest.mark.parametrize(
@@ -498,6 +544,62 @@ geometry:
       pins:
         - name: readout
           {pin_body}
+""")
+
+
+@pytest.mark.parametrize(
+    ("geometry_body", "message"),
+    [
+        ("        operations: []", "geometry.operations must be a mapping"),
+        ("        operations: false", "geometry.operations must be a mapping"),
+        ("        transform: []", "geometry.transform must be a mapping"),
+    ],
+)
+def test_template_rejects_malformed_geometry_maps(geometry_body, message):
+    with pytest.raises(DesignDslError, match=message):
+        build_ir(f"""
+schema: qiskit-metal/design-dsl/3
+vars: {{}}
+hamiltonian: {{}}
+circuit: {{}}
+netlist: {{}}
+geometry:
+  design: {{class: DesignPlanar}}
+  templates:
+    bad_template:
+      schema: qiskit-metal/component-template/1
+      id: bad_template
+      options: {{}}
+      geometry:
+{geometry_body}
+        primitives: []
+  components:
+    Q1:
+      type: bad_template
+""")
+
+
+def test_typed_component_rejects_malformed_instance_operations():
+    with pytest.raises(DesignDslError, match="Q1.operations must be a mapping"):
+        build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  templates:
+    template_pad:
+      schema: qiskit-metal/component-template/1
+      id: template_pad
+      options: {}
+      geometry:
+        primitives: []
+  components:
+    Q1:
+      type: template_pad
+      operations: []
 """)
 
 
@@ -592,6 +694,482 @@ geometry:
 """)
 
 
+def test_template_generators_expand_primitives_pins_and_netlist():
+    source = """
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist:
+  connections:
+    - {from: Q1.left, to: Q2.bus}
+geometry:
+  design: {class: DesignPlanar}
+  templates:
+    generated_ports:
+      schema: qiskit-metal/component-template/1
+      id: generated_ports
+      options:
+        connection_pads: {}
+        _default_connection_pads:
+          x: 100um
+          width: 12um
+          loc: 1
+      merge_rules:
+        connection_pads:
+          each_entry_extends: _default_connection_pads
+          remove_from_resolved_options:
+            - _default_connection_pads
+      geometry:
+        generators:
+          connection_pads:
+            for_each: "${options.connection_pads}"
+            as: pad
+            operations:
+              wire:
+                op: polyline
+                points:
+                  - ["${pad.value.loc * pad.value.x}", 0um]
+                  - ["${pad.value.loc * (pad.value.x + 100um)}", 0um]
+            primitives:
+              - name: "${pad.key}_wire"
+                type: path.from_operation
+                operation: wire
+                width: "${pad.value.width}"
+            pins:
+              - name: "${pad.key}"
+                mode: normal_segment
+                from_operation: wire
+                width: "${pad.value.width}"
+  components:
+    Q1:
+      type: generated_ports
+      options:
+        connection_pads:
+          left:
+            loc: -1
+          right:
+            loc: 1
+    Q2:
+      pins:
+        - name: bus
+          points: [[1mm, -6um], [1mm, 6um]]
+          width: 12um
+"""
+
+    ir = build_ir(source)
+    component = ir.components[0]
+    assert {primitive.name for primitive in component.primitives} == {
+        "left_wire",
+        "right_wire",
+    }
+    assert {pin.name for pin in component.pins} == {"left", "right"}
+
+    left_wire = next(primitive for primitive in component.primitives
+                     if primitive.name == "left_wire")
+    assert list(left_wire.geometry.coords) == pytest.approx([(-0.1, 0.0),
+                                                             (-0.2, 0.0)])
+    left_pin = next(pin for pin in component.pins if pin.name == "left")
+    np.testing.assert_allclose(left_pin.normal_points, [[-0.1, 0.0],
+                                                        [-0.2, 0.0]])
+
+    design = build_design(source)
+    assert "left" in design.components["Q1"].pins
+    assert len(design.net_info) == 2
+
+
+def test_builtin_qcomponent_template_supplies_transform_and_runtime_options():
+    ir = build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  templates:
+    placed_rect:
+      schema: qiskit-metal/component-template/1
+      id: placed_rect
+      extends: qcomponent
+      options:
+        width: 100um
+        height: 50um
+      geometry:
+        primitives:
+          - name: pad
+            type: poly.rectangle
+            center: [0um, 0um]
+            size: ["${options.width}", "${options.height}"]
+            chip: "${options.chip}"
+            layer: "${options.layer}"
+        pins:
+          - name: bus
+            points: [[0um, -5um], [0um, 5um]]
+            width: 10um
+            chip: "${options.chip}"
+  components:
+    Q1:
+      type: placed_rect
+      options:
+        pos_x: 1mm
+        pos_y: 2mm
+        orientation: 90
+        chip: main
+        layer: 3
+""")
+
+    component = ir.components[0]
+    assert component.inherited == ["qcomponent", "placed_rect"]
+    assert component.options["pos_x"] == "1mm"
+    assert component.options["pos_y"] == "2mm"
+    assert component.options["orientation"] == 90
+    assert component.options["chip"] == "main"
+    assert component.options["layer"] == 3
+
+    primitive = component.primitives[0]
+    assert primitive.chip == "main"
+    assert primitive.layer == 3
+    assert primitive.geometry.centroid.x == pytest.approx(1.0)
+    assert primitive.geometry.centroid.y == pytest.approx(2.0)
+    minx, miny, maxx, maxy = primitive.geometry.bounds
+    assert maxx - minx == pytest.approx(0.050)
+    assert maxy - miny == pytest.approx(0.100)
+
+    pin = component.pins[0]
+    assert pin.chip == "main"
+    np.testing.assert_allclose(pin.points, [[1.005, 2.0], [0.995, 2.0]])
+
+
+def test_builtin_base_qubit_template_inherits_qcomponent_and_connection_pads():
+    ir = build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  templates:
+    qubit_stub:
+      schema: qiskit-metal/component-template/1
+      id: qubit_stub
+      extends: base_qubit
+      options:
+        _default_connection_pads:
+          cpw_width: 12um
+          cpw_gap: 7um
+          loc_W: 1
+          loc_H: 1
+      geometry:
+        primitives:
+          - name: marker
+            type: poly.rectangle
+            center: [0um, 0um]
+            size: [100um, 50um]
+            chip: "${options.chip}"
+            layer: "${options.layer}"
+  components:
+    Q1:
+      type: qubit_stub
+      options:
+        pos_x: 500um
+        connection_pads:
+          readout:
+            loc_W: -1
+          drive:
+            cpw_gap: 9um
+""")
+
+    component = ir.components[0]
+    assert component.inherited == ["qcomponent", "base_qubit", "qubit_stub"]
+    assert component.metadata["short_name"] == "Q"
+    assert "_default_connection_pads" not in component.options
+    assert component.options["connection_pads"]["readout"] == {
+        "cpw_width": "12um",
+        "cpw_gap": "7um",
+        "loc_W": -1,
+        "loc_H": 1,
+    }
+    assert component.options["connection_pads"]["drive"]["cpw_width"] == "12um"
+    assert component.options["connection_pads"]["drive"]["cpw_gap"] == "9um"
+    assert component.primitives[0].geometry.centroid.x == pytest.approx(0.5)
+
+
+def test_builtin_transmon_pocket_template_generates_static_pocket_geometry():
+    ir = build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        pos_x: 1mm
+        pos_y: 2mm
+        orientation: 90
+        layer: 4
+""")
+
+    component = ir.components[0]
+    assert component.inherited == [
+        "qcomponent",
+        "base_qubit",
+        "transmon_pocket",
+    ]
+    assert component.metadata["short_name"] == "Pocket"
+    assert component.metadata["qgeometry_tables"] == ["poly", "path", "junction"]
+    assert "_default_connection_pads" not in component.options
+    assert component.options["connection_pads"] == {}
+
+    primitives = {primitive.name: primitive for primitive in component.primitives}
+    assert set(primitives) == {"pad_top", "pad_bot", "rect_pk", "rect_jj"}
+    assert primitives["pad_top"].kind == "poly"
+    assert primitives["pad_bot"].kind == "poly"
+    assert primitives["rect_pk"].subtract is True
+    assert primitives["rect_jj"].kind == "junction"
+    assert primitives["rect_jj"].width == pytest.approx(0.020)
+    assert all(primitive.layer == 4 for primitive in primitives.values())
+
+    assert primitives["pad_top"].geometry.centroid.x == pytest.approx(0.940)
+    assert primitives["pad_top"].geometry.centroid.y == pytest.approx(2.0)
+    assert primitives["pad_bot"].geometry.centroid.x == pytest.approx(1.060)
+    assert primitives["pad_bot"].geometry.centroid.y == pytest.approx(2.0)
+    minx, miny, maxx, maxy = primitives["rect_pk"].geometry.bounds
+    assert maxx - minx == pytest.approx(0.650)
+    assert maxy - miny == pytest.approx(0.650)
+    assert primitives["rect_jj"].geometry.length == pytest.approx(0.030)
+
+
+def test_builtin_transmon_pocket_exports_static_rows_without_qlibrary_construction(
+        monkeypatch):
+    from qiskit_metal.qlibrary.qubits.transmon_pocket import TransmonPocket
+
+    def fail_init(*args, **kwargs):
+        raise AssertionError("qlibrary TransmonPocket must not be constructed")
+
+    monkeypatch.setattr(TransmonPocket, "__init__", fail_init)
+
+    design = build_design("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+""")
+
+    component = design.components["Q1"]
+    assert component.__class__.__name__ == "NativeComponent"
+    poly_rows = design.qgeometry.tables["poly"]
+    junction_rows = design.qgeometry.tables["junction"]
+    assert set(poly_rows["name"]) == {"pad_top", "pad_bot", "rect_pk"}
+    assert set(junction_rows["name"]) == {"rect_jj"}
+    rect_pk = poly_rows[poly_rows["name"] == "rect_pk"].iloc[0]
+    rect_jj = junction_rows[junction_rows["name"] == "rect_jj"].iloc[0]
+    assert bool(rect_pk["subtract"]) is True
+    assert rect_jj["width"] == pytest.approx(0.020)
+    assert component.metadata["template"]["type"] == "transmon_pocket"
+
+
+def test_builtin_transmon_pocket_generates_connection_pad_geometry_and_pin():
+    source = """
+schema: qiskit-metal/design-dsl/3
+vars:
+  cpw_width: 12um
+  cpw_gap: 7um
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        layer: 2
+        connection_pads:
+          readout: {}
+"""
+
+    ir = build_ir(source)
+    component = ir.components[0]
+    primitives = {primitive.name: primitive for primitive in component.primitives}
+    assert set(primitives) == {
+        "pad_top",
+        "pad_bot",
+        "rect_pk",
+        "rect_jj",
+        "readout_connector_pad",
+        "readout_wire",
+        "readout_wire_sub",
+    }
+    assert primitives["readout_connector_pad"].kind == "poly"
+    assert primitives["readout_wire"].kind == "path"
+    assert primitives["readout_wire"].width == pytest.approx(0.012)
+    assert primitives["readout_wire_sub"].kind == "path"
+    assert primitives["readout_wire_sub"].width == pytest.approx(0.026)
+    assert primitives["readout_wire_sub"].subtract is True
+    assert all(primitive.layer == 2 for primitive in primitives.values())
+
+    readout_wire = primitives["readout_wire"].geometry
+    np.testing.assert_allclose(list(readout_wire.coords), [
+        (0.2275, 0.131),
+        (0.2525, 0.131),
+        (0.32, 0.196),
+        (0.425, 0.196),
+    ])
+
+    pin = component.pins[0]
+    assert pin.name == "readout"
+    assert pin.width == pytest.approx(0.012)
+    assert pin.gap == pytest.approx(0.0072)
+    np.testing.assert_allclose(pin.normal_points, [[0.32, 0.196],
+                                                   [0.425, 0.196]])
+
+    design = build_design(source)
+    exported_pin = design.components["Q1"].pins["readout"]
+    np.testing.assert_allclose(exported_pin.points, pin.points)
+    assert exported_pin.gap == pytest.approx(0.0072)
+    assert set(design.qgeometry.tables["poly"]["name"]) == {
+        "pad_top",
+        "pad_bot",
+        "rect_pk",
+        "readout_connector_pad",
+    }
+    assert set(design.qgeometry.tables["path"]["name"]) == {
+        "readout_wire",
+        "readout_wire_sub",
+    }
+
+
+def test_builtin_transmon_pocket_default_connection_pad_uses_design_variables():
+    source = """
+schema: qiskit-metal/design-dsl/3
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        connection_pads:
+          readout: {}
+"""
+
+    ir = build_ir(source)
+    component = ir.components[0]
+    primitives = {primitive.name: primitive for primitive in component.primitives}
+    assert primitives["readout_wire"].width == pytest.approx(0.010)
+    assert primitives["readout_wire_sub"].width == pytest.approx(0.022)
+
+    pin = component.pins[0]
+    assert pin.name == "readout"
+    assert pin.width == pytest.approx(0.010)
+    assert pin.gap == pytest.approx(0.006)
+
+    design = build_design(source)
+    exported_pin = design.components["Q1"].pins["readout"]
+    assert exported_pin.width == pytest.approx(0.010)
+    assert exported_pin.gap == pytest.approx(0.006)
+
+
+def test_builtin_transmon_pocket_connection_pad_overrides_and_netlist():
+    source = """
+schema: qiskit-metal/design-dsl/3
+vars:
+  cpw_width: 12um
+  cpw_gap: 7um
+hamiltonian: {}
+circuit: {}
+netlist:
+  connections:
+    - {from: Q1.readout, to: Q2.readout}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        pos_x: -1mm
+        connection_pads:
+          readout:
+            loc_W: 1
+            loc_H: 1
+    Q2:
+      type: transmon_pocket
+      options:
+        pos_x: 1mm
+        connection_pads:
+          readout:
+            loc_W: -1
+            loc_H: 1
+            cpw_width: 16um
+            cpw_gap: 8um
+"""
+
+    ir = build_ir(source)
+    q2 = next(component for component in ir.components if component.name == "Q2")
+    q2_primitives = {primitive.name: primitive for primitive in q2.primitives}
+    assert q2.options["connection_pads"]["readout"]["cpw_width"] == "16um"
+    assert q2.options["connection_pads"]["readout"]["cpw_gap"] == "8um"
+    assert q2_primitives["readout_wire"].width == pytest.approx(0.016)
+    assert q2_primitives["readout_wire_sub"].width == pytest.approx(0.032)
+
+    design = build_design(source)
+    assert "readout" in design.components["Q1"].pins
+    assert "readout" in design.components["Q2"].pins
+    assert len(design.net_info) == 2
+    assert int(design.components["Q1"].pins["readout"].net_id) == int(
+        design.components["Q2"].pins["readout"].net_id)
+
+
+def test_builtin_transmon_pocket_connection_pad_uses_component_transform_once():
+    ir = build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars:
+  cpw_width: 12um
+  cpw_gap: 7um
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        pos_x: 1mm
+        pos_y: 2mm
+        orientation: 90
+        connection_pads:
+          readout: {}
+""")
+
+    component = ir.components[0]
+    primitives = {primitive.name: primitive for primitive in component.primitives}
+    wire = primitives["readout_wire"].geometry
+    np.testing.assert_allclose(list(wire.coords), [
+        (0.869, 2.2275),
+        (0.869, 2.2525),
+        (0.804, 2.32),
+        (0.804, 2.425),
+    ])
+    pin = component.pins[0]
+    np.testing.assert_allclose(pin.normal_points, [[0.804, 2.32],
+                                                   [0.804, 2.425]])
+
+
 @pytest.mark.parametrize("bad_metadata", ["[]", "''", "false"])
 def test_typed_component_rejects_non_mapping_metadata(bad_metadata):
     with pytest.raises(DesignDslError, match="metadata must be a mapping"):
@@ -617,8 +1195,9 @@ geometry:
 """)
 
 
-def test_template_generators_are_not_silently_ignored_before_support_lands():
-    with pytest.raises(DesignDslError, match="geometry.generators"):
+def test_template_generators_reject_invalid_iterator():
+    with pytest.raises(DesignDslError,
+                       match="for_each is invalid"):
         build_ir("""
 schema: qiskit-metal/design-dsl/3
 vars: {}
@@ -631,11 +1210,12 @@ geometry:
     generator_template:
       schema: qiskit-metal/component-template/1
       id: generator_template
-      options: {}
+      options:
+        connection_pads: {}
       geometry:
         generators:
           connection_pads:
-            for_each: options.connection_pads
+            for_each: missing.connection_pads
   components:
     Q1:
       type: generator_template

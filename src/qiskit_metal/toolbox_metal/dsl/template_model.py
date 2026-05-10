@@ -94,6 +94,15 @@ def component_template_from_mapping(spec: Mapping[str, Any],
     if "pins" in geometry:
         geometry["pins"] = _optional_list(geometry["pins"],
                                           f"{owner}.geometry.pins")
+    if "operations" in geometry:
+        geometry["operations"] = _mapping(geometry["operations"],
+                                          f"{owner}.geometry.operations")
+    if "transform" in geometry:
+        geometry["transform"] = _mapping(geometry["transform"],
+                                         f"{owner}.geometry.transform")
+    if "generators" in geometry:
+        geometry["generators"] = _mapping(geometry["generators"],
+                                          f"{owner}.geometry.generators")
 
     return ComponentTemplate(
         id=template_id,
