@@ -1,0 +1,51 @@
+schema: qiskit-metal/design-dsl/3
+
+vars:
+  qx: 1.2mm
+  cpw_width: 12um
+  cpw_gap: 7um
+  c_q: 65fF
+  ej_q: 18GHz
+
+hamiltonian:
+  subsystems:
+    Q1: {model: transmon, EJ: "${vars.ej_q}", C: "${vars.c_q}"}
+    Q2: {model: transmon, EJ: "${vars.ej_q}", C: "${vars.c_q}"}
+  couplings:
+    - {from: Q1, to: Q2, g: 12MHz}
+
+circuit:
+  Q1: {type: transmon, template: transmon_pocket}
+  Q2: {type: transmon, template: transmon_pocket}
+
+netlist:
+  connections:
+    - {from: Q1.readout, to: Q2.readout}
+
+geometry:
+  design:
+    class: DesignPlanar
+    chip: {size: 6mm x 6mm}
+
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        pos_x: "-${vars.qx}"
+        connection_pads:
+          readout:
+            loc_W: 1
+            loc_H: 1
+            cpw_width: "${vars.cpw_width}"
+            cpw_gap: "${vars.cpw_gap}"
+
+    Q2:
+      type: transmon_pocket
+      options:
+        pos_x: "${vars.qx}"
+        connection_pads:
+          readout:
+            loc_W: -1
+            loc_H: 1
+            cpw_width: "${vars.cpw_width}"
+            cpw_gap: "${vars.cpw_gap}"

@@ -23,6 +23,15 @@ The YAML no longer names qlibrary classes such as `TransmonPocket`,
 independent IR first.  `build_design()` then exports that IR to a normal Metal
 `QDesign` by writing primitive shapely geometry, pins, and net connections.
 
+The DSL now supports two authoring levels:
+
+- primitive-native components, where every shape and pin is written directly
+- YAML-native component templates, starting with `type: transmon_pocket`
+
+Qlibrary `class` components remain rejected.  The template path expands YAML
+defaults, connection-pad rules, geometry operations, and pins into primitive IR
+before export; it does not instantiate qlibrary `TransmonPocket`.
+
 ## Python API
 
 ```python
@@ -38,6 +47,32 @@ design = build_design("examples/dsl/chain_2q_native.metal.yaml")
 - pins into lightweight native components
 - pin connections into `design.net_info`
 - the full chain into `design.metadata["dsl_chain"]`
+
+## YAML-Native TransmonPocket
+
+Use `type: transmon_pocket` for the first YAML-native qlibrary-template
+replacement path:
+
+```yaml
+geometry:
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        pos_x: -1.2mm
+        connection_pads:
+          readout:
+            loc_W: 1
+            loc_H: 1
+            cpw_width: 12um
+            cpw_gap: 7um
+```
+
+The built-in template expands to the same kind of Metal data as primitive
+components: qgeometry rows, pins, netlist connections, and resolved metadata in
+`design.metadata["dsl_chain"]`.  Connection pads are generated from YAML
+template rules, so each pad such as `readout` becomes connector geometry and a
+connectable pin before export.
 
 ## Primitives
 
@@ -100,3 +135,7 @@ resolved netlist connections.
 - `native_2q_minimal.metal.yaml`: smallest native two-qubit sketch.
 - `chain_2q_native.metal.yaml`: full Hamiltonian-Circuit-Netlist-Geometry chain.
 - `run_chain_demo.py`: builds the chain example and prints qgeometry/netlist data.
+- `transmon_pocket_2q.metal.yaml`: two YAML-native `transmon_pocket` components
+  connected through generated `readout` pins.
+- `run_transmon_pocket_demo.py`: builds the TransmonPocket template example and
+  prints qgeometry rows, pins, net info, and template metadata.
