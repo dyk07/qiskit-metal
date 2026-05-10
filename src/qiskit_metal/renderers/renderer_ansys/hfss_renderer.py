@@ -799,6 +799,11 @@ class QHFSSRenderer(QAnsysRenderer):
                     o_project = o_desktop.SetActiveProject(
                         self.pinfo.project_name)
                     o_design = o_project.GetActiveDesign()
+                    # GetSolutionType() is the raw HFSS COM call; unlike
+                    # pinfo.design.solution_type this is NOT normalised by
+                    # pyEPR, so on HFSS 2024.1+ it can return
+                    # 'HFSS Modal Network' etc. is_eigenmode() handles all
+                    # aliases — see solution_types.py.
                     if is_eigenmode(o_design.GetSolutionType()):
                         # The set_mode() method is in HfssEMDesignSolutions
                         #  class in pyEPR.

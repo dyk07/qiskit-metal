@@ -28,7 +28,7 @@ The tests are pure-string and cross-platform; no Ansys, no Windows.
 import unittest
 
 from qiskit_metal.renderers.renderer_ansys.solution_types import (
-    DRIVENMODAL_NAMES, DRIVENTERMINAL_NAMES, EIGENMODE_NAMES, Q3D_NAMES,
+    DRIVEN_MODAL_NAMES, DRIVEN_TERMINAL_NAMES, EIGENMODE_NAMES, Q3D_NAMES,
     canonical_kind, is_drivenmodal, is_driventerminal, is_eigenmode, is_q3d)
 
 
@@ -41,21 +41,21 @@ class TestSolutionTypeAliases(unittest.TestCase):
     def test_drivenmodal_legacy_name_present(self):
         """``DrivenModal`` is what HFSS <= 2023 returns. Must remain
         accepted to keep older installations working."""
-        self.assertIn('DrivenModal', DRIVENMODAL_NAMES)
+        self.assertIn('DrivenModal', DRIVEN_MODAL_NAMES)
 
     def test_drivenmodal_hfss_2024_aliases_present(self):
         """HFSS 2024.1+ reports DrivenModal under two new identifiers
         (Hybrid vs non-Hybrid). Both must map to the drivenmodal kind."""
-        self.assertIn('HFSS Modal Network', DRIVENMODAL_NAMES)
-        self.assertIn('HFSS Hybrid Modal Network', DRIVENMODAL_NAMES)
+        self.assertIn('HFSS Modal Network', DRIVEN_MODAL_NAMES)
+        self.assertIn('HFSS Hybrid Modal Network', DRIVEN_MODAL_NAMES)
 
     def test_driventerminal_legacy_name_present(self):
-        self.assertIn('DrivenTerminal', DRIVENTERMINAL_NAMES)
+        self.assertIn('DrivenTerminal', DRIVEN_TERMINAL_NAMES)
 
     def test_driventerminal_hfss_2024_aliases_present(self):
-        self.assertIn('HFSS Terminal Network', DRIVENTERMINAL_NAMES)
+        self.assertIn('HFSS Terminal Network', DRIVEN_TERMINAL_NAMES)
         self.assertIn('HFSS Hybrid Terminal Network',
-                      DRIVENTERMINAL_NAMES)
+                      DRIVEN_TERMINAL_NAMES)
 
     def test_q3d_name_present(self):
         self.assertIn('Q3D', Q3D_NAMES)
@@ -63,8 +63,8 @@ class TestSolutionTypeAliases(unittest.TestCase):
     def test_alias_sets_are_disjoint(self):
         """The four kinds must not share any alias; a single
         ``solution_type`` can never legitimately be two kinds at once."""
-        all_sets = (EIGENMODE_NAMES, DRIVENMODAL_NAMES,
-                    DRIVENTERMINAL_NAMES, Q3D_NAMES)
+        all_sets = (EIGENMODE_NAMES, DRIVEN_MODAL_NAMES,
+                    DRIVEN_TERMINAL_NAMES, Q3D_NAMES)
         for i, a in enumerate(all_sets):
             for j, b in enumerate(all_sets):
                 if i < j:
@@ -80,11 +80,11 @@ class TestSolutionTypePredicates(unittest.TestCase):
             self.assertTrue(is_eigenmode(name), name)
 
     def test_is_drivenmodal_accepts_all_aliases(self):
-        for name in DRIVENMODAL_NAMES:
+        for name in DRIVEN_MODAL_NAMES:
             self.assertTrue(is_drivenmodal(name), name)
 
     def test_is_driventerminal_accepts_all_aliases(self):
-        for name in DRIVENTERMINAL_NAMES:
+        for name in DRIVEN_TERMINAL_NAMES:
             self.assertTrue(is_driventerminal(name), name)
 
     def test_is_q3d_accepts_all_aliases(self):

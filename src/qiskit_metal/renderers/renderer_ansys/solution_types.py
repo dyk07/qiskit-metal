@@ -13,20 +13,31 @@
 # that they have been altered from the originals.
 """HFSS / Q3D solution-type name handling.
 
-HFSS 2024.1 introduced new solution-type identifiers alongside the legacy
-ones. ``pinfo.design.solution_type`` (and the underlying COM
-``GetSolutionType()``) returns whatever the running HFSS version reports,
-so call-site code that compares against a single string silently breaks
-when a user upgrades. This module centralises the name aliases and the
-predicates so a future rename is a one-file change.
+HFSS 2024.1 introduced new solution-type identifiers alongside the
+legacy ones (``HFSS Modal Network`` / ``HFSS Hybrid Modal Network``
+replace ``DrivenModal``; same shape for ``DrivenTerminal``). The
+identifiers are reported verbatim by the underlying COM
+``GetSolutionType()``.
 
-Aliases tracked here mirror the set merged into pyEPR (PRs #172 and
-#176) for HFSS 2024.1 support; if HFSS introduces another alias, add it
-to the relevant ``frozenset`` below — every call site picks it up
-automatically.
+These alias sets mirror ``pyEPR.solution_types`` (pyEPR PR #176).
+**pyEPR normalises ``design.solution_type`` at read time**, so any code
+in metal that reads ``pinfo.design.solution_type`` already receives the
+canonical pre-AEDT-2021.2 string (``DrivenModal``, ``DrivenTerminal``,
+``Eigenmode``, ``Q3D``) regardless of which HFSS version is running. The
+predicates here are still correct as defence-in-depth and are
+**essential** for the one call site (``hfss_renderer.py``'s
+``set_mode``) that reaches past pyEPR and calls
+``o_design.GetSolutionType()`` directly — that path sees the raw HFSS
+string and would silently mismatch on HFSS 2024.1+ without these
+predicates.
 
-This module is pure Python: no Ansys, no Windows, no pyEPR. It's safe to
-import on any platform.
+If HFSS introduces a new alias in a future release, update both this
+file *and* pyEPR's ``solution_types.py``; the test suites in both repos
+will fail until the new alias is added, which is the intended early
+warning.
+
+This module is pure Python: no Ansys, no Windows, no pyEPR. It's safe
+to import on any platform.
 """
 
 from typing import Optional
@@ -37,17 +48,20 @@ EIGENMODE_NAMES = frozenset({
 })
 
 #: HFSS Driven Modal solver. HFSS 2024.1+ exposes the same solver under
-#: two additional identifiers depending on whether the design is "Hybrid".
-DRIVENMODAL_NAMES = frozenset({
+#: two additional identifiers depending on whether the design is
+#: "Hybrid". Naming matches ``pyEPR.solution_types.DRIVEN_MODAL_NAMES``.
+DRIVEN_MODAL_NAMES = frozenset({
     'DrivenModal',  # HFSS <= 2023
     'HFSS Modal Network',  # HFSS 2024.1+
     'HFSS Hybrid Modal Network',  # HFSS 2024.1+
 })
 
-#: HFSS Driven Terminal solver. Renamed in HFSS 2024.1+ alongside Driven Modal.
-#: qiskit-metal does not currently ship a renderer for this solver, but the
-#: helper is provided so future renderer code can use the same pattern.
-DRIVENTERMINAL_NAMES = frozenset({
+#: HFSS Driven Terminal solver. Renamed in HFSS 2024.1+ alongside Driven
+#: Modal. qiskit-metal does not currently ship a renderer for this
+#: solver, but the helper is provided so future renderer code can use
+#: the same pattern. Naming matches
+#: ``pyEPR.solution_types.DRIVEN_TERMINAL_NAMES``.
+DRIVEN_TERMINAL_NAMES = frozenset({
     'DrivenTerminal',  # HFSS <= 2023
     'HFSS Terminal Network',  # HFSS 2024.1+
     'HFSS Hybrid Terminal Network',  # HFSS 2024.1+
@@ -66,16 +80,16 @@ def is_eigenmode(solution_type: Optional[str]) -> bool:
 
 
 def is_drivenmodal(solution_type: Optional[str]) -> bool:
-    """True if ``solution_type`` names any alias of the HFSS Driven Modal
-    solver, including the post-2024.1 ``HFSS Modal Network`` and
+    """True if ``solution_type`` names any alias of the HFSS Driven
+    Modal solver, including the post-2024.1 ``HFSS Modal Network`` and
     ``HFSS Hybrid Modal Network`` identifiers."""
-    return solution_type in DRIVENMODAL_NAMES
+    return solution_type in DRIVEN_MODAL_NAMES
 
 
 def is_driventerminal(solution_type: Optional[str]) -> bool:
     """True if ``solution_type`` names any alias of the HFSS Driven
     Terminal solver."""
-    return solution_type in DRIVENTERMINAL_NAMES
+    return solution_type in DRIVEN_TERMINAL_NAMES
 
 
 def is_q3d(solution_type: Optional[str]) -> bool:
@@ -92,8 +106,8 @@ def canonical_kind(solution_type: Optional[str]) -> Optional[str]:
     recognised solver identifier.
 
     The metal-internal kinds are stable across HFSS versions; downstream
-    metal code (renderer dispatch, design-creation guards) should compare
-    against these rather than the raw HFSS strings.
+    metal code (renderer dispatch, design-creation guards) should
+    compare against these rather than the raw HFSS strings.
     """
     if is_eigenmode(solution_type):
         return 'eigenmode'
