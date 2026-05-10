@@ -111,6 +111,7 @@ ENV/
 
 # temporary, installs and results
 .vs
+.codex/
 tutorials/**/*.png
 tutorials/**/*.jpg
 tutorials/**/*.tif

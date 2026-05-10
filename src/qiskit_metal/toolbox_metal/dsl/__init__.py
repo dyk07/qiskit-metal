@@ -20,6 +20,12 @@ from .builder import (
 )
 from .component_templates import ComponentTemplateExpansion
 from .expression import evaluate_expression, substitute_string, walk_substitute
+from .geometry_ops import (
+    DEFAULT_GEOMETRY_OPERATIONS,
+    GeometryOperationRegistry,
+    evaluate_geometry_operations,
+    resolve_operation_reference,
+)
 from .template_model import ComponentTemplate, TEMPLATE_SCHEMA
 from .template_registry import (
     BUILTIN_COMPONENT_TEMPLATE_PATHS,
@@ -48,4 +54,8 @@ __all__ = [
     "evaluate_expression",
     "substitute_string",
     "walk_substitute",
+    "DEFAULT_GEOMETRY_OPERATIONS",
+    "GeometryOperationRegistry",
+    "evaluate_geometry_operations",
+    "resolve_operation_reference",
 ]

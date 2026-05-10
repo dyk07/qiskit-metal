@@ -48,12 +48,13 @@ def expand_component_template(
         geometry = _merge_geometry(geometry, template.geometry)
         merge_rules = _deep_merge(merge_rules, template.merge_rules)
 
-    _validate_option_overrides(default_options, instance_options,
-                               f"component {component_spec.get('name')}.options")
-    options = _deep_merge(default_options, dict(instance_options))
+    options = _merge_options(default_options, dict(instance_options),
+                             merge_rules,
+                             f"component {component_spec.get('name')}.options")
 
     instance_metadata = component_spec.get("metadata", {})
-    if instance_metadata and not isinstance(instance_metadata, Mapping):
+    if "metadata" in component_spec and not isinstance(instance_metadata,
+                                                       Mapping):
         raise DesignDslError(
             f"component {component_spec.get('name')}.metadata must be a mapping")
     metadata = _deep_merge(metadata, dict(instance_metadata or {}))
@@ -70,6 +71,15 @@ def expand_component_template(
     expanded["options"] = options
     expanded["template"] = chain[-1].id
     expanded["inherited"] = [template.id for template in chain]
+
+    template_operations = dict(geometry.get("operations", {}) or {})
+    instance_operations = dict(component_spec.get("operations", {}) or {})
+    expanded["operations"] = _deep_merge(template_operations,
+                                         instance_operations)
+    if "generators" in geometry:
+        raise DesignDslError(
+            f"component template {template_type!r} geometry.generators are "
+            "not supported yet")
 
     template_primitives = list(geometry.get("primitives", []))
     template_pins = list(geometry.get("pins", []))
@@ -106,6 +116,8 @@ def _merge_geometry(base: Mapping[str, Any],
     for key, value in override.items():
         if key in {"primitives", "pins"}:
             out[key] = [*out.get(key, []), *list(value or [])]
+        elif key == "operations":
+            out[key] = _deep_merge(out.get(key, {}), value or {})
         elif key == "transform":
             out[key] = _deep_merge(out.get(key, {}), value)
         else:
@@ -113,12 +125,93 @@ def _merge_geometry(base: Mapping[str, Any],
     return out
 
 
+def _merge_options(defaults: Mapping[str, Any], overrides: Mapping[str, Any],
+                   merge_rules: Mapping[str, Any], owner: str) -> dict[str, Any]:
+    _validate_option_overrides(defaults, overrides, owner, merge_rules)
+    options = _deep_merge(dict(defaults), dict(overrides))
+    _apply_merge_rules(options, merge_rules, owner)
+    return options
+
+
 def _validate_option_overrides(defaults: Mapping[str, Any],
                                overrides: Mapping[str, Any],
-                               owner: str) -> None:
+                               owner: str,
+                               merge_rules: Mapping[str, Any]) -> None:
     for key, value in overrides.items():
         if key not in defaults:
             raise DesignDslError(f"Unknown {owner} key(s): {[key]}")
         default_value = defaults[key]
+        rule = merge_rules.get(key)
+        if _is_each_entry_extends_rule(rule):
+            _validate_each_entry_override(defaults, key, value, rule, owner)
+            continue
         if isinstance(default_value, Mapping) and isinstance(value, Mapping):
-            _validate_option_overrides(default_value, value, f"{owner}.{key}")
+            nested_rules = rule if isinstance(rule, Mapping) else {}
+            _validate_option_overrides(default_value, value, f"{owner}.{key}",
+                                       nested_rules)
+
+
+def _is_each_entry_extends_rule(rule: Any) -> bool:
+    return isinstance(rule, Mapping) and "each_entry_extends" in rule
+
+
+def _validate_each_entry_override(defaults: Mapping[str, Any], option_key: str,
+                                  value: Any, rule: Mapping[str, Any],
+                                  owner: str) -> None:
+    if not isinstance(value, Mapping):
+        raise DesignDslError(f"{owner}.{option_key} must be a mapping")
+    default_key = rule["each_entry_extends"]
+    if not isinstance(default_key, str) or default_key not in defaults:
+        raise DesignDslError(
+            f"{owner}.{option_key} merge rule references unknown option "
+            f"{default_key!r}")
+    default_entry = defaults[default_key]
+    if not isinstance(default_entry, Mapping):
+        raise DesignDslError(
+            f"{owner}.{option_key} merge rule default {default_key!r} must "
+            "be a mapping")
+    for entry_name, entry_value in value.items():
+        if not isinstance(entry_value, Mapping):
+            raise DesignDslError(
+                f"{owner}.{option_key}.{entry_name} must be a mapping")
+        _validate_option_overrides(default_entry, entry_value,
+                                   f"{owner}.{option_key}.{entry_name}", {})
+
+
+def _apply_merge_rules(options: dict[str, Any], merge_rules: Mapping[str, Any],
+                       owner: str) -> None:
+    remove_options: set[str] = set()
+    for option_key, rule in merge_rules.items():
+        if not _is_each_entry_extends_rule(rule):
+            continue
+        if option_key not in options:
+            continue
+        entry_map = options[option_key]
+        if not isinstance(entry_map, Mapping):
+            raise DesignDslError(f"{owner}.{option_key} must be a mapping")
+        default_key = rule["each_entry_extends"]
+        if not isinstance(default_key, str) or default_key not in options:
+            raise DesignDslError(
+                f"{owner}.{option_key} merge rule references unknown option "
+                f"{default_key!r}")
+        default_entry = options[default_key]
+        if not isinstance(default_entry, Mapping):
+            raise DesignDslError(
+                f"{owner}.{option_key} merge rule default {default_key!r} "
+                "must be a mapping")
+        merged_entries = {}
+        for entry_name, entry_value in entry_map.items():
+            if not isinstance(entry_value, Mapping):
+                raise DesignDslError(
+                    f"{owner}.{option_key}.{entry_name} must be a mapping")
+            merged_entries[entry_name] = _deep_merge(default_entry,
+                                                     dict(entry_value))
+        options[option_key] = merged_entries
+        for key in rule.get("remove_from_resolved_options", []) or []:
+            if not isinstance(key, str):
+                raise DesignDslError(
+                    f"{owner}.{option_key}.remove_from_resolved_options "
+                    "entries must be strings")
+            remove_options.add(key)
+    for key in remove_options:
+        options.pop(key, None)

@@ -12,11 +12,15 @@ from qiskit_metal.toolbox_metal.dsl import (
     NativeComponent,
     PinIR,
     PrimitiveIR,
+    DEFAULT_GEOMETRY_OPERATIONS,
+    GeometryOperationRegistry,
     build_design,
     build_ir,
     clear_user_registry,
+    evaluate_geometry_operations,
     export_ir_to_metal,
     register_design,
+    resolve_operation_reference,
 )
 
 __all__ = [
@@ -28,6 +32,10 @@ __all__ = [
     "NativeComponent",
     "BUILTIN_DESIGNS",
     "CURRENT_SCHEMA",
+    "DEFAULT_GEOMETRY_OPERATIONS",
+    "GeometryOperationRegistry",
+    "evaluate_geometry_operations",
+    "resolve_operation_reference",
     "build_ir",
     "export_ir_to_metal",
     "build_design",

@@ -22,12 +22,17 @@ from shapely.geometry import LineString, Polygon
 import yaml
 
 from qiskit_metal import Dict
+from qiskit_metal import draw
 from qiskit_metal.qlibrary.core.base import QComponent
 from qiskit_metal.toolbox_metal.parsing import parse_value
 
 from .component_templates import expand_component_template
 from .errors import DesignDslError
 from .expression import walk_substitute as _walk_substitute
+from .geometry_ops import (
+    evaluate_geometry_operations,
+    resolve_operation_reference,
+)
 from .template_registry import ComponentTemplateRegistry
 
 __all__ = [
@@ -60,13 +65,17 @@ DESIGN_KEYS = {
 TRANSFORM_KEYS = {"translate", "rotate", "origin"}
 COMPONENT_KEYS = {
     "name", "primitives", "pins", "metadata", "transform", "translate",
-    "rotate", "origin", "type", "options",
+    "rotate", "origin", "type", "options", "operations",
 }
 PRIMITIVE_KEYS = {
     "name", "kind", "shape", "type", "primitive", "points", "center", "size",
     "subtract", "helper", "layer", "chip", "width", "fillet", "transform",
+    "operation",
 }
-PIN_KEYS = {"name", "points", "width", "gap", "chip", "transform"}
+PIN_KEYS = {
+    "name", "points", "width", "gap", "chip", "transform", "mode",
+    "from_operation", "operation", "segment",
+}
 NETLIST_KEYS = {"connections"}
 NETLIST_CONNECTION_KEYS = {"from", "to"}
 CHIP_KEYS = {
@@ -135,7 +144,13 @@ class PinIR:
     width: float
     gap: Optional[float] = None
     chip: str = "main"
+    input_as_norm: bool = False
+    normal_points: Optional[list[list[float]]] = None
     source: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.normal_points is None:
+            self.normal_points = self.points
 
 
 @dataclass
@@ -539,7 +554,26 @@ def _apply_transform_to_points(points: list[list[float]],
 def _make_primitive_geometry(spec: Mapping[str, Any],
                              kind: str,
                              shape: str,
-                             variables: Mapping[str, Any]) -> Any:
+                             variables: Mapping[str, Any],
+                             operations: Optional[Mapping[str, Any]] = None) -> Any:
+    if shape == "from_operation":
+        if "operation" not in spec:
+            raise DesignDslError(
+                f"{kind}.from_operation requires operation")
+        geometry = resolve_operation_reference(operations or {},
+                                               spec["operation"],
+                                               f"primitive {kind}.{shape}")
+        if not hasattr(geometry, "geom_type"):
+            raise DesignDslError(
+                f"{kind}.from_operation source must resolve to shapely geometry")
+        if kind == "poly" and not isinstance(geometry, Polygon):
+            raise DesignDslError(
+                f"poly.from_operation source must resolve to a Polygon")
+        if kind in {"path", "junction"} and not isinstance(geometry, LineString):
+            raise DesignDslError(
+                f"{kind}.from_operation source must resolve to a LineString")
+        return geometry
+
     if kind == "poly" and shape == "rectangle":
         center = _parse_point(spec.get("center", [0, 0]), variables)
         size = spec.get("size")
@@ -568,7 +602,8 @@ def _make_primitive_geometry(spec: Mapping[str, Any],
 
 def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
                          transform: Mapping[str, Any],
-                         variables: Mapping[str, Any]) -> PrimitiveIR:
+                         variables: Mapping[str, Any],
+                         operations: Optional[Mapping[str, Any]] = None) -> PrimitiveIR:
     if not isinstance(spec, Mapping):
         raise DesignDslError(
             f"Primitive in {component_name!r} must be a mapping")
@@ -582,7 +617,8 @@ def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
                          f"primitive {component_name}.{name}")
 
     kind, shape = _parse_type(spec)
-    geometry = _make_primitive_geometry(spec, kind, shape, variables)
+    geometry = _make_primitive_geometry(spec, kind, shape, variables,
+                                        operations)
     merged_transform = _deep_merge(
         transform,
         _validate_transform(_optional_mapping(spec, "transform"),
@@ -613,30 +649,104 @@ def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
                        source=dict(spec))
 
 
+def _points_from_normal_segment(component_name: str, name: str,
+                                spec: Mapping[str, Any],
+                                width: float,
+                                variables: Mapping[str, Any],
+                                operations: Mapping[str, Any]
+                                ) -> tuple[list[list[float]], list[list[float]]]:
+    operation = spec.get("from_operation", spec.get("operation"))
+    if operation is None:
+        raise DesignDslError(
+            f"Pin {component_name}.{name} normal_segment requires "
+            "from_operation")
+    if spec.get("segment", "last") != "last":
+        raise DesignDslError(
+            f"Pin {component_name}.{name} normal_segment only supports "
+            "segment: last")
+    geometry = resolve_operation_reference(operations, operation,
+                                           f"pin {component_name}.{name}")
+    if not isinstance(geometry, LineString):
+        raise DesignDslError(
+            f"Pin {component_name}.{name} normal_segment source must resolve "
+            "to a LineString")
+    coords = list(geometry.coords)
+    if len(coords) < 2:
+        raise DesignDslError(
+            f"Pin {component_name}.{name} normal_segment source must contain "
+            "at least two points")
+
+    normal_points = [
+        _parse_point(list(coords[-2]), variables),
+        _parse_point(list(coords[-1]), variables),
+    ]
+    start = np.array(normal_points[0], dtype=float)
+    end = np.array(normal_points[1], dtype=float)
+    normal = end - start
+    norm = np.linalg.norm(normal)
+    if norm == 0:
+        raise DesignDslError(
+            f"Pin {component_name}.{name} normal_segment source has zero "
+            "length")
+    normal = normal / norm
+    point_a = np.round(draw.Vector.rotate(normal, np.pi / 2)) * width / 2 + end
+    point_b = np.round(draw.Vector.rotate(normal, -np.pi / 2)) * width / 2 + end
+    return [point_a.tolist(), point_b.tolist()], normal_points
+
+
 def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
                    transform: Mapping[str, Any],
-                   variables: Mapping[str, Any]) -> PinIR:
+                   variables: Mapping[str, Any],
+                   operations: Optional[Mapping[str, Any]] = None) -> PinIR:
     if not isinstance(spec, Mapping):
         raise DesignDslError(f"Pin in {component_name!r} must be a mapping")
     name = spec.get("name")
     if not isinstance(name, str) or not name:
         raise DesignDslError(f"Pin in {component_name!r} requires name")
     _reject_unknown_keys(spec, PIN_KEYS, f"pin {component_name}.{name}")
-    points = _parse_points(spec.get("points"), variables)
-    if len(points) != 2:
-        raise DesignDslError(f"Pin {component_name}.{name} requires exactly two points")
     width = _parse_number(spec.get("width"), variables)
-    point_width = math.dist(points[0], points[1])
-    if not math.isclose(point_width, width, rel_tol=1e-6, abs_tol=1e-9):
+    mode = spec.get("mode", "tangent_points")
+    input_as_norm = False
+    normal_points = None
+    if mode == "tangent_points":
+        if "from_operation" in spec or "operation" in spec or "segment" in spec:
+            raise DesignDslError(
+                f"Pin {component_name}.{name} tangent_points does not accept "
+                "from_operation, operation, or segment")
+        if "points" not in spec:
+            raise DesignDslError(
+                f"Pin {component_name}.{name} tangent_points requires points")
+        points = _parse_points(spec.get("points"), variables)
+        if len(points) != 2:
+            raise DesignDslError(
+                f"Pin {component_name}.{name} requires exactly two points")
+        point_width = math.dist(points[0], points[1])
+        if not math.isclose(point_width, width, rel_tol=1e-6, abs_tol=1e-9):
+            raise DesignDslError(
+                f"Pin {component_name}.{name} width {width} does not match "
+                f"distance between points {point_width}")
+    elif mode == "normal_segment":
+        if "points" in spec:
+            raise DesignDslError(
+                f"Pin {component_name}.{name} normal_segment does not accept "
+                "points")
+        points, normal_points = _points_from_normal_segment(
+            component_name, name, spec, width, variables, operations or {})
+        input_as_norm = True
+    else:
         raise DesignDslError(
-            f"Pin {component_name}.{name} width {width} does not match "
-            f"distance between points {point_width}")
+            f"Pin {component_name}.{name} mode must be 'tangent_points' or "
+            f"'normal_segment', got {mode!r}")
     merged_transform = _deep_merge(
         transform,
         _validate_transform(_optional_mapping(spec, "transform"),
                             f"{component_name}.{name}"),
     )
     points = _apply_transform_to_points(points, merged_transform, variables)
+    if normal_points is not None:
+        normal_points = _apply_transform_to_points(normal_points,
+                                                   merged_transform,
+                                                   variables)
 
     return PinIR(component=component_name,
                  name=name,
@@ -645,6 +755,8 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
                  gap=_parse_optional_number(spec.get("gap"), variables)
                  if "gap" in spec else width * 0.6,
                  chip=str(spec.get("chip", "main")),
+                 input_as_norm=input_as_norm,
+                 normal_points=normal_points,
                  source=dict(spec))
 
 
@@ -817,6 +929,11 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
         }
         comp_spec = _walk_substitute(comp_spec, component_ctx)
         transform = _transform_spec(comp_spec, geometry_spec, name)
+        operation_outputs = evaluate_geometry_operations(
+            _optional_mapping(comp_spec, "operations"),
+            variables,
+            owner=f"component {name}",
+        )
 
         primitive_specs = _expand_list(_optional_list(comp_spec, "primitives"),
                                        component_ctx, templates)
@@ -826,7 +943,7 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
         primitive_names: set[str] = set()
         for primitive in primitive_specs:
             primitive_ir = _primitive_from_spec(name, primitive, transform,
-                                               variables)
+                                               variables, operation_outputs)
             if primitive_ir.name in primitive_names:
                 raise DesignDslError(
                     f"Duplicate primitive name: {name}.{primitive_ir.name}")
@@ -836,7 +953,8 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
         pins = []
         pin_names: set[str] = set()
         for pin in pin_specs:
-            pin_ir = _pin_from_spec(name, pin, transform, variables)
+            pin_ir = _pin_from_spec(name, pin, transform, variables,
+                                    operation_outputs)
             if pin_ir.name in pin_names:
                 raise DesignDslError(f"Duplicate pin name: {name}.{pin_ir.name}")
             pin_names.add(pin_ir.name)
@@ -1110,9 +1228,11 @@ def export_ir_to_metal(
                                            **options)
 
         for pin in component_ir.pins:
+            pin_points = pin.normal_points if pin.input_as_norm else pin.points
             component.add_pin(pin.name,
-                              np.array(pin.points, dtype=float),
+                              np.array(pin_points, dtype=float),
                               pin.width,
+                              input_as_norm=pin.input_as_norm,
                               chip=pin.chip,
                               gap=pin.gap)
 
