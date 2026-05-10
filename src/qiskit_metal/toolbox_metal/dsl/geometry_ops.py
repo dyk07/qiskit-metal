@@ -4,16 +4,22 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from numbers import Number
 from typing import Any, Mapping, Optional
 
-import numpy as np
 from shapely.geometry import CAP_STYLE, JOIN_STYLE, LineString, Polygon
 from shapely.geometry.base import BaseGeometry
 
 from qiskit_metal import draw
-from qiskit_metal.toolbox_metal.parsing import parse_value
 
+from ._helpers import (
+    parse_angle as _parse_angle,
+    parse_bool as _parse_bool,
+    parse_number as _parse_number,
+    parse_optional_number as _parse_optional_number,
+    parse_point as _parse_point,
+    parse_points as _parse_points,
+    reject_unknown_keys as _reject_unknown_keys,
+)
 from .errors import DesignDslError
 
 GeometryOperation = Callable[[Mapping[str, Any], Mapping[str, Any],
@@ -113,86 +119,6 @@ def resolve_operation_reference(outputs: Mapping[str, Any], reference: str,
     return current
 
 
-def _reject_unknown_keys(spec: Mapping[str, Any], allowed: set[str],
-                         owner: str) -> None:
-    unknown = set(spec) - allowed
-    if unknown:
-        raise DesignDslError(
-            f"Unknown geometry operation key(s) for {owner}: "
-            f"{sorted(unknown)}")
-
-
-def _parse_number(value: Any, variables: Mapping[str, Any], owner: str) -> float:
-    parsed = parse_value(value, dict(variables))
-    if isinstance(parsed, (int, float, np.number)) and not isinstance(
-            parsed, bool):
-        return float(parsed)
-    raise DesignDslError(
-        f"{owner} must be a numeric value with optional units, got {value!r}")
-
-
-def _parse_optional_number(value: Any, variables: Mapping[str, Any],
-                           owner: str) -> Optional[float]:
-    if value is None:
-        return None
-    return _parse_number(value, variables, owner)
-
-
-def _parse_point(value: Any, variables: Mapping[str, Any],
-                 owner: str) -> tuple[float, float]:
-    if not isinstance(value, (list, tuple)) or len(value) != 2:
-        raise DesignDslError(f"{owner} must be [x, y], got {value!r}")
-    return (
-        _parse_number(value[0], variables, f"{owner}[0]"),
-        _parse_number(value[1], variables, f"{owner}[1]"),
-    )
-
-
-def _parse_points(value: Any, variables: Mapping[str, Any],
-                  owner: str) -> list[tuple[float, float]]:
-    if not isinstance(value, list) or len(value) < 2:
-        raise DesignDslError(f"{owner} must be a list with at least two points")
-    return [
-        _parse_point(point, variables, f"{owner}[{index}]")
-        for index, point in enumerate(value)
-    ]
-
-
-def _parse_angle(value: Any, owner: str) -> float:
-    if value is None:
-        return 0.0
-    if isinstance(value, Number) and not isinstance(value, bool):
-        return float(value)
-    if not isinstance(value, str):
-        raise DesignDslError(
-            f"{owner} must be a number or '<number>deg', got {value!r}")
-    stripped = value.strip()
-    if stripped.endswith("deg"):
-        stripped = stripped[:-3]
-    try:
-        return float(stripped)
-    except ValueError as exc:
-        raise DesignDslError(
-            f"{owner} must be a number or '<number>deg', got {value!r}") from exc
-
-
-def _parse_bool(value: Any, owner: str) -> bool:
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        lowered = value.strip().lower()
-        if lowered in {"true", "yes", "1"}:
-            return True
-        if lowered in {"false", "no", "0"}:
-            return False
-    if isinstance(value, (int, float, np.number)):
-        if value == 1:
-            return True
-        if value == 0:
-            return False
-    raise DesignDslError(f"{owner} must be true or false, got {value!r}")
-
-
 def _parse_origin(value: Any, variables: Mapping[str, Any],
                   owner: str) -> str | tuple[float, float]:
     if value is None:
@@ -202,7 +128,8 @@ def _parse_origin(value: Any, variables: Mapping[str, Any],
             return value
         raise DesignDslError(
             f"{owner} must be 'center', 'centroid', or [x, y], got {value!r}")
-    return _parse_point(value, variables, owner)
+    # shapely.affinity rejects list origins on 3D geometry (list + tuple TypeError)
+    return tuple(_parse_point(value, variables, owner))
 
 
 def _parse_style(value: Any, owner: str, choices: Mapping[str, Any]) -> Any:
@@ -375,12 +302,13 @@ def _op_rotate_position(spec: Mapping[str, Any], variables: Mapping[str, Any],
         {"op", "source", "angle", "pos", "pos_rot"},
         owner,
     )
-    pos_rot = _parse_point(spec.get("pos_rot", [0, 0]), variables,
-                           f"{owner}.pos_rot")
+    # pos_rot becomes a shapely.affinity origin → must be a tuple, not a list
+    pos_rot = tuple(_parse_point(spec.get("pos_rot", [0, 0]), variables,
+                                 f"{owner}.pos_rot"))
     return draw.rotate_position(
         _source(spec, outputs, owner),
         _parse_angle(spec.get("angle", 0), f"{owner}.angle"),
-        list(_parse_point(spec.get("pos", [0, 0]), variables, f"{owner}.pos")),
+        _parse_point(spec.get("pos", [0, 0]), variables, f"{owner}.pos"),
         pos_rot=pos_rot,
     )
 

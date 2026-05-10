@@ -8,6 +8,7 @@ from typing import Any, Mapping, Optional
 
 import yaml
 
+from ._helpers import UniqueKeyYamlLoader
 from .errors import DesignDslError
 from .template_model import (
     TEMPLATE_SCHEMA,
@@ -21,26 +22,6 @@ BUILTIN_COMPONENT_TEMPLATE_PATHS = {
     "base_qubit": Path("core/base_qubit.yaml"),
     "transmon_pocket": Path("qubits/transmon_pocket.yaml"),
 }
-
-
-class _UniqueKeyLoader(yaml.SafeLoader):
-    """YAML loader that rejects duplicate mapping keys."""
-
-
-def _construct_unique_mapping(loader: _UniqueKeyLoader, node, deep=False):
-    mapping = {}
-    for key_node, value_node in node.value:
-        key = loader.construct_object(key_node, deep=deep)
-        if key in mapping:
-            raise DesignDslError(f"Duplicate YAML mapping key: {key!r}")
-        mapping[key] = loader.construct_object(value_node, deep=deep)
-    return mapping
-
-
-_UniqueKeyLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-    _construct_unique_mapping,
-)
 
 
 class ComponentTemplateRegistry:
@@ -124,7 +105,7 @@ def _builtin_template_root() -> Path:
 def _load_template_file(path: Path) -> Mapping[str, Any]:
     try:
         with path.open("r", encoding="utf-8") as handle:
-            data = yaml.load(handle, Loader=_UniqueKeyLoader)
+            data = yaml.load(handle, Loader=UniqueKeyYamlLoader)
     except yaml.YAMLError as exc:
         raise DesignDslError(f"YAML parse failed ({path}): {exc}") from exc
     if not isinstance(data, Mapping):

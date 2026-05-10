@@ -6,6 +6,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping
 
+from ._helpers import deep_merge as _deep_merge
 from .errors import DesignDslError
 from .template_registry import ComponentTemplateRegistry
 
@@ -131,15 +132,6 @@ def expand_component_template(
         template=chain[-1].id,
         inherited=[template.id for template in chain],
     )
-
-
-def _deep_merge(base: Any, override: Any) -> Any:
-    if isinstance(base, dict) and isinstance(override, dict):
-        out = dict(base)
-        for key, value in override.items():
-            out[key] = _deep_merge(out.get(key), value) if key in out else value
-        return out
-    return override
 
 
 def _optional_mapping_value(value: Any, owner: str) -> dict[str, Any]:

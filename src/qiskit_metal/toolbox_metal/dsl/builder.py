@@ -24,8 +24,18 @@ import yaml
 from qiskit_metal import Dict
 from qiskit_metal import draw
 from qiskit_metal.qlibrary.core.base import QComponent
-from qiskit_metal.toolbox_metal.parsing import parse_value
 
+from ._helpers import (
+    UniqueKeyYamlLoader as _UniqueKeyLoader,
+    deep_merge as _deep_merge,
+    parse_angle as _parse_angle,
+    parse_bool as _as_bool,
+    parse_number as _parse_number,
+    parse_optional_number as _parse_optional_number,
+    parse_point as _parse_point,
+    parse_points as _parse_points,
+    reject_unknown_keys as _reject_unknown_keys,
+)
 from .component_templates import expand_component_template
 from .errors import DesignDslError
 from .expression import (
@@ -97,26 +107,6 @@ BUILTIN_DESIGNS: dict[str, str] = {
 }
 
 _USER_DESIGNS: dict[str, Any] = {}
-
-
-class _UniqueKeyLoader(yaml.SafeLoader):
-    """YAML loader that rejects duplicate mapping keys."""
-
-
-def _construct_unique_mapping(loader: _UniqueKeyLoader, node, deep=False):
-    mapping = {}
-    for key_node, value_node in node.value:
-        key = loader.construct_object(key_node, deep=deep)
-        if key in mapping:
-            raise DesignDslError(f"Duplicate YAML mapping key: {key!r}")
-        mapping[key] = loader.construct_object(value_node, deep=deep)
-    return mapping
-
-
-_UniqueKeyLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-    _construct_unique_mapping,
-)
 
 
 @dataclass
@@ -221,15 +211,6 @@ def register_design(short_name: str, cls_or_path: Union[type, str]) -> None:
 def clear_user_registry() -> None:
     """Clear user registered design classes."""
     _USER_DESIGNS.clear()
-
-
-def _deep_merge(base: Any, override: Any) -> Any:
-    if isinstance(base, dict) and isinstance(override, dict):
-        out = dict(base)
-        for key, value in override.items():
-            out[key] = _deep_merge(out.get(key), value) if key in out else value
-        return out
-    return override
 
 
 def _resolve_class(name_or_path: str, table: Mapping[str, Any],
@@ -393,101 +374,6 @@ def _optional_list(container: Mapping[str, Any], key: str) -> list:
     if not isinstance(value, list):
         raise DesignDslError(f"{key} must be a list")
     return value
-
-
-def _reject_unknown_keys(spec: Mapping[str, Any], allowed: set[str],
-                         owner: str) -> None:
-    unknown = set(spec) - allowed
-    if unknown:
-        raise DesignDslError(f"Unknown {owner} key(s): {sorted(unknown)}")
-
-
-def _as_bool(value: Any, owner: str) -> bool:
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        lowered = value.strip().lower()
-        if lowered in {"true", "yes", "1"}:
-            return True
-        if lowered in {"false", "no", "0"}:
-            return False
-    if isinstance(value, (int, float, np.number)):
-        if value == 1:
-            return True
-        if value == 0:
-            return False
-    raise DesignDslError(
-        f"{owner} must be a boolean or one of true/false/yes/no/1/0, "
-        f"got {value!r}")
-
-
-def _parse_number(value: Any,
-                  variables: Optional[Mapping[str, Any]] = None,
-                  owner: str = "value") -> float:
-    if isinstance(value, bool):
-        raise DesignDslError(
-            f"{owner} must be a numeric value with optional units, got "
-            f"{value!r}")
-    try:
-        parsed = parse_value(value, dict(variables or {}))
-    except Exception as exc:
-        raise DesignDslError(
-            f"{owner} must be a numeric value with optional units, got "
-            f"{value!r}: {exc}") from exc
-    if isinstance(parsed, (int, float, np.number)) and not isinstance(
-            parsed, bool):
-        return float(parsed)
-    raise DesignDslError(
-        f"{owner} must be a numeric value with optional units, got {value!r}")
-
-
-def _parse_optional_number(value: Any,
-                           variables: Optional[Mapping[str, Any]] = None,
-                           owner: str = "value"):
-    if value is None:
-        return None
-    return _parse_number(value, variables, owner)
-
-
-def _parse_point(value: Any,
-                 variables: Optional[Mapping[str, Any]] = None,
-                 owner: str = "Point") -> list[float]:
-    if not isinstance(value, (list, tuple)) or len(value) != 2:
-        raise DesignDslError(f"{owner} must be [x, y], got {value!r}")
-    return [
-        _parse_number(value[0], variables, f"{owner}[0]"),
-        _parse_number(value[1], variables, f"{owner}[1]"),
-    ]
-
-
-def _parse_points(value: Any,
-                  variables: Optional[Mapping[str, Any]] = None,
-                  owner: str = "points") -> list[list[float]]:
-    if not isinstance(value, list) or len(value) < 2:
-        raise DesignDslError(f"{owner} must be a list with at least two points")
-    return [
-        _parse_point(point, variables, f"{owner}[{index}]")
-        for index, point in enumerate(value)
-    ]
-
-
-def _parse_angle(value: Any, owner: str = "Angle") -> float:
-    if value is None:
-        return 0.0
-    if isinstance(value, (int, float, np.number)) and not isinstance(
-            value, bool):
-        return float(value)
-    if not isinstance(value, str):
-        raise DesignDslError(
-            f"{owner} must be a number or '<number>deg', got {value!r}")
-    stripped = value.strip()
-    if stripped.endswith("deg"):
-        stripped = stripped[:-3]
-    try:
-        return float(stripped)
-    except ValueError as exc:
-        raise DesignDslError(
-            f"{owner} must be a number or '<number>deg', got {value!r}") from exc
 
 
 def _validate_transform(transform: Mapping[str, Any], owner: str) -> dict[str, Any]:
@@ -1301,7 +1187,7 @@ def _design_variable_context(design_spec: Mapping[str, Any],
     _validate_design_spec(design_spec)
     design_cls = _resolve_design_class(design_spec)
     init_kwargs = _design_init_kwargs(design_spec)
-    init_kwargs["enable_renderers"] = False
+    init_kwargs["enable_renderers"] = False  # variable-discovery only; don't spin up renderers
     design = design_cls(**init_kwargs)
     return {
         **dict(design.variables),
@@ -1321,9 +1207,9 @@ def _instantiate_design(design_spec: Mapping[str, Any]):
     if chip_spec:
         _validate_chip_spec(chip_spec)
         chip_name = chip_spec.get("name", "main")
-        if chip_name not in design._chips:
+        if chip_name not in design.chips:
             raise DesignDslError(f"design has no chip {chip_name!r}")
-        chip_size = design._chips[chip_name]["size"]
+        chip_size = design.chips[chip_name]["size"]
         if "size" in chip_spec:
             size_x, size_y = _parse_chip_size(chip_spec["size"])
             if size_x is not None:
@@ -1341,26 +1227,19 @@ def build_ir(source: Union[str, Path],
              *,
              overrides: Optional[Mapping[str, Any]] = None) -> DesignIR:
     """Build a resolved native v3 IR from a YAML file or YAML text."""
-    
-    # 1. 加载与预处理
-    # 解析 YAML 文件或字符串，返回字典 (spec) 和文件所在目录 (base_dir) 
-    # _load_yaml 内部使用了自定义的加载器以拒绝重复的键名
     spec, base_dir = _load_yaml(source)
-
-    # 处理 YAML 内部的 `$include` 语法，递归加载外部引用的 YAML 文件合并到当前 spec 中
     spec = _expand_includes(spec, base_dir)
     if overrides:
         spec = _deep_merge(spec, dict(overrides))
 
     _reject_unknown_keys(spec, ROOT_KEYS, "root")
 
-    schema = spec.get("schema")    #  Schema 版本校验
+    schema = spec.get("schema")
     if schema != CURRENT_SCHEMA:
         raise DesignDslError(
             f"Unsupported schema {schema!r}; expected {CURRENT_SCHEMA!r}")
 
- #  提取和校验 Geometry (几何) 节点
-    geometry_spec = spec.get("geometry")   
+    geometry_spec = spec.get("geometry")
     if not isinstance(geometry_spec, Mapping):
         raise DesignDslError("geometry must be a mapping")
     _reject_unknown_keys(geometry_spec, GEOMETRY_KEYS, "geometry")
@@ -1370,7 +1249,6 @@ def build_ir(source: Union[str, Path],
     _reject_unknown_keys(design_spec, DESIGN_KEYS, "geometry.design")
 
     vars_table = _optional_mapping(spec, "vars")
-        # 创建初始上下文 ctx_vars，使得用户可以通过 ${vars.xxx} 引用变量
     ctx_vars = {**vars_table, "vars": vars_table}
     circuit = _walk_substitute(_optional_mapping(spec, "circuit"), ctx_vars)
     hamiltonian = _walk_substitute(

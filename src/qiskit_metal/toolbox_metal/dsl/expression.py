@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import ast
+from functools import lru_cache
 from numbers import Number
 import operator
 import re
@@ -15,7 +16,6 @@ from .errors import DesignDslError
 
 
 _INTERPOLATION_RE = re.compile(r"\$\{([^{}]+)\}")
-_FULL_INTERPOLATION_RE = re.compile(r"\$\{([^{}]+)\}")
 _SIMPLE_PATH_RE = re.compile(r"[a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z0-9_]+)*")
 _UNIT_LITERAL_RE = re.compile(
     r"(?<![A-Za-z0-9_\.])"
@@ -75,11 +75,17 @@ def evaluate_expression(expr: str, ctx: Mapping[str, Any]) -> Any:
     if _SIMPLE_PATH_RE.fullmatch(expr):
         return resolve_path(ctx, expr)
 
-    try:
-        parsed = ast.parse(_replace_unit_literals(expr, ctx), mode="eval")
-    except SyntaxError as exc:
-        raise DesignDslError(f"Invalid expression ${{{expr}}}: {exc.msg}") from exc
+    parsed = _compile_expression(_replace_unit_literals(expr, ctx), expr)
     return _eval_ast(parsed, ctx, expr)
+
+
+@lru_cache(maxsize=512)
+def _compile_expression(normalized_text: str, original_expr: str) -> ast.AST:
+    try:
+        return ast.parse(normalized_text, mode="eval")
+    except SyntaxError as exc:
+        raise DesignDslError(
+            f"Invalid expression ${{{original_expr}}}: {exc.msg}") from exc
 
 
 def substitute_string(value: str,
@@ -92,7 +98,7 @@ def substitute_string(value: str,
     Embedded interpolations are converted to text, matching the historical DSL
     behavior for values like ``"-${vars.qx}"``.
     """
-    full_match = _FULL_INTERPOLATION_RE.fullmatch(value)
+    full_match = _INTERPOLATION_RE.fullmatch(value)
     if preserve_type and full_match:
         return evaluate_expression(full_match.group(1), ctx)
 
