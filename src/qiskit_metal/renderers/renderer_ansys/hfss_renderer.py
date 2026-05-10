@@ -30,6 +30,8 @@ from qiskit_metal import Dict
 from qiskit_metal.draw.utility import to_vec3D
 from qiskit_metal.renderers.renderer_ansys.ansys_renderer import (
     QAnsysRenderer, get_clean_name)
+from qiskit_metal.renderers.renderer_ansys.solution_types import (
+    is_drivenmodal, is_eigenmode)
 
 
 class QHFSSRenderer(QAnsysRenderer):
@@ -226,7 +228,7 @@ class QHFSSRenderer(QAnsysRenderer):
                                                        y_max - y_min, 0,
                                                        **dict(transparency=0.0))
             axis = 'x' if abs(x1 - x0) > abs(y1 - y0) else 'y'
-            if self.pinfo.design.solution_type != 'Eigenmode':
+            if not is_eigenmode(self.pinfo.design.solution_type):
                 poly_ansys.make_lumped_port(axis,
                                             z0=str(impedance) + 'ohm',
                                             name=f'LumpPort_{qcomp}_{pin}')
@@ -599,7 +601,7 @@ class QHFSSRenderer(QAnsysRenderer):
         if self.pinfo:
             if self.pinfo.project:
                 if self.pinfo.design:
-                    if self.pinfo.design.solution_type == 'Eigenmode':
+                    if is_eigenmode(self.pinfo.design.solution_type):
                         if self.pinfo.setup_name != setup_args.name:
                             self.design.logger.warning(
                                 f'The name of active setup={self.pinfo.setup_name} does not match'
@@ -712,7 +714,7 @@ class QHFSSRenderer(QAnsysRenderer):
         if self.pinfo:
             if self.pinfo.project:
                 if self.pinfo.design:
-                    if self.pinfo.design.solution_type == 'DrivenModal':
+                    if is_drivenmodal(self.pinfo.design.solution_type):
                         if self.pinfo.setup_name != setup_args.name:
                             self.design.logger.warning(
                                 f'The name of active setup={self.pinfo.setup_name} does not match'
@@ -797,7 +799,7 @@ class QHFSSRenderer(QAnsysRenderer):
                     o_project = o_desktop.SetActiveProject(
                         self.pinfo.project_name)
                     o_design = o_project.GetActiveDesign()
-                    if o_design.GetSolutionType() == 'Eigenmode':
+                    if is_eigenmode(o_design.GetSolutionType()):
                         # The set_mode() method is in HfssEMDesignSolutions
                         #  class in pyEPR.
                         # The class HfssEMDesignSolutions is instantiated by
@@ -1025,7 +1027,7 @@ class QHFSSRenderer(QAnsysRenderer):
             o_design = self.pinfo.design
             setup = self.pinfo.setup
 
-            if not o_design.solution_type == 'Eigenmode':
+            if not is_eigenmode(o_design.solution_type):
                 return None
 
             report = o_design._reporter  # reporter OModule for Ansys
