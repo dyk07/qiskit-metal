@@ -1,0 +1,55 @@
+schema: qiskit-metal/design-dsl/3
+
+vars:
+  qx: 1.2mm
+  pad_w: 420um
+  pad_h: 90um
+  trace_w: 12um
+  trace_gap: 7um
+
+hamiltonian:
+  subsystems:
+    Q1: {model: transmon, EJ: 18GHz}
+    Q2: {model: transmon, EJ: 18GHz}
+  couplings:
+    - {from: Q1, to: Q2, g: 12MHz}
+
+circuit:
+  Q1: {type: transmon, pad_width: "${pad_w}"}
+  Q2: {type: transmon, pad_width: "${pad_w}"}
+
+netlist:
+  connections:
+    - {from: Q1.bus, to: Q2.bus}
+
+geometry:
+  design:
+    class: DesignPlanar
+    chip: {size: 6mm x 6mm}
+
+  components:
+    Q1:
+      translate: ["-${qx}", 0mm]
+      primitives:
+        - {name: pad_left, type: poly.rectangle, center: [-0.12mm, 0mm],
+           size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
+        - {name: pad_right, type: poly.rectangle, center: [0.12mm, 0mm],
+           size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
+        - {name: jj, type: junction.line, points: [[0mm, -45um], [0mm, 45um]],
+           width: 10um, layer: 1}
+      pins:
+        - {name: bus, points: [[0.34mm, -6um], [0.34mm, 6um]],
+           width: "${trace_w}", gap: "${trace_gap}"}
+
+    Q2:
+      translate: ["${qx}", 0mm]
+      primitives:
+        - {name: pad_left, type: poly.rectangle, center: [-0.12mm, 0mm],
+           size: ["${circuit.Q2.pad_width}", "${pad_h}"], layer: 1}
+        - {name: pad_right, type: poly.rectangle, center: [0.12mm, 0mm],
+           size: ["${circuit.Q2.pad_width}", "${pad_h}"], layer: 1}
+        - {name: jj, type: junction.line, points: [[0mm, -45um], [0mm, 45um]],
+           width: 10um, layer: 1}
+      pins:
+        - {name: bus, points: [[-0.34mm, -6um], [-0.34mm, 6um]],
+           width: "${trace_w}", gap: "${trace_gap}"}
