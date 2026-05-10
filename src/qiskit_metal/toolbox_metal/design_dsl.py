@@ -43,12 +43,39 @@ __all__ = [
 
 CURRENT_SCHEMA = "qiskit-metal/design-dsl/3"
 
+ROOT_KEYS = {
+    "schema", "vars", "hamiltonian", "circuit", "netlist", "geometry",
+    "templates",
+}
+GEOMETRY_KEYS = {"design", "templates", "components", "transforms"}
+DESIGN_KEYS = {
+    "class", "metadata", "overwrite_enabled", "enable_renderers", "variables",
+    "chip",
+}
+TRANSFORM_KEYS = {"translate", "rotate", "origin"}
+COMPONENT_KEYS = {
+    "name", "primitives", "pins", "metadata", "transform", "translate",
+    "rotate", "origin",
+}
+PRIMITIVE_KEYS = {
+    "name", "kind", "shape", "type", "primitive", "points", "center", "size",
+    "subtract", "helper", "layer", "chip", "width", "fillet", "transform",
+}
+PIN_KEYS = {"name", "points", "width", "gap", "chip", "transform"}
+NETLIST_KEYS = {"connections"}
+NETLIST_CONNECTION_KEYS = {"from", "to"}
+CHIP_KEYS = {
+    "name", "size", "size_x", "size_y", "size_z", "center_x", "center_y",
+    "center_z",
+}
+CHIP_SIZE_KEYS = {"size_x", "size_y"}
+
 
 BUILTIN_DESIGNS: dict[str, str] = {
     "DesignPlanar": "qiskit_metal.designs.design_planar.DesignPlanar",
     "DesignFlipChip": "qiskit_metal.designs.design_flipchip.DesignFlipChip",
     "DesignMultiPlanar":
-        "qiskit_metal.designs.design_multiplanar.DesignMultiPlanar",
+        "qiskit_metal.designs.design_multiplanar.MultiPlanar",
 }
 
 _USER_DESIGNS: dict[str, Any] = {}
@@ -56,6 +83,26 @@ _USER_DESIGNS: dict[str, Any] = {}
 
 class DesignDslError(Exception):
     """DSL parsing or export error."""
+
+
+class _UniqueKeyLoader(yaml.SafeLoader):
+    """YAML loader that rejects duplicate mapping keys."""
+
+
+def _construct_unique_mapping(loader: _UniqueKeyLoader, node, deep=False):
+    mapping = {}
+    for key_node, value_node in node.value:
+        key = loader.construct_object(key_node, deep=deep)
+        if key in mapping:
+            raise DesignDslError(f"Duplicate YAML mapping key: {key!r}")
+        mapping[key] = loader.construct_object(value_node, deep=deep)
+    return mapping
+
+
+_UniqueKeyLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+    _construct_unique_mapping,
+)
 
 
 @dataclass
@@ -237,7 +284,7 @@ def _load_yaml(source: Union[str, Path]) -> tuple[dict, Optional[Path]]:
         if "\n" not in source and len(source) < 4096 and candidate.exists():
             return _load_yaml_file(candidate)
         try:
-            data = yaml.safe_load(source)
+            data = yaml.load(source, Loader=_UniqueKeyLoader)
         except yaml.YAMLError as exc:
             raise DesignDslError(f"YAML parse failed: {exc}") from exc
         if not isinstance(data, dict):
@@ -253,7 +300,7 @@ def _load_yaml_file(path: Path) -> tuple[dict, Path]:
         raise DesignDslError(f"DSL file does not exist: {path}")
     try:
         with path.open("r", encoding="utf-8") as handle:
-            data = yaml.safe_load(handle)
+            data = yaml.load(handle, Loader=_UniqueKeyLoader)
     except yaml.YAMLError as exc:
         raise DesignDslError(f"YAML parse failed ({path}): {exc}") from exc
     if not isinstance(data, dict):
@@ -261,7 +308,10 @@ def _load_yaml_file(path: Path) -> tuple[dict, Path]:
     return data, path.parent
 
 
-def _expand_includes(node: Any, base_dir: Optional[Path]) -> Any:
+def _expand_includes(node: Any,
+                     base_dir: Optional[Path],
+                     seen: Optional[frozenset[Path]] = None) -> Any:
+    seen = seen or frozenset()
     if isinstance(node, dict):
         if set(node.keys()) == {"$include"}:
             include_path = node["$include"]
@@ -270,11 +320,18 @@ def _expand_includes(node: Any, base_dir: Optional[Path]) -> Any:
             if base_dir is None:
                 raise DesignDslError(
                     "$include requires build_ir to receive a file path")
-            included, child_dir = _load_yaml_file((base_dir / include_path).resolve())
-            return _expand_includes(included, child_dir)
-        return {key: _expand_includes(val, base_dir) for key, val in node.items()}
+            target = (base_dir / include_path).resolve()
+            if target in seen:
+                chain = " -> ".join(str(path) for path in [*seen, target])
+                raise DesignDslError(f"$include cycle detected: {chain}")
+            included, child_dir = _load_yaml_file(target)
+            return _expand_includes(included, child_dir, seen | {target})
+        return {
+            key: _expand_includes(val, base_dir, seen)
+            for key, val in node.items()
+        }
     if isinstance(node, list):
-        return [_expand_includes(item, base_dir) for item in node]
+        return [_expand_includes(item, base_dir, seen) for item in node]
     return node
 
 
@@ -289,7 +346,11 @@ def _resolve_template(name: str, templates: Mapping[str, Any],
     if not isinstance(template, dict):
         raise DesignDslError(f"Template {name!r} must be a mapping")
     if "$extend" in template:
-        parent = _resolve_template(template["$extend"], templates, seen | {name})
+        parent_name = template["$extend"]
+        if not isinstance(parent_name, str):
+            raise DesignDslError(
+                f"Template {name!r} $extend value must be a template name")
+        parent = _resolve_template(parent_name, templates, seen | {name})
         body = {key: val for key, val in template.items() if key != "$extend"}
         return _deep_merge(parent, body)
     return dict(template)
@@ -327,18 +388,56 @@ def _expand_node(node: Any, ctx: Mapping[str, Any],
 
 def _expand_list(items: list, ctx: Mapping[str, Any],
                  templates: Mapping[str, Any]) -> list:
+    if not isinstance(items, list):
+        raise DesignDslError("Expandable DSL field must be a list")
     out: list[Any] = []
     for item in items:
         out.extend(_expand_node(item, ctx, templates))
     return out
 
 
-def _as_bool(value: Any) -> bool:
+def _optional_mapping(container: Mapping[str, Any], key: str) -> dict:
+    if key not in container:
+        return {}
+    value = container[key]
+    if not isinstance(value, Mapping):
+        raise DesignDslError(f"{key} must be a mapping")
+    return dict(value)
+
+
+def _optional_list(container: Mapping[str, Any], key: str) -> list:
+    if key not in container:
+        return []
+    value = container[key]
+    if not isinstance(value, list):
+        raise DesignDslError(f"{key} must be a list")
+    return value
+
+
+def _reject_unknown_keys(spec: Mapping[str, Any], allowed: set[str],
+                         owner: str) -> None:
+    unknown = set(spec) - allowed
+    if unknown:
+        raise DesignDslError(f"Unknown {owner} key(s): {sorted(unknown)}")
+
+
+def _as_bool(value: Any, owner: str) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
-        return value.lower() in {"true", "yes", "1"}
-    return bool(value)
+        lowered = value.strip().lower()
+        if lowered in {"true", "yes", "1"}:
+            return True
+        if lowered in {"false", "no", "0"}:
+            return False
+    if isinstance(value, (int, float, np.number)):
+        if value == 1:
+            return True
+        if value == 0:
+            return False
+    raise DesignDslError(
+        f"{owner} must be a boolean or one of true/false/yes/no/1/0, "
+        f"got {value!r}")
 
 
 def _parse_number(value: Any, variables: Optional[Mapping[str, Any]] = None) -> float:
@@ -382,6 +481,15 @@ def _parse_angle(value: Any) -> float:
     return float(stripped)
 
 
+def _validate_transform(transform: Mapping[str, Any], owner: str) -> dict[str, Any]:
+    out = dict(transform)
+    unknown = set(out) - TRANSFORM_KEYS
+    if unknown:
+        raise DesignDslError(
+            f"Unknown transform key(s) for {owner}: {sorted(unknown)}")
+    return out
+
+
 def _parse_type(spec: Mapping[str, Any]) -> tuple[str, str]:
     type_value = spec.get("type") or spec.get("primitive")
     if type_value:
@@ -409,15 +517,20 @@ def _layer(value: Any) -> int:
 def _transform_spec(component_spec: Mapping[str, Any],
                     geometry_spec: Mapping[str, Any],
                     component_name: str) -> dict[str, Any]:
-    transforms = geometry_spec.get("transforms") or {}
+    transforms = geometry_spec.get("transforms", {})
     transform = {}
     if isinstance(transforms, Mapping):
-        transform = dict(transforms.get(component_name) or {})
-    transform = _deep_merge(transform, dict(component_spec.get("transform") or {}))
+        raw_transform = transforms.get(component_name)
+        if raw_transform is not None:
+            if not isinstance(raw_transform, Mapping):
+                raise DesignDslError(
+                    f"geometry.transforms.{component_name} must be a mapping")
+            transform = dict(raw_transform)
+    transform = _deep_merge(transform, _optional_mapping(component_spec, "transform"))
     for key in ("translate", "rotate", "origin"):
         if key in component_spec:
             transform[key] = component_spec[key]
-    return transform
+    return _validate_transform(transform, component_name)
 
 
 def _apply_transform_to_geometry(geometry: Any,
@@ -494,57 +607,81 @@ def _make_primitive_geometry(spec: Mapping[str, Any],
 def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
                          transform: Mapping[str, Any],
                          variables: Mapping[str, Any]) -> PrimitiveIR:
+    if not isinstance(spec, Mapping):
+        raise DesignDslError(
+            f"Primitive in {component_name!r} must be a mapping")
     if "class" in spec:
         raise DesignDslError(
             "v3 native geometry does not accept qlibrary class entries")
     name = spec.get("name")
     if not isinstance(name, str) or not name:
         raise DesignDslError(f"Primitive in {component_name!r} requires name")
+    _reject_unknown_keys(spec, PRIMITIVE_KEYS,
+                         f"primitive {component_name}.{name}")
 
     kind, shape = _parse_type(spec)
     geometry = _make_primitive_geometry(spec, kind, shape, variables)
-    merged_transform = _deep_merge(transform, dict(spec.get("transform") or {}))
+    merged_transform = _deep_merge(
+        transform,
+        _validate_transform(_optional_mapping(spec, "transform"),
+                            f"{component_name}.{name}"),
+    )
     geometry = _apply_transform_to_geometry(geometry, merged_transform, variables)
 
-    reserved = {
-        "name", "kind", "shape", "type", "primitive", "points", "center",
-        "size", "subtract", "helper", "layer", "chip", "width", "fillet",
-        "transform",
-    }
-    options = {key: val for key, val in spec.items() if key not in reserved}
     width = _parse_optional_number(spec.get("width"), variables)
     fillet = _parse_optional_number(spec.get("fillet"), variables)
+    if kind in {"path", "junction"} and width is None:
+        raise DesignDslError(f"{kind}.{shape} primitive {component_name}.{name} "
+                             "requires width")
 
     return PrimitiveIR(component=component_name,
                        name=name,
                        kind=kind,
                        shape=shape,
                        geometry=geometry,
-                       subtract=_as_bool(spec.get("subtract", False)),
-                       helper=_as_bool(spec.get("helper", False)),
+                       subtract=_as_bool(spec.get("subtract", False),
+                                         f"{component_name}.{name}.subtract"),
+                       helper=_as_bool(spec.get("helper", False),
+                                       f"{component_name}.{name}.helper"),
                        layer=_layer(spec.get("layer")),
                        chip=str(spec.get("chip", "main")),
                        width=width,
                        fillet=fillet,
-                       options=options,
+                       options={},
                        source=dict(spec))
 
 
 def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
                    transform: Mapping[str, Any],
                    variables: Mapping[str, Any]) -> PinIR:
+    if not isinstance(spec, Mapping):
+        raise DesignDslError(f"Pin in {component_name!r} must be a mapping")
     name = spec.get("name")
     if not isinstance(name, str) or not name:
         raise DesignDslError(f"Pin in {component_name!r} requires name")
+    _reject_unknown_keys(spec, PIN_KEYS, f"pin {component_name}.{name}")
     points = _parse_points(spec.get("points"), variables)
-    merged_transform = _deep_merge(transform, dict(spec.get("transform") or {}))
+    if len(points) != 2:
+        raise DesignDslError(f"Pin {component_name}.{name} requires exactly two points")
+    width = _parse_number(spec.get("width"), variables)
+    point_width = math.dist(points[0], points[1])
+    if not math.isclose(point_width, width, rel_tol=1e-6, abs_tol=1e-9):
+        raise DesignDslError(
+            f"Pin {component_name}.{name} width {width} does not match "
+            f"distance between points {point_width}")
+    merged_transform = _deep_merge(
+        transform,
+        _validate_transform(_optional_mapping(spec, "transform"),
+                            f"{component_name}.{name}"),
+    )
     points = _apply_transform_to_points(points, merged_transform, variables)
 
     return PinIR(component=component_name,
                  name=name,
                  points=points,
-                 width=_parse_number(spec.get("width"), variables),
-                 gap=_parse_optional_number(spec.get("gap"), variables),
+                 width=width,
+                 gap=_parse_optional_number(spec.get("gap"), variables)
+                 if "gap" in spec else width * 0.6,
                  chip=str(spec.get("chip", "main")),
                  source=dict(spec))
 
@@ -556,6 +693,10 @@ def _components_as_list(raw_components: Any) -> list[dict[str, Any]]:
             if not isinstance(spec, dict):
                 raise DesignDslError(f"Component {name!r} must be a mapping")
             merged = dict(spec)
+            if "name" in merged and merged["name"] != name:
+                raise DesignDslError(
+                    f"Component mapping key {name!r} does not match "
+                    f"explicit name {merged['name']!r}")
             merged.setdefault("name", name)
             out.append(merged)
         return out
@@ -576,15 +717,20 @@ def _split_endpoint(endpoint: str, where: str) -> dict[str, str]:
 
 
 def _normalise_connections(netlist_spec: Any) -> list[dict[str, Any]]:
-    if not isinstance(netlist_spec, Mapping):
+    if netlist_spec is None:
         return []
-    connections = netlist_spec.get("connections") or []
+    if not isinstance(netlist_spec, Mapping):
+        raise DesignDslError("netlist must be a mapping")
+    _reject_unknown_keys(netlist_spec, NETLIST_KEYS, "netlist")
+    connections = _optional_list(netlist_spec, "connections")
     if not isinstance(connections, list):
         raise DesignDslError("netlist.connections must be a list")
     out = []
     for index, connection in enumerate(connections):
         if not isinstance(connection, Mapping):
             raise DesignDslError(f"netlist.connections[{index}] must be a mapping")
+        _reject_unknown_keys(connection, NETLIST_CONNECTION_KEYS,
+                             f"netlist.connections[{index}]")
         from_pin = _split_endpoint(connection.get("from"),
                                    f"netlist.connections[{index}].from")
         to_pin = _split_endpoint(connection.get("to"),
@@ -663,9 +809,13 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
     raw_components = geometry_spec.get("components")
     if raw_components is None:
         raise DesignDslError("geometry.components is required")
+    transforms = geometry_spec.get("transforms", {})
+    if not isinstance(transforms, Mapping):
+        raise DesignDslError("geometry.transforms must be a mapping")
 
     component_specs = _expand_list(_components_as_list(raw_components), ctx, templates)
     components: list[ComponentIR] = []
+    component_names: set[str] = set()
     for comp_spec in component_specs:
         if not isinstance(comp_spec, dict):
             raise DesignDslError("Expanded component spec must be a mapping")
@@ -675,27 +825,81 @@ def _parse_components(geometry_spec: Mapping[str, Any], ctx: Mapping[str, Any],
         name = comp_spec.get("name")
         if not isinstance(name, str) or not name:
             raise DesignDslError("Each component requires a name")
+        if name in component_names:
+            raise DesignDslError(f"Duplicate component name: {name}")
+        component_names.add(name)
+        _reject_unknown_keys(comp_spec, COMPONENT_KEYS, f"component {name}")
         transform = _transform_spec(comp_spec, geometry_spec, name)
 
-        primitive_specs = _expand_list(comp_spec.get("primitives") or [], ctx,
+        primitive_specs = _expand_list(_optional_list(comp_spec, "primitives"), ctx,
                                        templates)
-        pin_specs = _expand_list(comp_spec.get("pins") or [], ctx, templates)
-        primitives = [
-            _primitive_from_spec(name, primitive, transform, variables)
-            for primitive in primitive_specs
-        ]
-        pins = [
-            _pin_from_spec(name, pin, transform, variables)
-            for pin in pin_specs
-        ]
+        pin_specs = _expand_list(_optional_list(comp_spec, "pins"), ctx, templates)
+        primitives = []
+        primitive_names: set[str] = set()
+        for primitive in primitive_specs:
+            primitive_ir = _primitive_from_spec(name, primitive, transform,
+                                               variables)
+            if primitive_ir.name in primitive_names:
+                raise DesignDslError(
+                    f"Duplicate primitive name: {name}.{primitive_ir.name}")
+            primitive_names.add(primitive_ir.name)
+            primitives.append(primitive_ir)
+
+        pins = []
+        pin_names: set[str] = set()
+        for pin in pin_specs:
+            pin_ir = _pin_from_spec(name, pin, transform, variables)
+            if pin_ir.name in pin_names:
+                raise DesignDslError(f"Duplicate pin name: {name}.{pin_ir.name}")
+            pin_names.add(pin_ir.name)
+            pins.append(pin_ir)
         components.append(
             ComponentIR(name=name,
                         primitives=primitives,
                         pins=pins,
-                        metadata=dict(comp_spec.get("metadata") or {}),
+                        metadata=_optional_mapping(comp_spec, "metadata"),
                         source=dict(comp_spec)))
 
+    unknown_transform_components = set(transforms) - component_names
+    if unknown_transform_components:
+        raise DesignDslError(
+            "geometry.transforms references unknown component(s): "
+            f"{sorted(unknown_transform_components)}")
+
     return components
+
+
+def _validate_netlist_endpoints(components: list[ComponentIR],
+                                connections: list[dict[str, Any]]) -> None:
+    pin_names = {
+        component.name: {pin.name for pin in component.pins}
+        for component in components
+    }
+    used_endpoints: set[tuple[str, str]] = set()
+    for connection in connections:
+        endpoint_pairs = [
+            (connection["from"]["component"], connection["from"]["pin"]),
+            (connection["to"]["component"], connection["to"]["pin"]),
+        ]
+        if endpoint_pairs[0] == endpoint_pairs[1]:
+            component, pin = endpoint_pairs[0]
+            raise DesignDslError(
+                f"netlist self-connection is invalid: {component}.{pin}")
+        for endpoint_pair in endpoint_pairs:
+            if endpoint_pair in used_endpoints:
+                component, pin = endpoint_pair
+                raise DesignDslError(
+                    f"netlist endpoint reused: {component}.{pin}")
+            used_endpoints.add(endpoint_pair)
+        for endpoint in (connection["from"], connection["to"]):
+            comp_name = endpoint["component"]
+            pin_name = endpoint["pin"]
+            if comp_name not in pin_names:
+                raise DesignDslError(
+                    f"netlist references unknown component {comp_name!r}")
+            if pin_name not in pin_names[comp_name]:
+                raise DesignDslError(
+                    f"netlist references unknown pin {comp_name}.{pin_name}")
 
 
 def _parse_chip_size(value: Any) -> tuple[Optional[str], Optional[str]]:
@@ -713,42 +917,56 @@ def _parse_chip_size(value: Any) -> tuple[Optional[str], Optional[str]]:
     raise DesignDslError(f"Unsupported chip.size value: {value!r}")
 
 
+def _validate_chip_spec(chip_spec: Mapping[str, Any]) -> None:
+    _reject_unknown_keys(chip_spec, CHIP_KEYS, "geometry.design.chip")
+    size = chip_spec.get("size")
+    if isinstance(size, Mapping):
+        _reject_unknown_keys(size, CHIP_SIZE_KEYS, "geometry.design.chip.size")
+
+
+def _validate_design_spec(design_spec: Mapping[str, Any]) -> None:
+    _reject_unknown_keys(design_spec, DESIGN_KEYS, "geometry.design")
+    if "chip" in design_spec:
+        _validate_chip_spec(_optional_mapping(design_spec, "chip"))
+
+
 def _instantiate_design(design_spec: Mapping[str, Any]):
+    _validate_design_spec(design_spec)
     class_name = design_spec.get("class", "DesignPlanar")
     design_cls = _resolve_class(class_name, BUILTIN_DESIGNS, _USER_DESIGNS,
                                 "design")
     init_kwargs: dict[str, Any] = {}
+    init_kwargs["enable_renderers"] = False
     if "metadata" in design_spec:
-        init_kwargs["metadata"] = design_spec["metadata"]
+        init_kwargs["metadata"] = _optional_mapping(design_spec, "metadata")
     if "overwrite_enabled" in design_spec:
         init_kwargs["overwrite_enabled"] = _as_bool(
-            design_spec["overwrite_enabled"])
+            design_spec["overwrite_enabled"], "geometry.design.overwrite_enabled")
     if "enable_renderers" in design_spec:
         init_kwargs["enable_renderers"] = _as_bool(
-            design_spec["enable_renderers"])
+            design_spec["enable_renderers"], "geometry.design.enable_renderers")
 
     design = design_cls(**init_kwargs)
-    for key, value in (design_spec.get("variables") or {}).items():
+    for key, value in _optional_mapping(design_spec, "variables").items():
         design.variables[key] = value
 
-    chip_spec = design_spec.get("chip")
+    chip_spec = _optional_mapping(design_spec, "chip")
     if chip_spec:
-        chip_name = chip_spec.get("name", "main") if isinstance(chip_spec,
-                                                                 dict) else "main"
+        _validate_chip_spec(chip_spec)
+        chip_name = chip_spec.get("name", "main")
         if chip_name not in design._chips:
             raise DesignDslError(f"design has no chip {chip_name!r}")
         chip_size = design._chips[chip_name]["size"]
-        if isinstance(chip_spec, dict) and "size" in chip_spec:
+        if "size" in chip_spec:
             size_x, size_y = _parse_chip_size(chip_spec["size"])
             if size_x is not None:
                 chip_size["size_x"] = size_x
             if size_y is not None:
                 chip_size["size_y"] = size_y
-        if isinstance(chip_spec, dict):
-            for key in ("size_x", "size_y", "size_z", "center_x", "center_y",
-                        "center_z"):
-                if key in chip_spec:
-                    chip_size[key] = chip_spec[key]
+        for key in ("size_x", "size_y", "size_z", "center_x", "center_y",
+                    "center_z"):
+            if key in chip_spec:
+                chip_size[key] = chip_spec[key]
     return design
 
 
@@ -761,27 +979,39 @@ def build_ir(source: Union[str, Path],
     if overrides:
         spec = _deep_merge(spec, dict(overrides))
 
-    schema = spec.get("schema")
+    _reject_unknown_keys(spec, ROOT_KEYS, "root")
+
+    schema = spec.get("schema")    #  Schema 版本校验
     if schema != CURRENT_SCHEMA:
         raise DesignDslError(
             f"Unsupported schema {schema!r}; expected {CURRENT_SCHEMA!r}")
 
-    geometry_spec = spec.get("geometry")
+ #  提取和校验 Geometry (几何) 节点
+    geometry_spec = spec.get("geometry")   
     if not isinstance(geometry_spec, Mapping):
         raise DesignDslError("geometry must be a mapping")
+    _reject_unknown_keys(geometry_spec, GEOMETRY_KEYS, "geometry")
     design_spec = geometry_spec.get("design")
     if not isinstance(design_spec, Mapping):
         raise DesignDslError("geometry.design must be a mapping")
+    _reject_unknown_keys(design_spec, DESIGN_KEYS, "geometry.design")
 
-    vars_table = dict(spec.get("vars") or {})
+    vars_table = _optional_mapping(spec, "vars")
+        # 创建初始上下文 ctx_vars，使得用户可以通过 ${vars.xxx} 引用变量
     ctx_vars = {**vars_table, "vars": vars_table}
-    circuit = _walk_substitute(spec.get("circuit") or {}, ctx_vars)
+    circuit = _walk_substitute(_optional_mapping(spec, "circuit"), ctx_vars)
     hamiltonian = _walk_substitute(
-        spec.get("hamiltonian") or {},
+        _optional_mapping(spec, "hamiltonian"),
         {**ctx_vars, "circuit": circuit},
     )
+    netlist_spec = None
+    if "netlist" in spec:
+        netlist_spec = spec["netlist"]
+        if not isinstance(netlist_spec, Mapping):
+            raise DesignDslError("netlist must be a mapping")
+        _reject_unknown_keys(netlist_spec, NETLIST_KEYS, "netlist")
     netlist = _walk_substitute(
-        spec.get("netlist") or {},
+        dict(netlist_spec or {}),
         {**ctx_vars, "circuit": circuit, "hamiltonian": hamiltonian},
     )
     ctx = {
@@ -798,10 +1028,12 @@ def build_ir(source: Union[str, Path],
         resolved_geometry["transforms"] = _walk_substitute(
             geometry_spec["transforms"], ctx)
     design_spec = dict(resolved_geometry["design"])
-    templates = _deep_merge(dict(spec.get("templates") or {}),
-                            dict(resolved_geometry.get("templates") or {}))
+    _validate_design_spec(design_spec)
+    templates = _deep_merge(_optional_mapping(spec, "templates"),
+                            _optional_mapping(resolved_geometry, "templates"))
     components = _parse_components(resolved_geometry, ctx, templates, vars_table)
     derived = _derive(components, netlist)
+    _validate_netlist_endpoints(components, derived["netlist"]["connections"])
 
     metadata_geometry = {
         "design": design_spec,
@@ -810,6 +1042,8 @@ def build_ir(source: Union[str, Path],
             component.name: component.source for component in components
         },
     }
+    if "transforms" in resolved_geometry:
+        metadata_geometry["transforms"] = resolved_geometry["transforms"]
 
     return DesignIR(schema=schema,
                     vars=vars_table,
@@ -826,6 +1060,20 @@ def _component_pin_names(component: ComponentIR) -> set[str]:
     return {pin.name for pin in component.pins}
 
 
+def _validate_component_chips(design, component_ir: ComponentIR) -> None:
+    known_chips = set(design.chips.keys())
+    for primitive in component_ir.primitives:
+        if primitive.chip not in known_chips:
+            raise DesignDslError(
+                f"Primitive {component_ir.name}.{primitive.name} references "
+                f"unknown chip {primitive.chip!r}")
+    for pin in component_ir.pins:
+        if pin.chip not in known_chips:
+            raise DesignDslError(
+                f"Pin {component_ir.name}.{pin.name} references unknown chip "
+                f"{pin.chip!r}")
+
+
 def export_ir_to_metal(
     ir: DesignIR,
     *,
@@ -837,6 +1085,7 @@ def export_ir_to_metal(
     component_irs = {component.name: component for component in ir.components}
 
     for component_ir in ir.components:
+        _validate_component_chips(design, component_ir)
         component = NativeComponent(design, component_ir.name, make=False)
         component.metadata.update(component_ir.metadata)
         component_objects[component_ir.name] = component
@@ -847,14 +1096,18 @@ def export_ir_to_metal(
                 options["width"] = primitive.width
             if primitive.fillet is not None:
                 options["fillet"] = primitive.fillet
-            component.add_qgeometry(primitive.kind, {
-                primitive.name: primitive.geometry
-            },
-                                    subtract=primitive.subtract,
-                                    helper=primitive.helper,
-                                    layer=primitive.layer,
-                                    chip=primitive.chip,
-                                    **options)
+            if primitive.kind in component.qgeometry_table_usage:
+                component.qgeometry_table_usage[primitive.kind] = True
+            design.qgeometry.add_qgeometry(primitive.kind,
+                                           component.id, {
+                                               primitive.name:
+                                                   primitive.geometry
+                                           },
+                                           subtract=primitive.subtract,
+                                           helper=primitive.helper,
+                                           layer=primitive.layer,
+                                           chip=primitive.chip,
+                                           **options)
 
         for pin in component_ir.pins:
             component.add_pin(pin.name,
