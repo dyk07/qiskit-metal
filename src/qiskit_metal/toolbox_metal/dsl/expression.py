@@ -28,6 +28,14 @@ _BIN_OPS = {
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
 }
+_OP_SYMBOLS = {
+    ast.Add: "+",
+    ast.Sub: "-",
+    ast.Mult: "*",
+    ast.Div: "/",
+    ast.UAdd: "+",
+    ast.USub: "-",
+}
 _UNARY_OPS = {
     ast.UAdd: operator.pos,
     ast.USub: operator.neg,
@@ -159,12 +167,22 @@ def _eval_ast(node: ast.AST, ctx: Mapping[str, Any], expr: str) -> Any:
 
     if isinstance(node, ast.UnaryOp) and type(node.op) in _UNARY_OPS:
         operand = _coerce_number(_eval_ast(node.operand, ctx, expr), ctx, expr)
-        return _UNARY_OPS[type(node.op)](operand)
+        try:
+            return _UNARY_OPS[type(node.op)](operand)
+        except Exception as exc:
+            raise DesignDslError(
+                f"Expression ${{{expr}}} failed applying unary operator "
+                f"{_OP_SYMBOLS[type(node.op)]!r}: {exc}") from exc
 
     if isinstance(node, ast.BinOp) and type(node.op) in _BIN_OPS:
         left = _coerce_number(_eval_ast(node.left, ctx, expr), ctx, expr)
         right = _coerce_number(_eval_ast(node.right, ctx, expr), ctx, expr)
-        return _BIN_OPS[type(node.op)](left, right)
+        try:
+            return _BIN_OPS[type(node.op)](left, right)
+        except Exception as exc:
+            raise DesignDslError(
+                f"Expression ${{{expr}}} failed applying operator "
+                f"{_OP_SYMBOLS[type(node.op)]!r}: {exc}") from exc
 
     raise DesignDslError(
         f"Unsupported expression syntax in ${{{expr}}}: "
@@ -182,7 +200,12 @@ def _coerce_number(value: Any, ctx: Mapping[str, Any], expr: str) -> float:
         return float(value)
 
     if isinstance(value, str):
-        parsed = parse_value(value, dict(ctx))
+        try:
+            parsed = parse_value(value, dict(ctx))
+        except Exception as exc:
+            raise DesignDslError(
+                f"Expression ${{{expr}}} requires numeric values; "
+                f"could not parse {value!r}: {exc}") from exc
         if isinstance(parsed, Number) and not isinstance(parsed, bool):
             return float(parsed)
 

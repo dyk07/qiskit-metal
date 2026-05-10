@@ -359,6 +359,33 @@ geometry:
 """)
 
 
+def test_template_expression_runtime_errors_use_design_dsl_error():
+    with pytest.raises(DesignDslError, match=r"Expression \$\{1 / 0\}"):
+        build_ir("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  templates:
+    bad_expr:
+      schema: qiskit-metal/component-template/1
+      id: bad_expr
+      options: {}
+      geometry:
+        primitives:
+          - name: pad
+            type: poly.rectangle
+            center: ["${1 / 0}", 0mm]
+            size: [100um, 50um]
+  components:
+    Q1:
+      type: bad_expr
+""")
+
+
 @pytest.mark.parametrize(
     ("operation_body", "message"),
     [
@@ -1084,6 +1111,33 @@ geometry:
     assert exported_pin.gap == pytest.approx(0.006)
 
 
+@pytest.mark.parametrize(
+    ("option_line", "message"),
+    [
+        ("orientation: nope", r"transform\.rotate"),
+        ("orientation: true", r"transform\.rotate"),
+        ("layer: true", r"primitive Q1\.pad_top\.layer"),
+    ],
+)
+def test_builtin_template_invalid_numeric_options_raise_design_dsl_error(
+        option_line, message):
+    with pytest.raises(DesignDslError, match=message):
+        build_ir(f"""
+schema: qiskit-metal/design-dsl/3
+vars: {{}}
+hamiltonian: {{}}
+circuit: {{}}
+netlist: {{}}
+geometry:
+  design: {{class: DesignPlanar}}
+  components:
+    Q1:
+      type: transmon_pocket
+      options:
+        {option_line}
+""")
+
+
 def test_builtin_transmon_pocket_connection_pad_overrides_and_netlist():
     source = """
 schema: qiskit-metal/design-dsl/3
@@ -1220,3 +1274,110 @@ geometry:
     Q1:
       type: generator_template
 """)
+
+
+def test_component_template_file_lookup_from_design_directory(tmp_path):
+    template_file = tmp_path / "local_pad.yaml"
+    template_file.write_text("""
+schema: qiskit-metal/component-template/1
+id: local_pad.yaml
+options:
+  width: 300um
+  height: 80um
+geometry:
+  primitives:
+    - name: pad
+      type: poly.rectangle
+      center: [0mm, 0mm]
+      size: ["${options.width}", "${options.height}"]
+  pins:
+    - name: bus
+      points: [[0mm, -5um], [0mm, 5um]]
+      width: 10um
+""",
+                             encoding="utf-8")
+
+    design_file = tmp_path / "design.yaml"
+    design_file.write_text("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: local_pad.yaml
+      options:
+        width: 450um
+""",
+                           encoding="utf-8")
+
+    ir = build_ir(design_file)
+
+    component = ir.components[0]
+    assert component.type == "local_pad.yaml"
+    assert component.template == "local_pad.yaml"
+    assert component.options["width"] == "450um"
+    assert [primitive.name for primitive in component.primitives] == ["pad"]
+    assert [pin.name for pin in component.pins] == ["bus"]
+    minx, _, maxx, _ = component.primitives[0].geometry.bounds
+    assert maxx - minx == pytest.approx(0.450)
+
+
+def test_component_template_file_id_mismatch_is_rejected(tmp_path):
+    template_file = tmp_path / "local_pad.yaml"
+    template_file.write_text("""
+schema: qiskit-metal/component-template/1
+id: wrong_id
+options: {}
+geometry: {}
+""",
+                             encoding="utf-8")
+    design_file = tmp_path / "design.yaml"
+    design_file.write_text("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: local_pad.yaml
+""",
+                           encoding="utf-8")
+
+    with pytest.raises(DesignDslError, match="declares id 'wrong_id'"):
+        build_ir(design_file)
+
+
+def test_component_template_file_duplicate_key_is_rejected(tmp_path):
+    template_file = tmp_path / "local_pad.yaml"
+    template_file.write_text("""
+schema: qiskit-metal/component-template/1
+id: local_pad.yaml
+options: {}
+options: {}
+geometry: {}
+""",
+                             encoding="utf-8")
+    design_file = tmp_path / "design.yaml"
+    design_file.write_text("""
+schema: qiskit-metal/design-dsl/3
+vars: {}
+hamiltonian: {}
+circuit: {}
+netlist: {}
+geometry:
+  design: {class: DesignPlanar}
+  components:
+    Q1:
+      type: local_pad.yaml
+""",
+                           encoding="utf-8")
+
+    with pytest.raises(DesignDslError, match="Duplicate YAML mapping key"):
+        build_ir(design_file)

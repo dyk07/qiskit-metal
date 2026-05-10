@@ -35,6 +35,17 @@ class RendererDefaultDesign(DesignPlanar):
         }
 
 
+class CountingDesign(DesignPlanar):
+    """Design test double that records constructor calls."""
+
+    constructor_calls = 0
+
+    def __init__(self, *args, **kwargs):
+        CountingDesign.constructor_calls += 1
+        kwargs["enable_renderers"] = False
+        super().__init__(*args, **kwargs)
+
+
 def _minimal_yaml(extra_geometry: str = "") -> str:
     return f"""
 schema: {CURRENT_SCHEMA}
@@ -407,6 +418,30 @@ geometry:
 """)
 
 
+@pytest.mark.parametrize(
+    ("replacement", "message"),
+    [
+        ("width: true", r"primitive Q2\.trace\.width"),
+        ("layer: nope", r"primitive Q1\.pad\.layer"),
+        ("layer: true", r"primitive Q1\.pad\.layer"),
+    ],
+)
+def test_invalid_primitive_numeric_fields_raise_design_dsl_error(
+        replacement, message):
+    if replacement.startswith("width"):
+        source = _minimal_yaml().replace('width: "${trace_w}"}',
+                                         f"{replacement}" + "}", 1)
+    else:
+        source = _minimal_yaml().replace(
+            'size: ["${circuit.Q1.pad_width}", 90um]',
+            f'size: ["${{circuit.Q1.pad_width}}", 90um], {replacement}',
+            1,
+        )
+
+    with pytest.raises(DesignDslError, match=message):
+        build_ir(source)
+
+
 def test_rejects_missing_junction_width():
     with pytest.raises(DesignDslError, match="requires width"):
         build_ir("""
@@ -547,6 +582,22 @@ def test_default_export_does_not_inject_renderer_qgeometry_defaults():
     assert len(design.renderers) == 0
     assert len(design.qgeometry.tables["junction"]) == 1
     assert "dummy_inductance" not in design.qgeometry.tables["junction"].columns
+
+
+def test_build_ir_and_build_design_design_class_instantiation_counts():
+    register_design("CountingDesign", CountingDesign)
+    CountingDesign.constructor_calls = 0
+    try:
+        source = _minimal_yaml().replace("class: DesignPlanar",
+                                         "class: CountingDesign")
+
+        build_ir(source)
+        assert CountingDesign.constructor_calls == 1
+
+        build_design(source)
+        assert CountingDesign.constructor_calls == 3
+    finally:
+        clear_user_registry()
 
 
 def test_resolved_transforms_are_preserved_in_chain_metadata():

@@ -421,45 +421,73 @@ def _as_bool(value: Any, owner: str) -> bool:
         f"got {value!r}")
 
 
-def _parse_number(value: Any, variables: Optional[Mapping[str, Any]] = None) -> float:
-    parsed = parse_value(value, dict(variables or {}))
-    if isinstance(parsed, (int, float, np.number)):
+def _parse_number(value: Any,
+                  variables: Optional[Mapping[str, Any]] = None,
+                  owner: str = "value") -> float:
+    if isinstance(value, bool):
+        raise DesignDslError(
+            f"{owner} must be a numeric value with optional units, got "
+            f"{value!r}")
+    try:
+        parsed = parse_value(value, dict(variables or {}))
+    except Exception as exc:
+        raise DesignDslError(
+            f"{owner} must be a numeric value with optional units, got "
+            f"{value!r}: {exc}") from exc
+    if isinstance(parsed, (int, float, np.number)) and not isinstance(
+            parsed, bool):
         return float(parsed)
-    raise DesignDslError(f"Expected a numeric value with optional units, got {value!r}")
+    raise DesignDslError(
+        f"{owner} must be a numeric value with optional units, got {value!r}")
 
 
 def _parse_optional_number(value: Any,
-                           variables: Optional[Mapping[str, Any]] = None):
+                           variables: Optional[Mapping[str, Any]] = None,
+                           owner: str = "value"):
     if value is None:
         return None
-    return _parse_number(value, variables)
+    return _parse_number(value, variables, owner)
 
 
 def _parse_point(value: Any,
-                 variables: Optional[Mapping[str, Any]] = None) -> list[float]:
+                 variables: Optional[Mapping[str, Any]] = None,
+                 owner: str = "Point") -> list[float]:
     if not isinstance(value, (list, tuple)) or len(value) != 2:
-        raise DesignDslError(f"Point must be [x, y], got {value!r}")
-    return [_parse_number(value[0], variables), _parse_number(value[1], variables)]
+        raise DesignDslError(f"{owner} must be [x, y], got {value!r}")
+    return [
+        _parse_number(value[0], variables, f"{owner}[0]"),
+        _parse_number(value[1], variables, f"{owner}[1]"),
+    ]
 
 
 def _parse_points(value: Any,
-                  variables: Optional[Mapping[str, Any]] = None) -> list[list[float]]:
+                  variables: Optional[Mapping[str, Any]] = None,
+                  owner: str = "points") -> list[list[float]]:
     if not isinstance(value, list) or len(value) < 2:
-        raise DesignDslError(f"points must be a list with at least two points")
-    return [_parse_point(point, variables) for point in value]
+        raise DesignDslError(f"{owner} must be a list with at least two points")
+    return [
+        _parse_point(point, variables, f"{owner}[{index}]")
+        for index, point in enumerate(value)
+    ]
 
 
-def _parse_angle(value: Any) -> float:
+def _parse_angle(value: Any, owner: str = "Angle") -> float:
     if value is None:
         return 0.0
-    if isinstance(value, (int, float, np.number)):
+    if isinstance(value, (int, float, np.number)) and not isinstance(
+            value, bool):
         return float(value)
     if not isinstance(value, str):
-        raise DesignDslError(f"Angle must be a number or '<number>deg', got {value!r}")
+        raise DesignDslError(
+            f"{owner} must be a number or '<number>deg', got {value!r}")
     stripped = value.strip()
     if stripped.endswith("deg"):
         stripped = stripped[:-3]
-    return float(stripped)
+    try:
+        return float(stripped)
+    except ValueError as exc:
+        raise DesignDslError(
+            f"{owner} must be a number or '<number>deg', got {value!r}") from exc
 
 
 def _validate_transform(transform: Mapping[str, Any], owner: str) -> dict[str, Any]:
@@ -487,12 +515,18 @@ def _parse_type(spec: Mapping[str, Any]) -> tuple[str, str]:
     return str(kind), str(shape)
 
 
-def _layer(value: Any) -> int:
+def _layer(value: Any, owner: str = "layer") -> int:
     if value is None:
         return 1
-    if isinstance(value, str):
-        return int(float(value.strip()))
-    return int(value)
+    if isinstance(value, bool):
+        raise DesignDslError(f"{owner} must be an integer, got {value!r}")
+    try:
+        if isinstance(value, str):
+            return int(float(value.strip()))
+        return int(value)
+    except (TypeError, ValueError) as exc:
+        raise DesignDslError(
+            f"{owner} must be an integer, got {value!r}") from exc
 
 
 def _transform_spec(component_spec: Mapping[str, Any],
@@ -516,16 +550,18 @@ def _transform_spec(component_spec: Mapping[str, Any],
 
 def _apply_transform_to_geometry(geometry: Any,
                                  transform: Mapping[str, Any],
-                                 variables: Mapping[str, Any]) -> Any:
-    origin = _parse_point(transform.get("origin", [0, 0]), variables)
-    rotate = _parse_angle(transform.get("rotate", 0))
+                                 variables: Mapping[str, Any],
+                                 owner: str = "transform") -> Any:
+    origin = _parse_point(transform.get("origin", [0, 0]), variables,
+                          f"{owner}.origin")
+    rotate = _parse_angle(transform.get("rotate", 0), f"{owner}.rotate")
     translate = transform.get("translate", [0, 0])
 
     result = geometry
     if rotate:
         result = shapely.affinity.rotate(result, rotate, origin=tuple(origin))
     if translate:
-        xoff, yoff = _parse_point(translate, variables)
+        xoff, yoff = _parse_point(translate, variables, f"{owner}.translate")
         result = shapely.affinity.translate(result, xoff=xoff, yoff=yoff)
     return result
 
@@ -544,10 +580,13 @@ def _rotate_point(point: list[float], angle_deg: float,
 
 def _apply_transform_to_points(points: list[list[float]],
                                transform: Mapping[str, Any],
-                               variables: Mapping[str, Any]) -> list[list[float]]:
-    origin = _parse_point(transform.get("origin", [0, 0]), variables)
-    rotate = _parse_angle(transform.get("rotate", 0))
-    translate = _parse_point(transform.get("translate", [0, 0]), variables)
+                               variables: Mapping[str, Any],
+                               owner: str = "transform") -> list[list[float]]:
+    origin = _parse_point(transform.get("origin", [0, 0]), variables,
+                          f"{owner}.origin")
+    rotate = _parse_angle(transform.get("rotate", 0), f"{owner}.rotate")
+    translate = _parse_point(transform.get("translate", [0, 0]), variables,
+                             f"{owner}.translate")
     out = []
     for point in points:
         rotated = _rotate_point(point, rotate, origin)
@@ -559,7 +598,8 @@ def _make_primitive_geometry(spec: Mapping[str, Any],
                              kind: str,
                              shape: str,
                              variables: Mapping[str, Any],
-                             operations: Optional[Mapping[str, Any]] = None) -> Any:
+                             operations: Optional[Mapping[str, Any]] = None,
+                             owner: str = "primitive") -> Any:
     if shape == "from_operation":
         if "operation" not in spec:
             raise DesignDslError(
@@ -579,24 +619,28 @@ def _make_primitive_geometry(spec: Mapping[str, Any],
         return geometry
 
     if kind == "poly" and shape == "rectangle":
-        center = _parse_point(spec.get("center", [0, 0]), variables)
+        center = _parse_point(spec.get("center", [0, 0]), variables,
+                              f"{owner}.center")
         size = spec.get("size")
         if not isinstance(size, list) or len(size) != 2:
             raise DesignDslError("poly.rectangle requires size: [width, height]")
-        width = _parse_number(size[0], variables)
-        height = _parse_number(size[1], variables)
+        width = _parse_number(size[0], variables, f"{owner}.size[0]")
+        height = _parse_number(size[1], variables, f"{owner}.size[1]")
         x0, y0 = center[0] - width / 2.0, center[1] - height / 2.0
         x1, y1 = center[0] + width / 2.0, center[1] + height / 2.0
         return Polygon([(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
 
     if kind == "poly" and shape == "polygon":
-        return Polygon(_parse_points(spec.get("points"), variables))
+        return Polygon(_parse_points(spec.get("points"), variables,
+                                     f"{owner}.points"))
 
     if kind == "path" and shape in {"line", "polyline"}:
-        return LineString(_parse_points(spec.get("points"), variables))
+        return LineString(_parse_points(spec.get("points"), variables,
+                                        f"{owner}.points"))
 
     if kind == "junction" and shape == "line":
-        points = _parse_points(spec.get("points"), variables)
+        points = _parse_points(spec.get("points"), variables,
+                               f"{owner}.points")
         if len(points) != 2:
             raise DesignDslError("junction.line requires exactly two points")
         return LineString(points)
@@ -622,16 +666,21 @@ def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
 
     kind, shape = _parse_type(spec)
     geometry = _make_primitive_geometry(spec, kind, shape, variables,
-                                        operations)
+                                        operations,
+                                        f"primitive {component_name}.{name}")
     merged_transform = _deep_merge(
         transform,
         _validate_transform(_optional_mapping(spec, "transform"),
                             f"{component_name}.{name}"),
     )
-    geometry = _apply_transform_to_geometry(geometry, merged_transform, variables)
+    geometry = _apply_transform_to_geometry(
+        geometry, merged_transform, variables,
+        f"primitive {component_name}.{name}.transform")
 
-    width = _parse_optional_number(spec.get("width"), variables)
-    fillet = _parse_optional_number(spec.get("fillet"), variables)
+    width = _parse_optional_number(spec.get("width"), variables,
+                                   f"primitive {component_name}.{name}.width")
+    fillet = _parse_optional_number(spec.get("fillet"), variables,
+                                    f"primitive {component_name}.{name}.fillet")
     if kind in {"path", "junction"} and width is None:
         raise DesignDslError(f"{kind}.{shape} primitive {component_name}.{name} "
                              "requires width")
@@ -645,7 +694,8 @@ def _primitive_from_spec(component_name: str, spec: Mapping[str, Any],
                                          f"{component_name}.{name}.subtract"),
                        helper=_as_bool(spec.get("helper", False),
                                        f"{component_name}.{name}.helper"),
-                       layer=_layer(spec.get("layer")),
+                       layer=_layer(spec.get("layer"),
+                                    f"primitive {component_name}.{name}.layer"),
                        chip=str(spec.get("chip", "main")),
                        width=width,
                        fillet=fillet,
@@ -680,8 +730,10 @@ def _points_from_normal_segment(component_name: str, name: str,
             "at least two points")
 
     normal_points = [
-        _parse_point(list(coords[-2]), variables),
-        _parse_point(list(coords[-1]), variables),
+        _parse_point(list(coords[-2]), variables,
+                     f"pin {component_name}.{name}.normal_points[0]"),
+        _parse_point(list(coords[-1]), variables,
+                     f"pin {component_name}.{name}.normal_points[1]"),
     ]
     _points_from_normal_points(component_name, name, normal_points, 1.0)
     return normal_points
@@ -714,7 +766,8 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
     if not isinstance(name, str) or not name:
         raise DesignDslError(f"Pin in {component_name!r} requires name")
     _reject_unknown_keys(spec, PIN_KEYS, f"pin {component_name}.{name}")
-    width = _parse_number(spec.get("width"), variables)
+    width = _parse_number(spec.get("width"), variables,
+                          f"pin {component_name}.{name}.width")
     mode = spec.get("mode", "tangent_points")
     input_as_norm = False
     normal_points = None
@@ -726,7 +779,8 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
         if "points" not in spec:
             raise DesignDslError(
                 f"Pin {component_name}.{name} tangent_points requires points")
-        points = _parse_points(spec.get("points"), variables)
+        points = _parse_points(spec.get("points"), variables,
+                               f"pin {component_name}.{name}.points")
         if len(points) != 2:
             raise DesignDslError(
                 f"Pin {component_name}.{name} requires exactly two points")
@@ -753,11 +807,15 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
         _validate_transform(_optional_mapping(spec, "transform"),
                             f"{component_name}.{name}"),
     )
-    points = _apply_transform_to_points(points, merged_transform, variables)
+    points = _apply_transform_to_points(
+        points, merged_transform, variables,
+        f"pin {component_name}.{name}.transform")
     if normal_points is not None:
         normal_points = _apply_transform_to_points(normal_points,
                                                    merged_transform,
-                                                   variables)
+                                                   variables,
+                                                   f"pin {component_name}."
+                                                   f"{name}.transform")
         points = _points_from_normal_points(component_name, name,
                                             normal_points, width)
 
@@ -765,7 +823,8 @@ def _pin_from_spec(component_name: str, spec: Mapping[str, Any],
                  name=name,
                  points=points,
                  width=width,
-                 gap=_parse_optional_number(spec.get("gap"), variables)
+                 gap=_parse_optional_number(spec.get("gap"), variables,
+                                            f"pin {component_name}.{name}.gap")
                  if "gap" in spec else width * 0.6,
                  chip=str(spec.get("chip", "main")),
                  input_as_norm=input_as_norm,
