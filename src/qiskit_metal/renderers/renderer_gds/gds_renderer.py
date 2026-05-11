@@ -19,7 +19,7 @@ import os
 from collections import defaultdict
 from copy import deepcopy
 from operator import itemgetter
-from typing import TYPE_CHECKING, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Literal, Optional, Tuple, Union
 from typing import Dict as DictType
 
 import gdstk
@@ -683,16 +683,14 @@ class QGDSRenderer(QRenderer):
         all_layers = self.design.qgeometry.get_all_unique_layers(chip_name)
 
         for chip_layer in all_layers:
-            copy_subtract = []
-            copy_no_subtract = []
             copy_subtract = deepcopy(all_table_subtracts)
             copy_no_subtract = deepcopy(all_table_no_subtracts)
 
-            for item in copy_subtract:
-                item = item[item["layer"] == chip_layer]
+            for i, item in enumerate(copy_subtract):
+                copy_subtract[i] = item[item["layer"] == chip_layer]
 
-            for item_no in copy_no_subtract:
-                item_no = item_no[item_no["layer"] == chip_layer]
+            for i, item_no in enumerate(copy_no_subtract):
+                copy_no_subtract[i] = item_no[item_no["layer"] == chip_layer]
 
             self.chip_info[chip_name][chip_layer]["all_subtract_true"] = (
                 geopandas.GeoDataFrame(pd.concat(copy_subtract, ignore_index=False))
@@ -730,7 +728,10 @@ class QGDSRenderer(QRenderer):
     # Handling Fillet issues.
 
     def _fix_short_segments_within_table(
-        self, chip_name: str, chip_layer: int, all_sub_true_or_false: str
+        self,
+        chip_name: str,
+        chip_layer: int,
+        all_sub_true_or_false: Literal["all_subtract_true", "all_subtract_false"],
     ):
         """Update self.chip_info geopandas.GeoDataFrame.
 
