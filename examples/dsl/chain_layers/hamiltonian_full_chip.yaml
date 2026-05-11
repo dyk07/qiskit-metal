@@ -1,0 +1,39 @@
+# Hamiltonian layer for Appendix A full chip design.
+
+subsystems:
+  Q_Main:
+    model: transmon
+    EJ: ${ej_main}
+    C: ${circuit.Q_Main.C}
+  Q1:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q1.C}
+  Q2:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q2.C}
+  Q3:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q3.C}
+  Q4:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q4.C}
+  Q5:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q5.C}
+  Tune_C_Q12:
+    model: tunable_coupler
+    Cc: ${circuit.Tune_C_Q12.Cc}
+
+couplings:
+  - {from: Q_Main, to: Q1, g: "${g_main}"}
+  - {from: Q_Main, to: Q2, g: "${g_main}"}
+  - {from: Q_Main, to: Q3, g: "${g_main}"}
+  - {from: Q_Main, to: Q4, g: "${g_main}"}
+  - {from: Q_Main, to: Q5, g: "${g_main}"}
+  - {from: Q3, to: Q4, g: "${g_q3_q4}"}
+  - {from: Q4, to: Q5, g: "${g_q4_q5}"}
