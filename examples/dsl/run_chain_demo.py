@@ -80,6 +80,16 @@ def main() -> int:
     assert len(design.net_info) == 4
     assert chain["derived"]["circuit"]["geometry"]["bus"]["primitives"][
         "center_trace"]["length"] > 0
+    q1_bus = chain["derived"]["circuit"]["geometry"]["Q1"]["pins"]["bus"][
+        "middle"]
+    bus_start = chain["derived"]["circuit"]["geometry"]["bus"]["pins"][
+        "start"]["middle"]
+    bus_end = chain["derived"]["circuit"]["geometry"]["bus"]["pins"]["end"][
+        "middle"]
+    q2_bus = chain["derived"]["circuit"]["geometry"]["Q2"]["pins"]["bus"][
+        "middle"]
+    assert q1_bus == bus_start
+    assert bus_end == q2_bus
     print("PASS: native DSL chain exported to Metal")
     return 0
 

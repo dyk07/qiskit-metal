@@ -144,8 +144,11 @@ def test_derived_contains_bounds_lengths_pins_and_connections():
     derived = ir.derived
 
     bus_data = derived["circuit"]["geometry"]["bus"]
-    assert bus_data["primitives"]["center_trace"]["length"] == pytest.approx(2.4)
-    assert bus_data["pins"]["start"]["middle"][0] == pytest.approx(-1.2)
+    assert bus_data["primitives"]["center_trace"]["length"] == pytest.approx(1.72)
+    assert bus_data["pins"]["start"]["middle"] == pytest.approx(
+        derived["circuit"]["geometry"]["Q1"]["pins"]["bus"]["middle"])
+    assert bus_data["pins"]["end"]["middle"] == pytest.approx(
+        derived["circuit"]["geometry"]["Q2"]["pins"]["bus"]["middle"])
     assert derived["netlist"]["connections"][0]["from"] == {
         "component": "Q1",
         "pin": "bus",

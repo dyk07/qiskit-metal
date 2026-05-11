@@ -20,7 +20,7 @@ vars:
   pad_h: 90um      # qubit pad 高度
   trace_w: 12um    # bus/path/pin 宽度
   trace_gap: 7um   # pin gap
-  bus_y: 0.55mm    # bus path 的 y 坐标
+  bus_attach: 0.34mm  # qubit 局部坐标里 bus pin 到中心的 x 偏移
   c_q: 65fF        # circuit 层 qubit capacitance
   ej_q: 18GHz      # Hamiltonian 层 EJ
 
@@ -107,18 +107,18 @@ geometry:
       # bus 是一个独立 component。它有 path qgeometry 和两个 pin。
       primitives:
         # center_trace 是真实中心导体。
+        # 端点对齐 Q1/Q2 的 bus pin 中点，所以 GUI 里会真正贴到两边 qubit。
         - {name: center_trace, type: path.polyline,
-           points: [["-${qx}", "${bus_y}"], [0mm, "${bus_y}"], ["${qx}", "${bus_y}"]],
+           points: [["-${qx} + ${bus_attach}", 0mm], [0mm, 0mm], ["${qx} - ${bus_attach}", 0mm]],
            width: "${circuit.bus.width}", layer: 1}
         # gap_cut 是 subtract path，宽度大于 center_trace。
         # 它和 center_trace 共线，用于表示 CPW gap 的挖空区域。
         - {name: gap_cut, type: path.polyline,
-           points: [["-${qx}", "${bus_y}"], [0mm, "${bus_y}"], ["${qx}", "${bus_y}"]],
+           points: [["-${qx} + ${bus_attach}", 0mm], [0mm, 0mm], ["${qx} - ${bus_attach}", 0mm]],
            width: 26um, subtract: true, layer: 1}
       pins:
-        # pin 的 points 横跨导体宽度。这里使用字符串表达式
-        # "${bus_y} - 6um" / "${bus_y} + 6um" 组合变量和单位。
-        - {name: start, points: [["-${qx}", "${bus_y} - 6um"], ["-${qx}", "${bus_y} + 6um"]],
+        # pin 的 points 横跨导体宽度，并和两端 qubit 的 bus pin 重合。
+        - {name: start, points: [["-${qx} + ${bus_attach}", -6um], ["-${qx} + ${bus_attach}", 6um]],
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
-        - {name: end, points: [["${qx}", "${bus_y} - 6um"], ["${qx}", "${bus_y} + 6um"]],
+        - {name: end, points: [["${qx} - ${bus_attach}", -6um], ["${qx} - ${bus_attach}", 6um]],
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
