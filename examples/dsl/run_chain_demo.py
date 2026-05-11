@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """运行 primitive-native full-chain DSL 示例。
 
 这个脚本适合作为汇报中的第一段 demo:
@@ -15,16 +16,19 @@
 也可以传入其它 YAML 文件:
 
     C:\\ProgramData\\anaconda3\\envs\\metal-env\\python.exe examples\\dsl\\run_chain_demo.py path\\to\\file.metal.yaml
+
 """
 
 from __future__ import annotations
 
 import argparse
+
 from pathlib import Path
 import sys
 
 
 # 允许直接从源码树运行示例，而不要求先 pip install 当前 worktree。
+
 _HERE = Path(__file__).resolve()
 _REPO = _HERE.parents[2]
 _SRC = _REPO / "src"
@@ -91,6 +95,7 @@ def main() -> int:
     assert q1_bus == bus_start
     assert bus_end == q2_bus
     print("PASS: native DSL chain exported to Metal")
+
     return 0
 
 

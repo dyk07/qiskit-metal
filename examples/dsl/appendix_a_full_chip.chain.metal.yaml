@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/2
+#
+# Full chip design (Appendix A) chain file.
+
+schema: qiskit-metal/design-dsl/2
+
+vars:
+  ej_main: 18GHz
+  ej_q: 18GHz
+  c_main: 75fF
+  c_q: 65fF
+  c_coupler: 20fF
+  g_main: 12MHz
+  g_q3_q4: 8MHz
+  g_q4_q5: 8MHz
+
+hamiltonian:
+  $include: chain_layers/hamiltonian_full_chip.yaml
+
+circuit:
+  $include: chain_layers/circuit_full_chip.yaml
+
+netlist:
+  $include: chain_layers/netlist_full_chip.yaml
+
+geometry:
+  $include: chain_layers/geometry_full_chip.yaml

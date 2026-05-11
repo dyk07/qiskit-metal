@@ -1,0 +1,25 @@
+# Hamiltonian layer for 2x2 4-qubit example.
+
+subsystems:
+  Q1:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q1.C}
+  Q2:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q2.C}
+  Q3:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q3.C}
+  Q4:
+    model: transmon
+    EJ: ${ej_q}
+    C: ${circuit.Q4.C}
+
+couplings:
+  - {from: Q1, to: Q2, g: 12MHz}
+  - {from: Q1, to: Q3, g: 12MHz}
+  - {from: Q2, to: Q4, g: 12MHz}
+  - {from: Q3, to: Q4, g: 12MHz}

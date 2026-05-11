@@ -1,0 +1,29 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/2
+#
+# 2x2 4-qubit chain example (Hamiltonian -> Circuit -> Netlist -> Geometry).
+#
+# Layer files are kept in examples/dsl/chain_layers/ for easier editing.
+
+schema: qiskit-metal/design-dsl/2
+
+vars:
+  qx: 1.55mm
+  qy: 1.55mm
+  cpw_width: 12um
+  cpw_gap: 7um
+  c_q: 65fF
+  ej_q: 18GHz
+  pad_w: 425um
+  pad_h: 90um
+
+hamiltonian:
+  $include: chain_layers/hamiltonian_2x2.yaml
+
+circuit:
+  $include: chain_layers/circuit_2x2.yaml
+
+netlist:
+  $include: chain_layers/netlist_2x2.yaml
+
+geometry:
+  $include: chain_layers/geometry_2x2.yaml

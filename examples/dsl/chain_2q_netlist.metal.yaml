@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/2
+#
+# Netlist-first example: explicit connections without routes.
+
+schema: qiskit-metal/design-dsl/2
+
+vars:
+  qx: 1.2mm
+  pad_w: 420um
+  pad_h: 90um
+  c_q: 65fF
+  ej_q: 18GHz
+
+hamiltonian:
+  subsystems:
+    Q1: {model: transmon, EJ: "${ej_q}", C: "${circuit.Q1.C}"}
+    Q2: {model: transmon, EJ: "${ej_q}", C: "${circuit.Q2.C}"}
+
+circuit:
+  Q1: {type: transmon, C: "${c_q}"}
+  Q2: {type: transmon, C: "${c_q}"}
+
+netlist:
+  connections:
+    - {from: Q1.bus, to: Q2.bus}
+
+geometry:
+  design:
+    class: DesignPlanar
+    chip: {size: 6mm x 6mm}
+
+  templates:
+    qubit:
+      class: TransmonPocket
+      options:
+        pad_width: ${pad_w}
+        pad_height: ${pad_h}
+        pad_gap: 30um
+        pocket_width: 650um
+        pocket_height: 650um
+        connection_pads:
+          bus: {loc_W: "-1", loc_H: "0", pad_width: 80um, pad_gap: 30um}
+
+  components:
+    - {name: Q1, $extend: qubit, options: {pos_x: "-${qx}", pos_y: 0mm}}
+    - {name: Q2, $extend: qubit, options: {pos_x: "${qx}", pos_y: 0mm,
+      connection_pads: {bus: {loc_W: "1", loc_H: "0"}}}}

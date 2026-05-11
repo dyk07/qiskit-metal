@@ -1,0 +1,1696 @@
+{
+  "components": [
+    {
+      "class": "qiskit_metal.qlibrary.qubits.transmon_pocket_cl.TransmonPocketCL",
+      "id": 1,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Q1",
+      "options": {
+        "aedt_hfss_capacitance": 0,
+        "aedt_hfss_inductance": 1e-08,
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_capacitance": 0,
+        "aedt_q3d_inductance": 1e-08,
+        "aedt_q3d_wire_bonds": false,
+        "chip": "main",
+        "cl_gap": "6um",
+        "cl_ground_gap": "6um",
+        "cl_length": "20um",
+        "cl_off_center": "50um",
+        "cl_pocket_edge": "180",
+        "cl_width": "10um",
+        "connection_pads": {
+          "bus": {
+            "cpw_extend": "100um",
+            "cpw_gap": "cpw_gap",
+            "cpw_width": "cpw_width",
+            "loc_H": -1,
+            "loc_W": -1,
+            "pad_cpw_extent": "25um",
+            "pad_cpw_shift": "5um",
+            "pad_gap": "15um",
+            "pad_height": "30um",
+            "pad_width": "125um",
+            "pocket_extent": "5um",
+            "pocket_rise": "65um"
+          },
+          "readout": {
+            "cpw_extend": "100um",
+            "cpw_gap": "cpw_gap",
+            "cpw_width": "cpw_width",
+            "loc_H": 1,
+            "loc_W": 1,
+            "pad_cpw_extent": "25um",
+            "pad_cpw_shift": "5um",
+            "pad_gap": "15um",
+            "pad_height": "30um",
+            "pad_width": "125um",
+            "pocket_extent": "5um",
+            "pocket_rise": "65um"
+          }
+        },
+        "gds_cell_name": "FakeJunction_01",
+        "hfss_capacitance": 0,
+        "hfss_inductance": "14nH",
+        "hfss_mesh_kw_jj": 7e-06,
+        "hfss_resistance": 0,
+        "hfss_wire_bonds": false,
+        "inductor_width": "20um",
+        "layer": "1",
+        "make_CL": true,
+        "orientation": "0",
+        "pad_gap": "30um",
+        "pad_height": "90um",
+        "pad_width": "425um",
+        "pocket_height": "650um",
+        "pocket_width": "650um",
+        "pos_x": "0.7mm",
+        "pos_y": "0mm",
+        "q3d_capacitance": 0,
+        "q3d_inductance": "10nH",
+        "q3d_mesh_kw_jj": 7e-06,
+        "q3d_resistance": 0,
+        "q3d_wire_bonds": false
+      },
+      "pins": {
+        "Charge_Line": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.117,
+            -0.055
+          ],
+          "net_id": 12,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 1,
+          "points": [
+            [
+              1.117,
+              -0.05
+            ],
+            [
+              1.117,
+              -0.06
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "bus": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            0.275,
+            -0.195
+          ],
+          "net_id": 1,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 1,
+          "points": [
+            [
+              0.275,
+              -0.2
+            ],
+            [
+              0.275,
+              -0.19
+            ]
+          ],
+          "tangent": [
+            -0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "readout": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.125,
+            0.195
+          ],
+          "net_id": 3,
+          "normal": [
+            1.0,
+            0.0
+          ],
+          "parent_name": 1,
+          "points": [
+            [
+              1.125,
+              0.2
+            ],
+            [
+              1.125,
+              0.19
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.qubits.transmon_pocket_cl.TransmonPocketCL",
+      "id": 2,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Q2",
+      "options": {
+        "aedt_hfss_capacitance": 0,
+        "aedt_hfss_inductance": 1e-08,
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_capacitance": 0,
+        "aedt_q3d_inductance": 1e-08,
+        "aedt_q3d_wire_bonds": false,
+        "chip": "main",
+        "cl_gap": "6um",
+        "cl_ground_gap": "6um",
+        "cl_length": "20um",
+        "cl_off_center": "50um",
+        "cl_pocket_edge": "180",
+        "cl_width": "10um",
+        "connection_pads": {
+          "bus": {
+            "cpw_extend": "100um",
+            "cpw_gap": "cpw_gap",
+            "cpw_width": "cpw_width",
+            "loc_H": -1,
+            "loc_W": -1,
+            "pad_cpw_extent": "25um",
+            "pad_cpw_shift": "5um",
+            "pad_gap": "15um",
+            "pad_height": "30um",
+            "pad_width": "125um",
+            "pocket_extent": "5um",
+            "pocket_rise": "65um"
+          },
+          "readout": {
+            "cpw_extend": "100um",
+            "cpw_gap": "cpw_gap",
+            "cpw_width": "cpw_width",
+            "loc_H": 1,
+            "loc_W": 1,
+            "pad_cpw_extent": "25um",
+            "pad_cpw_shift": "5um",
+            "pad_gap": "15um",
+            "pad_height": "30um",
+            "pad_width": "125um",
+            "pocket_extent": "5um",
+            "pocket_rise": "65um"
+          }
+        },
+        "gds_cell_name": "FakeJunction_02",
+        "hfss_capacitance": 0,
+        "hfss_inductance": "12nH",
+        "hfss_mesh_kw_jj": 7e-06,
+        "hfss_resistance": 0,
+        "hfss_wire_bonds": false,
+        "inductor_width": "20um",
+        "layer": "1",
+        "make_CL": true,
+        "orientation": "180",
+        "pad_gap": "30um",
+        "pad_height": "90um",
+        "pad_width": "425um",
+        "pocket_height": "650um",
+        "pocket_width": "650um",
+        "pos_x": "-0.7mm",
+        "pos_y": "0mm",
+        "q3d_capacitance": 0,
+        "q3d_inductance": "10nH",
+        "q3d_mesh_kw_jj": 7e-06,
+        "q3d_resistance": 0,
+        "q3d_wire_bonds": false
+      },
+      "pins": {
+        "Charge_Line": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.117,
+            0.055
+          ],
+          "net_id": 14,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 2,
+          "points": [
+            [
+              -1.117,
+              0.05
+            ],
+            [
+              -1.117,
+              0.06
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "bus": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -0.275,
+            0.195
+          ],
+          "net_id": 2,
+          "normal": [
+            1.0,
+            0.0
+          ],
+          "parent_name": 2,
+          "points": [
+            [
+              -0.275,
+              0.2
+            ],
+            [
+              -0.275,
+              0.19
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "readout": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.125,
+            -0.195
+          ],
+          "net_id": 5,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 2,
+          "points": [
+            [
+              -1.125,
+              -0.2
+            ],
+            [
+              -1.125,
+              -0.19
+            ]
+          ],
+          "tangent": [
+            -0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.pathfinder.RoutePathfinder",
+      "id": 3,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "Bus_Q1_Q2",
+      "options": {
+        "_actual_length": "0.8550176727053895 mm",
+        "advanced": {
+          "avoid_collision": "true"
+        },
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "anchors": {},
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "250um",
+          "start_jogged_extension": "",
+          "start_straight": "0mm"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Q2",
+            "pin": "bus"
+          },
+          "start_pin": {
+            "component": "Q1",
+            "pin": "bus"
+          }
+        },
+        "q3d_wire_bonds": false,
+        "step_size": "0.25mm",
+        "total_length": "7mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -0.275,
+            0.195
+          ],
+          "net_id": 2,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 3,
+          "points": [
+            [
+              -0.275,
+              0.19
+            ],
+            [
+              -0.275,
+              0.2
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            0.275,
+            -0.195
+          ],
+          "net_id": 1,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 3,
+          "points": [
+            [
+              0.275,
+              -0.19
+            ],
+            [
+              0.275,
+              -0.2
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.lumped.cap_3_interdigital.Cap3Interdigital",
+      "id": 4,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Cap_Q1",
+      "options": {
+        "chip": "main",
+        "finger_length": "40um",
+        "layer": "1",
+        "orientation": "90",
+        "pocket_buffer_width_x": "10um",
+        "pocket_buffer_width_y": "30um",
+        "pos_x": "2.5mm",
+        "pos_y": "0.25mm",
+        "trace_width": "10um"
+      },
+      "pins": {
+        "a": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            2.435,
+            0.25
+          ],
+          "net_id": 4,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 4,
+          "points": [
+            [
+              2.435,
+              0.245
+            ],
+            [
+              2.435,
+              0.255
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "b": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            2.565,
+            0.25
+          ],
+          "net_id": 8,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 4,
+          "points": [
+            [
+              2.565,
+              0.255
+            ],
+            [
+              2.565,
+              0.245
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.lumped.cap_3_interdigital.Cap3Interdigital",
+      "id": 5,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Cap_Q2",
+      "options": {
+        "chip": "main",
+        "finger_length": "40um",
+        "layer": "1",
+        "orientation": "-90",
+        "pocket_buffer_width_x": "10um",
+        "pocket_buffer_width_y": "30um",
+        "pos_x": "-2.5mm",
+        "pos_y": "-0.25mm",
+        "trace_width": "10um"
+      },
+      "pins": {
+        "a": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -2.435,
+            -0.25
+          ],
+          "net_id": 6,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 5,
+          "points": [
+            [
+              -2.435,
+              -0.245
+            ],
+            [
+              -2.435,
+              -0.255
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "b": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -2.565,
+            -0.25
+          ],
+          "net_id": 10,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 5,
+          "points": [
+            [
+              -2.565,
+              -0.255
+            ],
+            [
+              -2.565,
+              -0.245
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.meandered.RouteMeander",
+      "id": 6,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "Readout_Q1",
+      "options": {
+        "_actual_length": "5.000000000000001 mm",
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "125um",
+          "start_jogged_extension": "",
+          "start_straight": "0.325mm"
+        },
+        "meander": {
+          "asymmetry": "-50um",
+          "spacing": "200um"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Cap_Q1",
+            "pin": "a"
+          },
+          "start_pin": {
+            "component": "Q1",
+            "pin": "readout"
+          }
+        },
+        "prevent_short_edges": "true",
+        "q3d_wire_bonds": false,
+        "snap": "true",
+        "total_length": "5mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            2.435,
+            0.25
+          ],
+          "net_id": 4,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 6,
+          "points": [
+            [
+              2.435,
+              0.255
+            ],
+            [
+              2.435,
+              0.245
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.125,
+            0.195
+          ],
+          "net_id": 3,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 6,
+          "points": [
+            [
+              1.125,
+              0.19
+            ],
+            [
+              1.125,
+              0.2
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.meandered.RouteMeander",
+      "id": 7,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "Readout_Q2",
+      "options": {
+        "_actual_length": "5.999999999999999 mm",
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "125um",
+          "start_jogged_extension": "",
+          "start_straight": "0.325mm"
+        },
+        "meander": {
+          "asymmetry": "-50um",
+          "spacing": "200um"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Cap_Q2",
+            "pin": "a"
+          },
+          "start_pin": {
+            "component": "Q2",
+            "pin": "readout"
+          }
+        },
+        "prevent_short_edges": "true",
+        "q3d_wire_bonds": false,
+        "snap": "true",
+        "total_length": "6mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -2.435,
+            -0.25
+          ],
+          "net_id": 6,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 7,
+          "points": [
+            [
+              -2.435,
+              -0.255
+            ],
+            [
+              -2.435,
+              -0.245
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.125,
+            -0.195
+          ],
+          "net_id": 5,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 7,
+          "points": [
+            [
+              -1.125,
+              -0.19
+            ],
+            [
+              -1.125,
+              -0.2
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.terminations.launchpad_wb.LaunchpadWirebond",
+      "id": 8,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Launch_Q1_Read",
+      "options": {
+        "chip": "main",
+        "layer": "1",
+        "lead_length": "25um",
+        "orientation": "180",
+        "pad_gap": "58um",
+        "pad_height": "80um",
+        "pad_width": "80um",
+        "pos_x": "3.5mm",
+        "pos_y": "0um",
+        "taper_height": "122um",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "tie": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            3.475,
+            0.0
+          ],
+          "net_id": 7,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 8,
+          "points": [
+            [
+              3.475,
+              -0.005
+            ],
+            [
+              3.475,
+              0.005
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.terminations.launchpad_wb.LaunchpadWirebond",
+      "id": 9,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Launch_Q2_Read",
+      "options": {
+        "chip": "main",
+        "layer": "1",
+        "lead_length": "25um",
+        "orientation": "0",
+        "pad_gap": "58um",
+        "pad_height": "80um",
+        "pad_width": "80um",
+        "pos_x": "-3.5mm",
+        "pos_y": "0um",
+        "taper_height": "122um",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "tie": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -3.475,
+            0.0
+          ],
+          "net_id": 9,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 9,
+          "points": [
+            [
+              -3.475,
+              0.005
+            ],
+            [
+              -3.475,
+              -0.005
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.terminations.launchpad_wb.LaunchpadWirebond",
+      "id": 10,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Launch_Q1_CL",
+      "options": {
+        "chip": "main",
+        "layer": "1",
+        "lead_length": "25um",
+        "orientation": "90",
+        "pad_gap": "58um",
+        "pad_height": "80um",
+        "pad_width": "80um",
+        "pos_x": "1.35mm",
+        "pos_y": "-2.5mm",
+        "taper_height": "122um",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "tie": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.35,
+            -2.475
+          ],
+          "net_id": 11,
+          "normal": [
+            0.0,
+            1.0
+          ],
+          "parent_name": 10,
+          "points": [
+            [
+              1.345,
+              -2.475
+            ],
+            [
+              1.355,
+              -2.475
+            ]
+          ],
+          "tangent": [
+            1.0,
+            0.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.terminations.launchpad_wb.LaunchpadWirebond",
+      "id": 11,
+      "init_kwargs": {},
+      "made": true,
+      "metadata": {},
+      "name": "Launch_Q2_CL",
+      "options": {
+        "chip": "main",
+        "layer": "1",
+        "lead_length": "25um",
+        "orientation": "-90",
+        "pad_gap": "58um",
+        "pad_height": "80um",
+        "pad_width": "80um",
+        "pos_x": "-1.35mm",
+        "pos_y": "2.5mm",
+        "taper_height": "122um",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "tie": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.35,
+            2.475
+          ],
+          "net_id": 13,
+          "normal": [
+            -0.0,
+            -1.0
+          ],
+          "parent_name": 11,
+          "points": [
+            [
+              -1.345,
+              2.475
+            ],
+            [
+              -1.355,
+              2.475
+            ]
+          ],
+          "tangent": [
+            -1.0,
+            0.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.pathfinder.RoutePathfinder",
+      "id": 12,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "TL_Q1",
+      "options": {
+        "_actual_length": "1.0750176727053897 mm",
+        "advanced": {
+          "avoid_collision": "true"
+        },
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "anchors": {},
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "150um",
+          "start_jogged_extension": "",
+          "start_straight": "0mm"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Cap_Q1",
+            "pin": "b"
+          },
+          "start_pin": {
+            "component": "Launch_Q1_Read",
+            "pin": "tie"
+          }
+        },
+        "q3d_wire_bonds": false,
+        "step_size": "0.25mm",
+        "total_length": "7mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            2.565,
+            0.25
+          ],
+          "net_id": 8,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 12,
+          "points": [
+            [
+              2.565,
+              0.245
+            ],
+            [
+              2.565,
+              0.255
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            3.475,
+            0.0
+          ],
+          "net_id": 7,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 12,
+          "points": [
+            [
+              3.475,
+              0.005
+            ],
+            [
+              3.475,
+              -0.005
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.pathfinder.RoutePathfinder",
+      "id": 13,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "TL_Q2",
+      "options": {
+        "_actual_length": "1.0750176727053897 mm",
+        "advanced": {
+          "avoid_collision": "true"
+        },
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "anchors": {},
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "150um",
+          "start_jogged_extension": "",
+          "start_straight": "0mm"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Cap_Q2",
+            "pin": "b"
+          },
+          "start_pin": {
+            "component": "Launch_Q2_Read",
+            "pin": "tie"
+          }
+        },
+        "q3d_wire_bonds": false,
+        "step_size": "0.25mm",
+        "total_length": "7mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -2.565,
+            -0.25
+          ],
+          "net_id": 10,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 13,
+          "points": [
+            [
+              -2.565,
+              -0.245
+            ],
+            [
+              -2.565,
+              -0.255
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -3.475,
+            0.0
+          ],
+          "net_id": 9,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 13,
+          "points": [
+            [
+              -3.475,
+              -0.005
+            ],
+            [
+              -3.475,
+              0.005
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.pathfinder.RoutePathfinder",
+      "id": 14,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "TL_Q1_CL",
+      "options": {
+        "_actual_length": "2.610508836352695 mm",
+        "advanced": {
+          "avoid_collision": "true"
+        },
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "anchors": {},
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "150um",
+          "start_jogged_extension": "",
+          "start_straight": "0mm"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Q1",
+            "pin": "Charge_Line"
+          },
+          "start_pin": {
+            "component": "Launch_Q1_CL",
+            "pin": "tie"
+          }
+        },
+        "q3d_wire_bonds": false,
+        "step_size": "0.25mm",
+        "total_length": "7mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.117,
+            -0.055
+          ],
+          "net_id": 12,
+          "normal": [
+            -1.0,
+            0.0
+          ],
+          "parent_name": 14,
+          "points": [
+            [
+              1.117,
+              -0.06
+            ],
+            [
+              1.117,
+              -0.05
+            ]
+          ],
+          "tangent": [
+            0.0,
+            1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            1.35,
+            -2.475
+          ],
+          "net_id": 11,
+          "normal": [
+            -0.0,
+            -1.0
+          ],
+          "parent_name": 14,
+          "points": [
+            [
+              1.355,
+              -2.475
+            ],
+            [
+              1.345,
+              -2.475
+            ]
+          ],
+          "tangent": [
+            -1.0,
+            0.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    },
+    {
+      "class": "qiskit_metal.qlibrary.tlines.pathfinder.RoutePathfinder",
+      "id": 15,
+      "init_kwargs": {
+        "type": "CPW"
+      },
+      "made": true,
+      "metadata": {},
+      "name": "TL_Q2_CL",
+      "options": {
+        "_actual_length": "2.610508836352695 mm",
+        "advanced": {
+          "avoid_collision": "true"
+        },
+        "aedt_hfss_wire_bonds": false,
+        "aedt_q3d_wire_bonds": false,
+        "anchors": {},
+        "chip": "main",
+        "fillet": "99um",
+        "hfss_wire_bonds": false,
+        "layer": "1",
+        "lead": {
+          "end_jogged_extension": "",
+          "end_straight": "150um",
+          "start_jogged_extension": "",
+          "start_straight": "0mm"
+        },
+        "pin_inputs": {
+          "end_pin": {
+            "component": "Q2",
+            "pin": "Charge_Line"
+          },
+          "start_pin": {
+            "component": "Launch_Q2_CL",
+            "pin": "tie"
+          }
+        },
+        "q3d_wire_bonds": false,
+        "step_size": "0.25mm",
+        "total_length": "7mm",
+        "trace_gap": "cpw_gap",
+        "trace_width": "cpw_width"
+      },
+      "pins": {
+        "end": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.117,
+            0.055
+          ],
+          "net_id": 14,
+          "normal": [
+            1.0,
+            -0.0
+          ],
+          "parent_name": 15,
+          "points": [
+            [
+              -1.117,
+              0.06
+            ],
+            [
+              -1.117,
+              0.05
+            ]
+          ],
+          "tangent": [
+            0.0,
+            -1.0
+          ],
+          "width": 0.01
+        },
+        "start": {
+          "chip": "main",
+          "gap": 0.006,
+          "length": 0,
+          "middle": [
+            -1.35,
+            2.475
+          ],
+          "net_id": 13,
+          "normal": [
+            0.0,
+            1.0
+          ],
+          "parent_name": 15,
+          "points": [
+            [
+              -1.355,
+              2.475
+            ],
+            [
+              -1.345,
+              2.475
+            ]
+          ],
+          "tangent": [
+            1.0,
+            0.0
+          ],
+          "width": 0.01
+        }
+      },
+      "status": "good"
+    }
+  ],
+  "connections": [
+    {
+      "endpoints": [
+        {
+          "component": "Q1",
+          "pin": "bus"
+        },
+        {
+          "component": "Bus_Q1_Q2",
+          "pin": "start"
+        }
+      ],
+      "net_id": 1
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Q2",
+          "pin": "bus"
+        },
+        {
+          "component": "Bus_Q1_Q2",
+          "pin": "end"
+        }
+      ],
+      "net_id": 2
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Q1",
+          "pin": "readout"
+        },
+        {
+          "component": "Readout_Q1",
+          "pin": "start"
+        }
+      ],
+      "net_id": 3
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Cap_Q1",
+          "pin": "a"
+        },
+        {
+          "component": "Readout_Q1",
+          "pin": "end"
+        }
+      ],
+      "net_id": 4
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Q2",
+          "pin": "readout"
+        },
+        {
+          "component": "Readout_Q2",
+          "pin": "start"
+        }
+      ],
+      "net_id": 5
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Cap_Q2",
+          "pin": "a"
+        },
+        {
+          "component": "Readout_Q2",
+          "pin": "end"
+        }
+      ],
+      "net_id": 6
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Launch_Q1_Read",
+          "pin": "tie"
+        },
+        {
+          "component": "TL_Q1",
+          "pin": "start"
+        }
+      ],
+      "net_id": 7
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Cap_Q1",
+          "pin": "b"
+        },
+        {
+          "component": "TL_Q1",
+          "pin": "end"
+        }
+      ],
+      "net_id": 8
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Launch_Q2_Read",
+          "pin": "tie"
+        },
+        {
+          "component": "TL_Q2",
+          "pin": "start"
+        }
+      ],
+      "net_id": 9
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Cap_Q2",
+          "pin": "b"
+        },
+        {
+          "component": "TL_Q2",
+          "pin": "end"
+        }
+      ],
+      "net_id": 10
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Launch_Q1_CL",
+          "pin": "tie"
+        },
+        {
+          "component": "TL_Q1_CL",
+          "pin": "start"
+        }
+      ],
+      "net_id": 11
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Q1",
+          "pin": "Charge_Line"
+        },
+        {
+          "component": "TL_Q1_CL",
+          "pin": "end"
+        }
+      ],
+      "net_id": 12
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Launch_Q2_CL",
+          "pin": "tie"
+        },
+        {
+          "component": "TL_Q2_CL",
+          "pin": "start"
+        }
+      ],
+      "net_id": 13
+    },
+    {
+      "endpoints": [
+        {
+          "component": "Q2",
+          "pin": "Charge_Line"
+        },
+        {
+          "component": "TL_Q2_CL",
+          "pin": "end"
+        }
+      ],
+      "net_id": 14
+    }
+  ],
+  "design": {
+    "chips": {
+      "main": {
+        "layer_end": "2048",
+        "layer_start": "0",
+        "material": "silicon",
+        "size": {
+          "center_x": "0.0mm",
+          "center_y": "0.0mm",
+          "center_z": "0.0mm",
+          "sample_holder_bottom": "1650um",
+          "sample_holder_top": "890um",
+          "size_x": "10mm",
+          "size_y": "6mm",
+          "size_z": "-750um"
+        }
+      }
+    },
+    "class": "qiskit_metal.designs.design_planar.DesignPlanar",
+    "enable_renderers": true,
+    "init_kwargs": {},
+    "metadata": {
+      "design_name": "example_chip_design",
+      "notes": "Two transmons, a coupling bus, readout resonators, and launchpads.",
+      "time_created": "04/25/2026, 21:00:38"
+    },
+    "name": "Design",
+    "overwrite_enabled": true,
+    "save_path": null,
+    "variables": {
+      "cpw_gap": "6 um",
+      "cpw_width": "10 um"
+    }
+  },
+  "format": "qiskit-metal.design-description",
+  "generated_utc": "2026-04-25T13:00:39Z",
+  "version": 1
+}

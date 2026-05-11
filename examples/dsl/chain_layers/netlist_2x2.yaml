@@ -1,0 +1,6 @@
+# Netlist layer for 2x2 4-qubit example.
+# Keep connections empty to avoid double-wiring when routes are present.
+
+mode: from_routes
+connections: []
+notes: "Routes in geometry populate net_info."

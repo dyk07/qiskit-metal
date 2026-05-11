@@ -1,0 +1,389 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/1
+
+schema: qiskit-metal/design-dsl/1
+
+design:
+  class: DesignPlanar
+  overwrite_enabled: true
+  chip:
+    size: 11mm x 9mm
+
+templates:
+  meander_99um:
+    class: RouteMeander
+    options:
+      hfss_wire_bonds: true
+      fillet: 99um
+
+  pathfinder_wirebonds:
+    class: RoutePathfinder
+    options:
+      hfss_wire_bonds: true
+
+components:
+  - name: Q_Main
+    class: TransmonPocket6
+    options:
+      pos_x: 0mm
+      pos_y: -1mm
+      gds_cell_name: FakeJunction_01
+      hfss_inductance: 14nH
+      pad_width: 425um
+      pocket_height: 650um
+      connection_pads:
+        readout: {loc_W: 0, loc_H: -1, pad_width: 80um, pad_gap: 50um}
+        bus_01: {loc_W: -1, loc_H: -1, pad_width: 60um, pad_gap: 10um}
+        bus_02: {loc_W: -1, loc_H: 1, pad_width: 60um, pad_gap: 10um}
+        bus_03: {loc_W: 0, loc_H: 1, pad_width: 90um, pad_gap: 30um}
+        bus_04: {loc_W: 1, loc_H: 1, pad_width: 60um, pad_gap: 10um}
+        bus_05: {loc_W: 1, loc_H: -1, pad_width: 60um, pad_gap: 10um}
+
+  - name: Q1
+    class: TransmonCrossFL
+    options:
+      pos_x: -2.75mm
+      pos_y: -1.8mm
+      connection_pads:
+        bus_01: {connector_location: "180", claw_length: 95um}
+        readout: {connector_location: "0"}
+      fl_options: {}
+
+  - name: Q2
+    class: TransmonCrossFL
+    options:
+      pos_x: -2.75mm
+      pos_y: -1.2mm
+      orientation: "180"
+      connection_pads:
+        bus_02: {connector_location: "0", claw_length: 95um}
+        readout: {connector_location: "180"}
+      fl_options: {}
+
+  - name: Tune_C_Q12
+    class: TunableCoupler01
+    options:
+      pos_x: -2.81mm
+      pos_y: -1.5mm
+      orientation: 90
+      c_width: 500um
+
+  - name: Q3
+    class: TransmonPocket6
+    options:
+      pos_x: -3mm
+      pos_y: 0.5mm
+      gds_cell_name: FakeJunction_01
+      hfss_inductance: 14nH
+      connection_pads:
+        bus_03: {loc_W: 0, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        bus_q3_q4: {loc_W: 1, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        readout: {loc_W: 0, loc_H: 1, pad_width: 80um, pad_gap: 50um}
+
+  - name: Q4
+    class: TransmonPocket6
+    options:
+      pos_x: 0mm
+      pos_y: 1mm
+      gds_cell_name: FakeJunction_01
+      hfss_inductance: 14nH
+      connection_pads:
+        bus_04: {loc_W: 0, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        bus_q3_q4: {loc_W: -1, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        bus_q4_q5: {loc_W: 1, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        readout: {loc_W: 0, loc_H: 1, pad_width: 80um, pad_gap: 50um}
+
+  - name: Q5
+    class: TransmonPocket6
+    options:
+      pos_x: 3mm
+      pos_y: 0.5mm
+      gds_cell_name: FakeJunction_01
+      hfss_inductance: 14nH
+      connection_pads:
+        bus_05: {loc_W: 0, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        bus_q4_q5: {loc_W: -1, loc_H: -1, pad_width: 80um, pad_gap: 15um}
+        readout: {loc_W: 0, loc_H: 1, pad_width: 80um, pad_gap: 50um}
+
+  - name: Launch_QMain_Read
+    class: LaunchpadWirebond
+    options: {pos_x: 2mm, pos_y: -4mm, orientation: "90"}
+
+  - name: Launch_Q1_FL
+    class: LaunchpadWirebond
+    options:
+      pos_x: 0mm
+      pos_y: -4mm
+      orientation: "90"
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Launch_Q1_Read
+    class: LaunchpadWirebondCoupled
+    options: {pos_x: -2mm, pos_y: -4mm, orientation: "90"}
+
+  - name: Launch_TuneC_FL
+    class: LaunchpadWirebond
+    options:
+      pos_x: -4mm
+      pos_y: -4mm
+      orientation: "90"
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Launch_TuneC_Read
+    class: LaunchpadWirebondCoupled
+    options: {pos_x: -5mm, pos_y: -3mm, orientation: "0"}
+
+  - name: Launch_Q2_Read
+    class: LaunchpadWirebondCoupled
+    options: {pos_x: -5mm, pos_y: -1mm, orientation: "0"}
+
+  - name: Launch_Q2_FL
+    class: LaunchpadWirebond
+    options:
+      pos_x: -5mm
+      pos_y: 1mm
+      orientation: "0"
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Launch_NW
+    class: LaunchpadWirebond
+    options: {pos_x: -5mm, pos_y: 3mm, orientation: 0}
+
+  - name: Launch_NE
+    class: LaunchpadWirebond
+    options: {pos_x: 5mm, pos_y: 3mm, orientation: 180}
+
+  - name: Read_Q_Main_Cap
+    class: qiskit_metal.qlibrary.lumped.cap_n_interdigital.CapNInterdigital
+    options: {pos_x: 2mm, pos_y: -3.5mm, orientation: "0"}
+
+  - name: Q3_Read_T
+    class: CoupledLineTee
+    options:
+      pos_x: -3mm
+      pos_y: 3mm
+      orientation: "0"
+      coupling_length: 200um
+      open_termination: false
+
+  - name: Q4_Read_T
+    class: CapNInterdigitalTee
+    options:
+      pos_x: 0mm
+      pos_y: 3mm
+      orientation: "0"
+      finger_length: 0um
+      finger_count: "8"
+
+  - name: Q5_Read_T
+    class: CapNInterdigitalTee
+    options:
+      pos_x: 3mm
+      pos_y: 3mm
+      orientation: "0"
+      finger_length: 50um
+      finger_count: "11"
+
+routes:
+  - name: Bus_01
+    $extend: meander_99um
+    from: Q_Main.bus_01
+    to: Q1.bus_01
+    options:
+      lead: {start_straight: 125um, end_straight: 225um}
+      meander: {asymmetry: 1305um}
+      total_length: 6mm
+
+  - name: Bus_02
+    $extend: meander_99um
+    from: Q_Main.bus_02
+    to: Q2.bus_02
+    options:
+      lead: {start_straight: 325um, end_straight: 125um}
+      meander: {asymmetry: 450um}
+      total_length: 6.4mm
+
+  - name: Bus_03
+    $extend: meander_99um
+    from: Q_Main.bus_03
+    to: Q3.bus_03
+    options:
+      lead: {start_straight: 225um, end_straight: 25um}
+      meander: {asymmetry: 50um}
+      total_length: 6.8mm
+
+  - name: Bus_04
+    $extend: meander_99um
+    from: Q_Main.bus_04
+    to: Q4.bus_04
+    options:
+      lead:
+        start_straight: 225um
+        start_jogged_extension:
+          0: [L, 250um]
+          1: [R, 200um]
+      meander: {asymmetry: 150um}
+      total_length: 7.2mm
+
+  - name: Bus_05
+    $extend: meander_99um
+    from: Q_Main.bus_05
+    to: Q5.bus_05
+    options:
+      lead: {start_straight: 225um, end_straight: 25um}
+      meander: {asymmetry: 50um}
+      total_length: 7.6mm
+
+  - name: Bus_Q3_Q4
+    $extend: meander_99um
+    from: Q3.bus_q3_q4
+    to: Q4.bus_q3_q4
+    options:
+      lead: {start_straight: 125um, end_straight: 125um}
+      meander: {asymmetry: 50um}
+      total_length: 6.4mm
+
+  - name: Bus_Q4_Q5
+    $extend: meander_99um
+    from: Q4.bus_q4_q5
+    to: Q5.bus_q4_q5
+    options:
+      lead: {start_straight: 125um, end_straight: 25um}
+      meander: {asymmetry: 50um}
+      total_length: 6.8mm
+
+  - name: Read_Q_Main
+    $extend: meander_99um
+    from: Q_Main.readout
+    to: Read_Q_Main_Cap.north_end
+    options:
+      lead:
+        start_straight: 725um
+        end_straight: 625um
+        start_jogged_extension:
+          0: [L, 250um]
+        end_jogged_extension:
+          0: [L, 600um]
+      meander: {asymmetry: 50um}
+      total_length: 5.6mm
+
+  - name: Read_Q_Main_Cap_Launch
+    $extend: pathfinder_wirebonds
+    from: Read_Q_Main_Cap.south_end
+    to: Launch_QMain_Read.tie
+    options:
+      lead: {start_straight: 0um, end_straight: 0um}
+
+  - name: Read_Q1
+    $extend: meander_99um
+    from: Q1.readout
+    to: Launch_Q1_Read.tie
+    options:
+      lead: {start_straight: 250um, end_straight: 25um}
+      meander: {asymmetry: 50um}
+      total_length: 6.8mm
+
+  - name: Read_TuneC
+    $extend: meander_99um
+    from: Tune_C_Q12.Control
+    to: Launch_TuneC_Read.tie
+    options:
+      lead: {start_straight: 1525um, end_straight: 125um}
+      meander: {asymmetry: 50um}
+      total_length: 5.8mm
+
+  - name: Read_Q2
+    $extend: meander_99um
+    from: Q2.readout
+    to: Launch_Q2_Read.tie
+    options:
+      lead: {start_straight: 350um, end_straight: 0um}
+      meander: {asymmetry: -450um}
+      total_length: 5.4mm
+
+  - name: Flux_Line_Q1
+    $extend: pathfinder_wirebonds
+    from: Q1.flux_line
+    to: Launch_Q1_FL.tie
+    options:
+      fillet: 99um
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Flux_Line_TuneC
+    $extend: pathfinder_wirebonds
+    from: Tune_C_Q12.Flux
+    to: Launch_TuneC_FL.tie
+    options:
+      lead:
+        start_straight: 875um
+        end_straight: 350um
+        start_jogged_extension:
+          0: [L, 750um]
+      fillet: 99um
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Flux_Line_Q2
+    $extend: pathfinder_wirebonds
+    from: Q2.flux_line
+    to: Launch_Q2_FL.tie
+    options:
+      lead:
+        start_straight: 175um
+        end_straight: 150um
+        start_jogged_extension:
+          0: [L, 525um]
+          1: [R, 625um]
+      fillet: 99um
+      trace_width: 5um
+      trace_gap: 3um
+
+  - name: Read_Q3
+    $extend: meander_99um
+    from: Q3.readout
+    to: Q3_Read_T.second_end
+    options:
+      lead: {start_straight: 150um, end_straight: 150um}
+      meander: {asymmetry: 0um}
+      total_length: 5mm
+
+  - name: Read_Q4
+    $extend: meander_99um
+    from: Q4.readout
+    to: Q4_Read_T.second_end
+    options:
+      lead: {start_straight: 125um, end_straight: 125um}
+      meander: {asymmetry: 0um}
+      total_length: 5.8mm
+
+  - name: Read_Q5
+    $extend: meander_99um
+    from: Q5.readout
+    to: Q5_Read_T.second_end
+    options:
+      lead: {start_straight: 125um, end_straight: 125um}
+      meander: {asymmetry: 0um}
+      total_length: 5.4mm
+
+  - name: ML_TL_01
+    $extend: pathfinder_wirebonds
+    from: Launch_NW.tie
+    to: Q3_Read_T.prime_start
+
+  - name: ML_TL_02
+    $extend: pathfinder_wirebonds
+    from: Q3_Read_T.prime_end
+    to: Q4_Read_T.prime_start
+
+  - name: ML_TL_03
+    $extend: pathfinder_wirebonds
+    from: Q4_Read_T.prime_end
+    to: Q5_Read_T.prime_start
+
+  - name: ML_TL_04
+    $extend: pathfinder_wirebonds
+    from: Q5_Read_T.prime_end
+    to: Launch_NE.tie

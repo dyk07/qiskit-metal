@@ -1,0 +1,30 @@
+# Circuit layer for Appendix A full chip design.
+
+Q_Main:
+  type: transmon_pocket6
+  C: ${c_main}
+  pad_width: 425um
+
+Q1:
+  type: transmon_cross_fl
+  C: ${c_q}
+
+Q2:
+  type: transmon_cross_fl
+  C: ${c_q}
+
+Q3:
+  type: transmon_pocket6
+  C: ${c_q}
+
+Q4:
+  type: transmon_pocket6
+  C: ${c_q}
+
+Q5:
+  type: transmon_pocket6
+  C: ${c_q}
+
+Tune_C_Q12:
+  type: tunable_coupler
+  Cc: ${c_coupler}

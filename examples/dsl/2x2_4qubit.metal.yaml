@@ -1,0 +1,93 @@
+# yaml-language-server: $schema=qiskit-metal/design-dsl/1
+#
+# 4-qubit 2x2 transmon array —— DSL 版示例
+#
+# 对照参考：my_project/qiskit_metal_2x2_4qubit_demo.py（约 230 行 Python）
+# 构建：python -m examples.dsl.run_2x2_demo  或直接调用 build_design()
+#
+# 这份文件演示的全部 DSL 特性：
+#   schema    版本声明，loader 会校验前缀
+#   design    设计类、variables、chip 尺寸
+#   vars      仅供 ${...} 插值，不进 design.variables
+#   templates 可被 $extend 引用的模板
+#   $for      横扫一组配置展开成多个组件
+#   $extend   深合并 templates 中的某一份模板
+#   ${name}   字符串内插值，循环局部变量优先于 vars
+#   routes    顶层路由段，from/to 简记会自动展成 pin_inputs
+
+schema: qiskit-metal/design-dsl/1
+
+design:
+  class: DesignPlanar
+  overwrite_enabled: true
+  variables:
+    cpw_width: 12um
+    cpw_gap: 7um
+  chip:
+    size: 10mm x 10mm
+
+vars:
+  qx: 1.55mm
+  qy: 1.55mm
+
+templates:
+
+  # 共享的 transmon 几何：4 个 qubit 都从这里继承
+  qubit:
+    class: TransmonPocket
+    options:
+      pad_width: 425um
+      pad_height: 90um
+      pad_gap: 30um
+      pocket_width: 650um
+      pocket_height: 650um
+
+  # 共享的 meander 路由配置：4 条 bus 都从这里继承
+  bus_route:
+    class: RouteMeander
+    options:
+      lead:
+        start_straight: 0.18mm
+        end_straight: 0.18mm
+      trace_width: 12um
+      trace_gap: 7um
+      fillet: 90um
+
+components:
+
+  # 把 4 个 qubit 折成一段 $for —— Python 端原本要重复 4 份的 placement
+  # + connection_pads 在这里压成 4 行。
+  # 每个 qubit 三个 pin 的 loc_W/H 都按最近邻方向取值，与
+  # my_project/qiskit_metal_2x2_4qubit_demo.py::_per_qubit_connection_pads 1:1 对齐。
+  - $for:
+      # name | 位置                 | readout 朝外    | bus_h 朝水平邻居  | bus_v 朝垂直邻居
+      - {name: Q1, x: "-${qx}", y: "+${qy}",  ro_W: "-1", ro_H: "+1",  bh_W: "+1", bh_H: "+1",  bv_W: "+1", bv_H: "-1"}
+      - {name: Q2, x: "+${qx}", y: "+${qy}",  ro_W: "+1", ro_H: "+1",  bh_W: "-1", bh_H: "+1",  bv_W: "-1", bv_H: "-1"}
+      - {name: Q3, x: "-${qx}", y: "-${qy}",  ro_W: "-1", ro_H: "-1",  bh_W: "+1", bh_H: "-1",  bv_W: "+1", bv_H: "+1"}
+      - {name: Q4, x: "+${qx}", y: "-${qy}",  ro_W: "+1", ro_H: "-1",  bh_W: "-1", bh_H: "-1",  bv_W: "-1", bv_H: "+1"}
+    $extend: qubit
+    name: ${name}
+    options:
+      pos_x: ${x}
+      pos_y: ${y}
+      connection_pads:
+        readout: {loc_W: "${ro_W}", loc_H: "${ro_H}", pad_width: 180um, cpw_extend: 60um}
+        bus_h:   {loc_W: "${bh_W}", loc_H: "${bh_H}", pad_height: 30um, cpw_extend: 70um}
+        bus_v:   {loc_W: "${bv_W}", loc_H: "${bv_H}", pad_height: 30um, cpw_extend: 70um}
+
+routes:
+
+  # from/to 简记：'Q1.bus_h' 自动展开为 pin_inputs.start_pin = {component: Q1, pin: bus_h}
+  - {$extend: bus_route, name: top_bus,    from: Q1.bus_h, to: Q2.bus_h,
+     options: {total_length: 5.0mm, meander: {asymmetry: "+140um"}}}
+
+  - {$extend: bus_route, name: left_bus,   from: Q1.bus_v, to: Q3.bus_v,
+     options: {total_length: 5.4mm,
+               meander: {asymmetry: "-160um", lead_direction_inverted: "true"}}}
+
+  - {$extend: bus_route, name: bottom_bus, from: Q3.bus_h, to: Q4.bus_h,
+     options: {total_length: 5.0mm, meander: {asymmetry: "-140um"}}}
+
+  - {$extend: bus_route, name: right_bus,  from: Q2.bus_v, to: Q4.bus_v,
+     options: {total_length: 5.4mm,
+               meander: {asymmetry: "+160um", lead_direction_inverted: "true"}}}

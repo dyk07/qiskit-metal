@@ -1,0 +1,67 @@
+# Geometry layer for 2x2 4-qubit example.
+
+# Keep geometry identical to 2x2_4qubit.metal.yaml, but wired to circuit values
+# for pad sizes and to vars for CPW widths.
+
+design:
+  class: DesignPlanar
+  overwrite_enabled: true
+  variables:
+    cpw_width: ${cpw_width}
+    cpw_gap: ${cpw_gap}
+  chip:
+    size: 10mm x 10mm
+
+templates:
+
+  qubit:
+    class: TransmonPocket
+    options:
+      pad_gap: 30um
+      pocket_width: 650um
+      pocket_height: 650um
+
+  bus_route:
+    class: RouteMeander
+    options:
+      lead:
+        start_straight: 0.18mm
+        end_straight: 0.18mm
+      trace_width: ${cpw_width}
+      trace_gap: ${cpw_gap}
+      fillet: 90um
+
+components:
+
+  - $for:
+      - {name: Q1, x: "-${qx}", y: "+${qy}", ro_W: "-1", ro_H: "+1", bh_W: "+1", bh_H: "+1", bv_W: "+1", bv_H: "-1", pad_w: "${circuit.Q1.pad_width}", pad_h: "${circuit.Q1.pad_height}"}
+      - {name: Q2, x: "+${qx}", y: "+${qy}", ro_W: "+1", ro_H: "+1", bh_W: "-1", bh_H: "+1", bv_W: "-1", bv_H: "-1", pad_w: "${circuit.Q2.pad_width}", pad_h: "${circuit.Q2.pad_height}"}
+      - {name: Q3, x: "-${qx}", y: "-${qy}", ro_W: "-1", ro_H: "-1", bh_W: "+1", bh_H: "-1", bv_W: "+1", bv_H: "+1", pad_w: "${circuit.Q3.pad_width}", pad_h: "${circuit.Q3.pad_height}"}
+      - {name: Q4, x: "+${qx}", y: "-${qy}", ro_W: "+1", ro_H: "-1", bh_W: "-1", bh_H: "-1", bv_W: "-1", bv_H: "+1", pad_w: "${circuit.Q4.pad_width}", pad_h: "${circuit.Q4.pad_height}"}
+    $extend: qubit
+    name: ${name}
+    options:
+      pad_width: ${pad_w}
+      pad_height: ${pad_h}
+      pos_x: ${x}
+      pos_y: ${y}
+      connection_pads:
+        readout: {loc_W: "${ro_W}", loc_H: "${ro_H}", pad_width: 180um, cpw_extend: 60um}
+        bus_h:   {loc_W: "${bh_W}", loc_H: "${bh_H}", pad_height: 30um, cpw_extend: 70um}
+        bus_v:   {loc_W: "${bv_W}", loc_H: "${bv_H}", pad_height: 30um, cpw_extend: 70um}
+
+routes:
+
+  - {$extend: bus_route, name: top_bus,    from: Q1.bus_h, to: Q2.bus_h,
+     options: {total_length: 5.0mm, meander: {asymmetry: "+140um"}}}
+
+  - {$extend: bus_route, name: left_bus,   from: Q1.bus_v, to: Q3.bus_v,
+     options: {total_length: 5.4mm,
+               meander: {asymmetry: "-160um", lead_direction_inverted: "true"}}}
+
+  - {$extend: bus_route, name: bottom_bus, from: Q3.bus_h, to: Q4.bus_h,
+     options: {total_length: 5.0mm, meander: {asymmetry: "-140um"}}}
+
+  - {$extend: bus_route, name: right_bus,  from: Q2.bus_v, to: Q4.bus_v,
+     options: {total_length: 5.4mm,
+               meander: {asymmetry: "+160um", lead_direction_inverted: "true"}}}
