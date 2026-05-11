@@ -218,7 +218,10 @@ def _resolve_class(name_or_path: str, table: Mapping[str, Any],
     if not isinstance(name_or_path, str) or not name_or_path:
         raise DesignDslError(f"{kind} class must be a non-empty string")
 
-    target = user_table.get(name_or_path) or table.get(name_or_path) or name_or_path
+    target = user_table.get(name_or_path) or table.get(name_or_path)
+    if target is None:
+        raise DesignDslError(f"Unknown {kind} short name: {name_or_path!r}")
+
     if not isinstance(target, str):
         return target
     if "." not in target:

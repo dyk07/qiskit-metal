@@ -1,5 +1,24 @@
+# YAML-native TransmonPocket 两量子位示例。
+#
+# 这个文件展示 DSL v3 推荐的“组件模板”写法:
+#
+#   geometry.components.Q1.type: transmon_pocket
+#
+# 这里的 type 不是 Python qlibrary class。build_ir() 会读取内置 YAML 模板:
+#
+#   qcomponent.yaml -> base_qubit.yaml -> transmon_pocket.yaml
+#
+# 然后把模板 defaults、connection_pads generator、primitives 和 pins
+# 展开成 primitive IR。build_design() 再把这些 IR 写入 Metal QDesign。
+#
+# 运行:
+#   C:\ProgramData\anaconda3\envs\metal-env\python.exe examples\dsl\run_transmon_pocket_demo.py
+#
 schema: qiskit-metal/design-dsl/3
 
+# qx 控制两个 qubit 的水平位置。
+# cpw_width/cpw_gap 显式传给 readout connection pad，便于读者看清参数来源。
+# 如果不传，默认也可以从 selected DesignPlanar 的 design.variables 解析。
 vars:
   qx: 1.2mm
   cpw_width: 12um
@@ -7,6 +26,7 @@ vars:
   c_q: 65fF
   ej_q: 18GHz
 
+# hamiltonian 仍然是高层 metadata。这个示例让 hamiltonian 直接引用 vars。
 hamiltonian:
   subsystems:
     Q1: {model: transmon, EJ: "${vars.ej_q}", C: "${vars.c_q}"}
@@ -14,10 +34,14 @@ hamiltonian:
   couplings:
     - {from: Q1, to: Q2, g: 12MHz}
 
+# circuit 记录这两个组件的电路语义: 它们都是 transmon，
+# 并且 geometry 侧使用 transmon_pocket 模板。
 circuit:
   Q1: {type: transmon, template: transmon_pocket}
   Q2: {type: transmon, template: transmon_pocket}
 
+# readout pin 不是手写出来的。它由 transmon_pocket.yaml 中的
+# generators.connection_pads 根据 options.connection_pads.readout 生成。
 netlist:
   connections:
     - {from: Q1.readout, to: Q2.readout}
@@ -29,11 +53,20 @@ geometry:
 
   components:
     Q1:
+      # type: transmon_pocket 会触发 YAML component template 展开。
+      # 最终导出的 Metal component 是 NativeComponent，不会构造 qlibrary
+      # TransmonPocket Python class。
       type: transmon_pocket
       options:
+        # pos_x 来自 qcomponent.yaml 的通用位置选项。
         pos_x: "-${vars.qx}"
+
+        # connection_pads 来自 base_qubit.yaml。每个 pad entry 都会先继承
+        # transmon_pocket.yaml 中的 _default_connection_pads，再应用这里的覆盖。
         connection_pads:
           readout:
+            # loc_W / loc_H 控制 readout pad 位于 pocket 的哪个象限。
+            # Q1 放在右上侧，朝向中间。
             loc_W: 1
             loc_H: 1
             cpw_width: "${vars.cpw_width}"
@@ -45,6 +78,7 @@ geometry:
         pos_x: "${vars.qx}"
         connection_pads:
           readout:
+            # Q2 的 readout pad 放在左上侧，和 Q1.readout 相对。
             loc_W: -1
             loc_H: 1
             cpw_width: "${vars.cpw_width}"

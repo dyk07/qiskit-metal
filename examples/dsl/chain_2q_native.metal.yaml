@@ -1,15 +1,31 @@
+# Hamiltonian-Circuit-Netlist-Geometry full-chain 示例。
+#
+# 和 native_2q_minimal.metal.yaml 相比，这个文件多展示了:
+#
+#   1. hamiltonian 引用 circuit 参数
+#   2. circuit 统一定义 qubit 和 bus 的电路参数
+#   3. netlist 用两个连接把 Q1 -> bus -> Q2 串起来
+#   4. geometry.templates + $extend 复用 primitive 模板
+#   5. derived metadata 中会出现 bus path length、pin middle、连接信息
+#
+# 运行:
+#   C:\ProgramData\anaconda3\envs\metal-env\python.exe examples\dsl\run_chain_demo.py
+#
 schema: qiskit-metal/design-dsl/3
 
+# 全局变量。建议把“会被多处引用”的尺寸和电路参数放这里。
 vars:
-  qx: 1.2mm
-  pad_w: 420um
-  pad_h: 90um
-  trace_w: 12um
-  trace_gap: 7um
-  bus_y: 0.55mm
-  c_q: 65fF
-  ej_q: 18GHz
+  qx: 1.2mm        # Q1/Q2 离原点距离
+  pad_w: 420um     # qubit pad 宽度
+  pad_h: 90um      # qubit pad 高度
+  trace_w: 12um    # bus/path/pin 宽度
+  trace_gap: 7um   # pin gap
+  bus_y: 0.55mm    # bus path 的 y 坐标
+  c_q: 65fF        # circuit 层 qubit capacitance
+  ej_q: 18GHz      # Hamiltonian 层 EJ
 
+# hamiltonian 可以引用 circuit。这里 Q1/Q2 的 C 来自 circuit.Q*.C。
+# 当前 DSL 不做物理求解，hamiltonian 会作为 resolved metadata 保留。
 hamiltonian:
   subsystems:
     Q1: {model: transmon, EJ: "${ej_q}", C: "${circuit.Q1.C}"}
@@ -17,11 +33,17 @@ hamiltonian:
   couplings:
     - {from: Q1, to: Q2, g: 12MHz}
 
+# circuit 层放电路对象的参数。geometry 可以引用这些字段，
+# 例如 bus path 的 width/gap 从 circuit.bus 取。
 circuit:
   Q1: {type: transmon, C: "${c_q}", pad_width: "${pad_w}"}
   Q2: {type: transmon, C: "${c_q}", pad_width: "${pad_w}"}
   bus: {width: "${trace_w}", gap: "${trace_gap}"}
 
+# netlist 描述连接拓扑。
+# 这个例子中 Q1.bus 连接到 bus.start，bus.end 连接到 Q2.bus。
+# 导出时会调用 design.connect_pins()，所以 design.net_info 会出现
+# 每个连接对应的 net rows。
 netlist:
   connections:
     - {from: Q1.bus, to: bus.start}
@@ -32,13 +54,21 @@ geometry:
     class: DesignPlanar
     chip: {size: 6mm x 6mm}
 
+  # geometry.templates 是 primitive-native 的局部模板系统。
+  # 它和 type: transmon_pocket 这种 component template 不同:
+  #   - 这里的 template 没有 schema/id/extends
+  #   - 通过 $extend 做简单 YAML 片段复用
+  #   - 适合复用 primitives/pins 的局部写法
   templates:
     transmon_pad_pair:
       primitives:
+        # 注意这里用 circuit.Q1.pad_width 写模板，是为了展示模板里也能引用
+        # 上层 circuit。Q2 下面会显式覆盖 primitives，改成 circuit.Q2。
         - {name: pad_left, type: poly.rectangle, center: [-0.12mm, 0mm],
            size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
         - {name: pad_right, type: poly.rectangle, center: [0.12mm, 0mm],
            size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
+        # subtract: true 表示这行是刻蚀/挖空区域，会写入 qgeometry 的 subtract。
         - {name: pocket, type: poly.rectangle, center: [0mm, 0mm],
            size: [800um, 520um], subtract: true, layer: 1}
         - {name: jj, type: junction.line, points: [[0mm, -45um], [0mm, 45um]],
@@ -46,6 +76,7 @@ geometry:
 
   components:
     Q1:
+      # $extend 会把 transmon_pad_pair 的 primitives 合并进来。
       $extend: transmon_pad_pair
       translate: ["-${qx}", 0mm]
       pins:
@@ -53,6 +84,10 @@ geometry:
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
 
     Q2:
+      # Q2 同样使用模板，但这里显式重写 primitives，
+      # 让 pad_width 从 circuit.Q2 读取。这个写法也展示了:
+      # primitive-native $extend 更适合简单复用，复杂组件建议用
+      # type: transmon_pocket 这种 component template。
       $extend: transmon_pad_pair
       translate: ["${qx}", 0mm]
       primitives:
@@ -69,14 +104,20 @@ geometry:
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
 
     bus:
+      # bus 是一个独立 component。它有 path qgeometry 和两个 pin。
       primitives:
+        # center_trace 是真实中心导体。
         - {name: center_trace, type: path.polyline,
            points: [["-${qx}", "${bus_y}"], [0mm, "${bus_y}"], ["${qx}", "${bus_y}"]],
            width: "${circuit.bus.width}", layer: 1}
+        # gap_cut 是 subtract path，宽度大于 center_trace。
+        # 它和 center_trace 共线，用于表示 CPW gap 的挖空区域。
         - {name: gap_cut, type: path.polyline,
            points: [["-${qx}", "${bus_y}"], [0mm, "${bus_y}"], ["${qx}", "${bus_y}"]],
            width: 26um, subtract: true, layer: 1}
       pins:
+        # pin 的 points 横跨导体宽度。这里使用字符串表达式
+        # "${bus_y} - 6um" / "${bus_y} + 6um" 组合变量和单位。
         - {name: start, points: [["-${qx}", "${bus_y} - 6um"], ["-${qx}", "${bus_y} + 6um"]],
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
         - {name: end, points: [["${qx}", "${bus_y} - 6um"], ["${qx}", "${bus_y} + 6um"]],
