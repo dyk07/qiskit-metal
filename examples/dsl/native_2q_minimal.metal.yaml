@@ -1,0 +1,99 @@
+# 最小 primitive-native 两量子位示例。
+#
+# 这个文件故意不使用 `type: transmon_pocket` 模板，也不使用 qlibrary
+# `class: TransmonPocket`。它展示 DSL v3 最基本的写法:
+#
+#   vars        放全局参数
+#   hamiltonian 放高层物理/模型信息
+#   circuit     放电路层参数
+#   netlist     描述 pin 到 pin 的连接
+#   geometry    显式写 primitive 几何和 pin
+#
+# 构建流程:
+#   build_ir(this file)     -> 解析成 DesignIR
+#   build_design(this file) -> 导出到 Metal QDesign
+#
+schema: qiskit-metal/design-dsl/3
+
+# vars 是全局变量表。下面所有 `${...}` 插值都可以读取这里的变量。
+# 单位字符串会通过 Qiskit Metal 的 parse_value 解析，例如 1.2mm -> 1.2,
+# 420um -> 0.420。Metal 内部默认长度单位是 mm。
+vars:
+  qx: 1.2mm        # 两个 qubit 中心离原点的水平距离
+  pad_w: 420um     # pad 宽度，后面 circuit.Q*.pad_width 会引用它
+  pad_h: 90um      # pad 高度
+  trace_w: 12um    # CPW / pin 宽度
+  trace_gap: 7um   # CPW / pin gap
+
+# hamiltonian 当前作为结构化 metadata 参与解析和保存。
+# 它可以被 geometry/circuit 引用，也会写入 design.metadata["dsl_chain"]。
+# 这个最小示例只保留 transmon 模型和 Q1-Q2 的耦合强度。
+hamiltonian:
+  subsystems:
+    Q1: {model: transmon, EJ: 18GHz}
+    Q2: {model: transmon, EJ: 18GHz}
+  couplings:
+    - {from: Q1, to: Q2, g: 12MHz}
+
+# circuit 是电路语义层。这里把 pad_width 放在 circuit 里，
+# 后面的 geometry 会通过 `${circuit.Q1.pad_width}` 引用它。
+circuit:
+  Q1: {type: transmon, pad_width: "${pad_w}"}
+  Q2: {type: transmon, pad_width: "${pad_w}"}
+
+# netlist 用 component.pin 的写法描述连接关系。
+# build_ir() 会把 Q1.bus 规范化为 {component: Q1, pin: bus}，
+# 并检查 component 和 pin 是否真实存在。
+netlist:
+  connections:
+    - {from: Q1.bus, to: Q2.bus}
+
+geometry:
+  # design 描述要实例化的 Metal Design 类型和芯片信息。
+  # 当前内置短名包括 DesignPlanar、DesignFlipChip、DesignMultiPlanar。
+  design:
+    class: DesignPlanar
+    chip: {size: 6mm x 6mm}
+
+  # components 可以写成 mapping。mapping key 会自动成为 component.name。
+  # 每个 component 由 primitives + pins 组成。
+  components:
+    Q1:
+      # component 级 transform。这里把 Q1 向左移动 qx。
+      translate: ["-${qx}", 0mm]
+
+      # primitives 是最终会写入 design.qgeometry.tables 的几何行。
+      # 支持的基础类型包括:
+      #   poly.rectangle / poly.polygon
+      #   path.line / path.polyline
+      #   junction.line
+      primitives:
+        # 两块矩形 pad，size 中的宽度来自 circuit 层。
+        - {name: pad_left, type: poly.rectangle, center: [-0.12mm, 0mm],
+           size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
+        - {name: pad_right, type: poly.rectangle, center: [0.12mm, 0mm],
+           size: ["${circuit.Q1.pad_width}", "${pad_h}"], layer: 1}
+
+        # junction.line 会进入 junction qgeometry 表，必须提供 width。
+        - {name: jj, type: junction.line, points: [[0mm, -45um], [0mm, 45um]],
+           width: 10um, layer: 1}
+
+      # pins 会写入 design.components["Q1"].pins。
+      # tangent_points 模式下 points 两点之间的距离应等于 width。
+      pins:
+        - {name: bus, points: [[0.34mm, -6um], [0.34mm, 6um]],
+           width: "${trace_w}", gap: "${trace_gap}"}
+
+    Q2:
+      # Q2 向右移动 qx。它的 bus pin 朝向 Q1。
+      translate: ["${qx}", 0mm]
+      primitives:
+        - {name: pad_left, type: poly.rectangle, center: [-0.12mm, 0mm],
+           size: ["${circuit.Q2.pad_width}", "${pad_h}"], layer: 1}
+        - {name: pad_right, type: poly.rectangle, center: [0.12mm, 0mm],
+           size: ["${circuit.Q2.pad_width}", "${pad_h}"], layer: 1}
+        - {name: jj, type: junction.line, points: [[0mm, -45um], [0mm, 45um]],
+           width: 10um, layer: 1}
+      pins:
+        - {name: bus, points: [[-0.34mm, -6um], [-0.34mm, 6um]],
+           width: "${trace_w}", gap: "${trace_gap}"}

@@ -1,0 +1,112 @@
+schema: qiskit-metal/component-template/1
+id: transmon_pocket
+extends: base_qubit
+metadata:
+  short_name: Pocket
+  qgeometry_tables: [poly, path, junction]
+options:
+  pad_gap: 30um
+  inductor_width: 20um
+  pad_width: 455um
+  pad_height: 90um
+  pocket_width: 650um
+  pocket_height: 650um
+  _default_connection_pads:
+    pad_gap: 15um
+    pad_width: 125um
+    pad_height: 30um
+    pad_cpw_shift: 5um
+    pad_cpw_extent: 25um
+    cpw_width: cpw_width
+    cpw_gap: cpw_gap
+    cpw_extend: 100um
+    pocket_extent: 5um
+    pocket_rise: 65um
+    loc_W: +1
+    loc_H: +1
+geometry:
+  primitives:
+    - name: pad_top
+      type: poly.rectangle
+      center: [0um, "${(options.pad_height + options.pad_gap) / 2}"]
+      size: ["${options.pad_width}", "${options.pad_height}"]
+      chip: "${options.chip}"
+      layer: "${options.layer}"
+    - name: pad_bot
+      type: poly.rectangle
+      center: [0um, "${-(options.pad_height + options.pad_gap) / 2}"]
+      size: ["${options.pad_width}", "${options.pad_height}"]
+      chip: "${options.chip}"
+      layer: "${options.layer}"
+    - name: rect_pk
+      type: poly.rectangle
+      center: [0um, 0um]
+      size: ["${options.pocket_width}", "${options.pocket_height}"]
+      subtract: true
+      chip: "${options.chip}"
+      layer: "${options.layer}"
+    - name: rect_jj
+      type: junction.line
+      points:
+        - [0um, "${-options.pad_gap / 2}"]
+        - [0um, "${options.pad_gap / 2}"]
+      width: "${options.inductor_width}"
+      chip: "${options.chip}"
+      layer: "${options.layer}"
+  generators:
+    connection_pads:
+      for_each: options.connection_pads
+      as: pad
+      operations:
+        connector_pad:
+          op: rectangle
+          width: "${pad.value.pad_width}"
+          height: "${pad.value.pad_height}"
+          xoff: "${-pad.value.pad_width / 2}"
+          yoff: "${pad.value.pad_height / 2}"
+        connector_wire_path:
+          op: polyline
+          points:
+            - [0um, "${pad.value.pad_cpw_shift + pad.value.cpw_width / 2}"]
+            - ["${pad.value.pad_cpw_extent}", "${pad.value.pad_cpw_shift + pad.value.cpw_width / 2}"]
+            - ["${(options.pocket_width - options.pad_width) / 2 - pad.value.pocket_extent}", "${pad.value.pad_cpw_shift + pad.value.cpw_width / 2 + pad.value.pocket_rise}"]
+            - ["${(options.pocket_width - options.pad_width) / 2 + pad.value.cpw_extend}", "${pad.value.pad_cpw_shift + pad.value.cpw_width / 2 + pad.value.pocket_rise}"]
+        placed:
+          op: transform_group
+          sources:
+            connector_pad: connector_pad
+            connector_wire_path: connector_wire_path
+          steps:
+            - op: scale
+              xfact: "${pad.value.loc_W}"
+              yfact: "${pad.value.loc_H}"
+              origin: [0um, 0um]
+            - op: translate
+              xoff: "${pad.value.loc_W * options.pad_width / 2}"
+              yoff: "${pad.value.loc_H * (options.pad_height + options.pad_gap / 2 + pad.value.pad_gap)}"
+      primitives:
+        - name: "${pad.key}_connector_pad"
+          type: poly.from_operation
+          operation: placed.connector_pad
+          chip: "${options.chip}"
+          layer: "${options.layer}"
+        - name: "${pad.key}_wire"
+          type: path.from_operation
+          operation: placed.connector_wire_path
+          width: "${pad.value.cpw_width}"
+          chip: "${options.chip}"
+          layer: "${options.layer}"
+        - name: "${pad.key}_wire_sub"
+          type: path.from_operation
+          operation: placed.connector_wire_path
+          width: "${pad.value.cpw_width + 2 * pad.value.cpw_gap}"
+          subtract: true
+          chip: "${options.chip}"
+          layer: "${options.layer}"
+      pins:
+        - name: "${pad.key}"
+          mode: normal_segment
+          from_operation: placed.connector_wire_path
+          segment: last
+          width: "${pad.value.cpw_width}"
+          chip: "${options.chip}"

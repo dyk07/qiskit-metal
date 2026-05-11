@@ -1,0 +1,13 @@
+schema: qiskit-metal/component-template/1
+id: qcomponent
+options:
+  pos_x: 0.0um
+  pos_y: 0.0um
+  orientation: 0.0
+  chip: main
+  layer: 1
+metadata: {}
+geometry:
+  transform:
+    translate: ["${options.pos_x}", "${options.pos_y}"]
+    rotate: "${options.orientation}"
