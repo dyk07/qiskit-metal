@@ -12,7 +12,6 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-# pylint: disable=invalid-name
 # Configuration file for the Sphinx documentation builder.
 #
 # This file does only contain a selection of the most common options. For a
@@ -30,6 +29,15 @@ import os
 # Let Metal know we are building the docs.
 # Environment variables are per-process, not global
 os.environ["QISKIT_METAL_DOCS_BUILD"] = "1"
+
+# In docs-build mode, ``renderers/__init__.py`` imports the Qt-coupled
+# ``mpl_canvas`` module, which transitively  pulls
+# ``matplotlib.backends.backend_qt5agg``. Without a hint, matplotlib's
+# qt_compat probes for PyQt5 / PySide2 and fails on environments
+# (RTD, Colab) that only have PySide6 — the project's actual Qt
+# binding. Telling matplotlib to use PySide6 makes the legacy
+# qt5agg alias resolve to the modern Qt-agnostic backend_qtagg.
+os.environ.setdefault("QT_API", "pyside6")
 
 
 import qiskit_metal
@@ -110,7 +118,7 @@ nbsphinx_epilog = """
 
 # -- Project information -----------------------------------------------------
 project = "Quantum Metal"  # {version}
-copyright = "Quantum Metal Community; 2019-2025 Qiskit Development Team"  # pylint: disable=redefined-builtin
+copyright = "Quantum Metal Community; 2019-2025 Qiskit Development Team"
 author = qiskit_metal.__author__
 # -- General configuration ---------------------------------------------------
 
@@ -134,6 +142,7 @@ exclude_patterns = [
     "build",
     "**.ipynb_checkpoints",
     "_utility",  # '*.ipynb',
+    "_archive",  # archived configs / configs kept for revival
     "stubs/**",  # autosummary stub files are generated but not included in any toctree
 ]
 
@@ -146,7 +155,7 @@ nbsphinx_execute = os.getenv("QISKIT_DOCS_BUILD_TUTORIALS", "never")
 
 # Let Sphinx/nbsphinx choose the appropriate parser for each suffix.
 # source_suffix = ['.rst', '.ipynb']
-source_suffix = {'.rst': 'restructuredtext'}
+source_suffix = {".rst": "restructuredtext"}
 
 suppress_warnings = ["ref.ref"]
 

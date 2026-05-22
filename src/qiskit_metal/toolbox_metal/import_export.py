@@ -12,9 +12,6 @@
 # copyright notice, and modified files need to carry a notice indicating
 # that they have been altered from the originals.
 
-# pylint: disable=protected-access
-# pylint: disable-msg=relative-beyond-top-level
-# pylint: disable-msg=broad-except
 """Saving and loading Metal designs.
 
 This module defines the canonical JSON text schema for Metal design exchange.

@@ -4,6 +4,10 @@
 >![Welcome to Qiskit Metal!](https://raw.githubusercontent.com/Qiskit/qiskit-metal/main/docs/images/zkm_banner.png 'Welcome to Qiskit Metal')
 > Quantum Metal is an open-source framework for engineers and scientists to design superconducting quantum devices with ease.
 
+> **Where we're heading:** see [ROADMAP.md](./ROADMAP.md) for the
+> lite-by-default flip (v0.7.0), AI-orchestration profile, and
+> the open FEM stack (gmsh + Elmer + AWS Palace).
+
 
 
 
@@ -187,6 +191,13 @@ python -m ipykernel install --user --name quantum-metal
 Now that Qiskit Metal is installed, it's time to begin working with it.
 We are ready to try out a quantum chip example, which is simulated locally using
 the Qiskit MetalGUI element. This is a simple example that makes a qubit.
+
+> **Install note:** the example below uses ``MetalGUI``, which requires PySide6. On v0.6.x this comes by default with ``pip install quantum-metal``. On v0.7.0+ (lite-by-default), install the GUI extra explicitly:
+> ```bash
+> pip install "quantum-metal[gui]"
+> ```
+> Prefer no-Qt? Replace ``gui = MetalGUI(design)`` and the ``gui.rebuild()`` / ``gui.autoscale()`` calls with ``fig = qm.view(design)`` — see [docs/headless-usage.rst](./docs/headless-usage.rst). The headless path also covers AI-orchestration / Colab / Binder / cloud-Jupyter use cases.
+
 ```python
 from qiskit_metal import designs, MetalGUI, open_docs, draw
 

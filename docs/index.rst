@@ -38,6 +38,20 @@ Quantum Device Design & Analysis (Q-EDA)
 Design and analyze superconducting quantum chips with a Python API + GUI that plugs into your favorite tools.
 Leverages existing EDA stacks, automates tedious workflows, and keeps best practices baked in.
 
+.. note::
+    **You don't need the Qt GUI to use Quantum Metal.** The full API
+    — designs, components, renderers, analyses — works headlessly in a
+    plain Python interpreter or a Jupyter notebook. Use
+    ``qm.view(design)`` to render a design to a matplotlib figure
+    inline, without spinning up ``MetalGUI``::
+
+        import qiskit_metal as qm
+        fig = qm.view(design)
+        fig.savefig("design.png")
+
+    See :doc:`headless-usage` for the full Qt-free workflow, what
+    works without PySide6, and the migration to the lite install.
+
 .. grid:: 1 2 2 2
    :gutter: 1
 
@@ -252,6 +266,8 @@ The goal of Qiskit Metal is to allow for easy quantum hardware modeling with red
 
     About<self>
     Installing Qiskit Metal<installation>
+    Using Quantum Metal without the Qt GUI<headless-usage>
+    Migrating to v0.7.0 (lite install)<migration-to-v0.7.0>
 
 .. toctree::
     :maxdepth: 2
@@ -298,6 +314,18 @@ The goal of Qiskit Metal is to allow for easy quantum hardware modeling with red
     :hidden:
 
     Code of Conduct<https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md>
+
+.. Hidden glob toctree so every auto-generated per-class stub in
+   ``apidocs/`` is reachable from the document tree. Without this,
+   Sphinx emits one "document isn't included in any toctree" warning
+   per stub (currently ~100). The stubs are linked from the module
+   pages listed in the API References toctree above; this hidden
+   entry just satisfies Sphinx's reachability check.
+.. toctree::
+    :hidden:
+    :glob:
+
+    apidocs/*
 
 .. Hiding - Indices and tables
    :ref:`genindex`

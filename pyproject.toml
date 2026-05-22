@@ -10,7 +10,6 @@
     classifiers = [
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: Apache Software License",
         "Operating System :: MacOS",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: POSIX :: Linux",
@@ -26,7 +25,16 @@
     readme = { file = "README.md", content-type = "text/markdown" }
     requires-python = ">=3.10,<3.13"
     urls = { bugtracker = "https://github.com/qiskit-community/qiskit-metal/issues", documentation = "https://qiskit-community.github.io/qiskit-metal/", source = "https://github.com/qiskit-community/qiskit-metal" }
-    version = "0.5.3.post1"
+    version = "0.6.2"
+    # Core deps required for ``import qiskit_metal`` + ``qm.view()``
+    # to work in any environment. Heavy / optional deps (Qt GUI,
+    # pyaedt, gmsh) live in the ``[project.optional-dependencies]``
+    # section below so users can opt in. Note: for v0.6.x backward
+    # compatibility, the GUI / ANSYS / FEM stacks are still in the
+    # *base* deps list — the extras are additive. A future v0.7.0
+    # release plans to flip the default to lite (base = no Qt) and
+    # require ``pip install quantum-metal[full]`` for the current
+    # experience. See ``docs/headless-usage.rst`` for the timeline.
     dependencies = [
         "addict>=2.4.0",
         "gdstk>=0.9",
@@ -35,7 +43,7 @@
         "numpy>=1.24.2,<2",
         "pandas>=2.1.1",
         "pint>=0.21.0",
-        "pyEPR-quantum>=0.9.0",
+        "pyEPR-quantum>=0.9.5",
         "pygments>=2.14.0", # Needed for docs and GUI widgets.
         "pyside6>=6.8",
         "qdarkstyle>=3.1", # Needed for GUI styling.
@@ -43,10 +51,36 @@
         "scipy>=1.10.0",
         "shapely>=2.0.1",
         "scqubits>=4.1.0",
-        "gmsh>=4.11.1",
+        "gmsh>=4.15.0,<5",
         "pyaedt>=0.21,<0.24", # pyaedt 0.24 has some bugs (Jan 23, 2026)
-        "pyyaml>=6.0", # Used for the Elmer runner. 
+        "pyyaml>=6.0", # Used for the Elmer runner.
     ]
+
+    # Opt-in extras. Currently informational — every extra's deps are
+    # also in the base list above so v0.6.x users keep the
+    # all-batteries-included install. The CI ``tests-lite`` job
+    # exercises an install pruned of these extras to keep the
+    # lite-mode rendering path provably working, ahead of the v0.7.0
+    # flip when ``[full]`` becomes opt-in.
+    [project.optional-dependencies]
+        gui = [
+            "pyside6>=6.8",
+            "qdarkstyle>=3.1",
+        ]
+        ansys = [
+            "pyaedt>=0.21,<0.24",
+            "pyEPR-quantum>=0.9.5",
+        ]
+        fem = [
+            "gmsh>=4.15.0,<5",
+        ]
+        full = [
+            "pyside6>=6.8",
+            "qdarkstyle>=3.1",
+            "pyaedt>=0.21,<0.24",
+            "pyEPR-quantum>=0.9.5",
+            "gmsh>=4.15.0,<5",
+        ]
 
 [build-system]
     requires      = [ "uv_build>=0.9.23,<0.10.0" ]
@@ -87,21 +121,24 @@
 
 
 [tool.ruff.lint]
-    ignore = [ "E402", "F401", "F841", "E731", "F403", "E712", "E722", "E741", "F821" ]
+    ignore = [ "E402", "F401", "E731", "E722", "E741", "F821" ]
     # Ruff ignore codes:
     # To be sorted out in the future.
     # E402: module level import not at top of file
     # F401: module imported but unused
-    # F841: local variable is assigned to but never used
     # E731: do not assign a lambda expression, use a def
-    # F403: import * only allowed to namespace packages
-    # E712: use "if cond:" instead of "if cond" in comparisons to True or False
     # E722: do not use bare except
     # E741: do not use ambiguous variable names
     # F821 Undefined names. Mostly used for type hints.
-    per-file-ignores = { "**.ipynb" = [ "F811", "E703" ] }
+
+[tool.ruff.lint.per-file-ignores]
+    "**.ipynb" = ["F811", "E703", "F403", "F405"]
     # F811: redefinition of unused name
     # E703: unnecessary semicolons
+    # F403: import * only allowed to namespace packages
+    # F405: wildcard imports
+    "tests/**" = [ "F841" ]
+    # F841: local variable is assigned to but never used
 
 [tool.tox]
     requires = [ "tox>=4", "tox-uv>=1.29" ]
