@@ -44,44 +44,32 @@ Two things shape the next year:
 
 ---
 
-## Now — the lite-by-default flip (v0.7.0)
+## Lite-by-default flip (v0.7.0) `[shipped]`
 
-The current v0.6.x line ships every heavy dependency
-(`pyside6`, `gmsh`, `pyaedt`, `pyEPR-quantum`, `qdarkstyle`)
-in `[project.dependencies]`, so `pip install quantum-metal`
-pulls hundreds of MB and assumes Qt is welcome. The v0.7.0
-release flips this: heavies move into extras (`[gui]`,
-`[fem]`, `[ansys]`, `[full]`) and the base install becomes
+The v0.6.x line shipped every heavy dependency in `[project.dependencies]`,
+so `pip install quantum-metal` pulled hundreds of MB and assumed Qt was
+welcome. **v0.7.0 flipped this**: heavies moved into opt-in extras
+(`[gui]` / `[ansys]` / `[mesh]` / `[full]`) and the base install became
 the orchestration-friendly minimal surface.
 
-The work is sequenced as several smaller PRs so each lands
-green:
+Items shipped under this initiative (across v0.6.1 → v0.7.1):
 
-- **Eager-import audit** `[in-progress]`
-  Sweep `src/qiskit_metal/` for module-level imports of
-  the heavies, classify each as already-lazy, safely
-  guarded, or needs-lazification. Output drives the rest
-  of the flip.
-- **Lazify the heavies** `[planned, v0.7.0]`
-  Move every `import pyside6 / gmsh / pyaedt / pyEPR`
-  out of module top-level into functions or
-  `__getattr__` shims. Friendly `ImportError`s point
-  users at the right extra.
-- **Test-suite skip-cleanliness** `[planned, v0.7.0]`
-  Add `pytest.importorskip` where needed so the full
-  suite passes on a lite install (with skips, not
-  failures).
-- **Expanded `tests-lite` CI matrix** `[planned, v0.7.0]`
-  Current `tests-lite` runs one combo; expand to
-  3.10/3.11/3.12 × ubuntu/macos/windows so the lite
-  path has the same safety net as the full path.
-- **v0.6.2 deprecation release** `[planned, before v0.7.0]`
-  Ship `DeprecationWarning` on `import qiskit_metal`
-  telling users to install `quantum-metal[full]` if they
-  want the current all-in experience after v0.7.0.
-- **The flip** `[planned, v0.7.0]`
-  Move heavies out of base deps. Bump to v0.7.0. Update
-  changelog, tutorials, README install matrix.
+- ✅ Eager-import audit + lazification of `pyside6`, `gmsh`, `pyaedt`,
+  `pyEPR-quantum`. Module top-level imports moved into functions or
+  `__getattr__` shims; friendly `ImportError`s point users at the right
+  extra.
+- ✅ Test-suite skip-cleanliness via `pytest.importorskip` so the full
+  suite passes on a lite install (with skips, not failures).
+- ✅ `tests-lite` and `tests-extras` CI matrices — both run cleanly on
+  every PR. `tests-extras` runs `gui` / `ansys` / `mesh` / `fem`
+  independently.
+- ✅ `v0.6.2` deprecation release with `FutureWarning` advertising the
+  upcoming flip + the `[full]` opt-in path for stay-the-same users.
+- ✅ `v0.7.0` the actual flip — heavies out of base deps. README, install
+  matrix, migration guide all updated.
+- ✅ `v0.7.1` cleanup — added `[mesh]` as the canonical name for the
+  gmsh extra (`[fem]` kept as a backward-compatible alias); the
+  `README_Open_FEM_Stack.md` rename; ElmerFEM error-message UX fix.
 
 ---
 
@@ -191,6 +179,225 @@ but are worth tracking:
   `docs/_archive/readthedocs/` — revivable in minutes
   if/when per-PR previews, versioned docs, or the
   rebrand cutover make the switch worth it.
+
+---
+
+## Adoption, DevRel, and onboarding
+
+Making sure people *find* the project, *try* it, and *stick with* it.
+Ideated post-v0.7.0 lite-by-default flip (which finally made one-click
+trial viable).
+
+### Shipped (v0.7.1)
+
+- ✅ **"Open in Colab" button** in the README → tutorial 1.2 Quick Start
+- ✅ **"Open in Codespaces" button** in the README
+- ✅ **`CITATION.cff`** — GitHub "Cite this repository" widget on the repo page
+- ✅ **Badge row refresh** — PyPI downloads, Python versions, CI, docs, stars, contributors
+- ✅ **Repo description + GitHub topics** — punchy one-liner + tags for
+  GitHub-search discoverability
+- ✅ **Hero animated GIF** — 4-qubit chip built in 5 frames, embedded in README
+- ✅ **Issue-template modernization** — Bug / Feature / Docs templates
+  refreshed with v0.7.0 install paths, code-block sections for repros and
+  tracebacks, and ROADMAP / FAQ pointers. Issues (not Discord) are the
+  canonical route for support requests so nothing gets lost in chat
+  scrollback. `.github/ISSUE_TEMPLATE/config.yml` surfaces Docs / Roadmap
+  / PyPI links plus Discord as a community-chat link (NOT a support route).
+- ✅ **JupyterLite tutorials on the docs site** — every notebook runnable
+  in-browser via the Pyodide kernel, zero install. Lives under `/lite/`
+  on the published docs site.
+
+### Quick wins on deck (each <2 hours)
+
+- **Open Graph image** `[research]` — controls how the repo / docs preview
+  when shared on Twitter / Slack / Discord. Currently uses the GitHub
+  default which is much weaker than a designed image would be.
+
+### Medium effort (~half-day each)
+
+- **Gallery page** (`docs/gallery.rst`) `[planned]` — eye-candy rendered
+  images of representative designs (single transmon, two-qubit, surface-code
+  patch, examples from `tutorials/E.Input-output-coupling/`). Showcases
+  capability visually.
+- **`SUPPORT.md` + `GOVERNANCE.md`** `[planned]` — currently support info is
+  scattered across README / FAQ / contributor-guide. A single `SUPPORT.md`
+  consolidates "where to ask, response expectations." `GOVERNANCE.md`
+  matters for institutional adopters (labs, companies) deciding whether to
+  commit time.
+- **Devcontainer config** (`.devcontainer/devcontainer.json`)
+  `[planned]` — one-click cloud dev environment from any GitHub page.
+  Pairs with the lite install for a 90-second "open and run." (Note:
+  Codespaces *button* already shipped in v0.7.1 — this is the
+  devcontainer that customizes the env it launches into.)
+- **Recipes section in docs** `[planned]` — short focused how-tos
+  ("Design a CPW resonator at 5 GHz", "Sweep transmon pad gap and extract
+  frequency", "Export GDS with custom layer mapping"). Each <50 LOC,
+  copy-paste-runnable. Tutorials are deep dives; recipes are the
+  Stack-Overflow-style "I just want to do X" entry point.
+
+### Bigger plays (multi-day)
+
+- **`awesome-quantum-metal` companion repo** `[research]` — curated list:
+  papers using Metal, lab tooling on top of Metal, talks, integrations.
+  Community-curated, standard `awesome-*` pattern.
+- **Comparison page** ("Metal vs. ...") `[research]` — honest comparison
+  vs. Ansys Workbench / commercial EDA / hand-coded GDS. Highly searched
+  by evaluators.
+- **Web-based read-only design viewer** `[research]` — overlaps with the
+  Jupyter widget viewer in the renderer roadmap; a web-hosted version on
+  the docs site would be a flagship demo.
+- **Annual / quarterly community report** `[research]` — "State of Quantum
+  Metal 202X" with downloads, contributors, papers citing, new features.
+  Doubles as institutional fundraising / partnership signal.
+
+---
+
+## Docs build cleanup `[research]`
+
+Items deferred during the May 2026 docs-build pass (see PR #1085).
+The build is now clean (0 warnings) but a few latent fragilities remain:
+
+- **Analyses-module alias-path documentation.** Classes in
+  ``qiskit_metal.analyses`` are reachable through two paths:
+  (1) the alias path via ``__init__.py`` re-export
+  (``qiskit_metal.analyses.EPRanalysis``), and (2) the real submodule
+  path (``qiskit_metal.analyses.quantization.energy_participation_ratio.EPRanalysis``).
+  Autodoc currently registers each class under both, which is
+  benign for users but emits ``duplicate object description``
+  warnings whenever the per-class stubs are reached via *both* an
+  autosummary toctree and an automodule member walk simultaneously.
+  Today this is avoided by careful toctree structuring; ideally we
+  pick one canonical documentation path per class. Options:
+  (a) stop re-exporting from ``__init__.py`` and require users to
+  import from submodules (breaking API change — not desirable);
+  (b) add ``:no-index:`` to all 16 per-class stubs in
+  ``docs/apidocs/qiskit_metal.analyses.*.rst`` so only the
+  ``automodule`` walk wins;
+  (c) regenerate the stubs to use the full submodule path in their
+  ``currentmodule`` directives. (c) is the cleanest if we ever
+  re-run ``sphinx-autogen`` to refresh the stubs.
+
+- **Sphinx-autosummary code-block leak.** Sphinx's autosummary
+  extension scans *every* ``.rst`` file for ``.. autosummary::``
+  and ``.. automodule::`` directives, **including those nested
+  inside ``.. code-block:: rst`` / ``.. code-block:: python``
+  blocks** used for documentation examples. PR #1085 worked around
+  this by escaping directive names (``.\.``) in the contributor
+  guide so the examples don't accidentally fire at build time, but
+  the underlying behavior is a foot-gun: any future docs example
+  that includes a real autosummary directive will silently
+  generate phantom RST files in ``docs/``. Possible fixes:
+  (a) replace the in-text examples with ``literalinclude`` of a
+  fixture file (out of scope of autosummary's scanner);
+  (b) configure autosummary to ignore specific directories.
+
+---
+
+## Known bug-triage queue `[needs re-verification]`
+
+10 issues triaged on 2026-05-22. **All reports are on Metal 0.5.x or earlier**
+(0.1.5 / 0.5.2.post4 / 0.5.3.post1); none re-verified against v0.7.x. Before
+acting on any, reproduce on a current `quantum-metal[full]` install — some
+may have been fixed by the lite-flip / renderer-protocol / Qt6 work and just
+need closing.
+
+**Real bugs with reproducer + community-proposed fix:**
+
+- [#1036](https://github.com/qiskit-community/qiskit-metal/issues/1036)
+  `RoutePathFinder` path-penetrates-component — `unobstructed()` returns
+  True when both segment endpoints lie inside a component bounding box even
+  though the segment intersects the actual contour. Reporter included
+  reproducer + proposed fix. **High value: real correctness bug, easy win.**
+- [#1086](https://github.com/qiskit-community/qiskit-metal/issues/1086)
+  `RouteMeander` produces asymmetric geometry for rotated routes (filed
+  2026-05-22 with HFSS-validation rubric, workaround already in
+  `scripts/make_hero_gif.py`).
+
+**Easy / small fixes:**
+
+- [#1042](https://github.com/qiskit-community/qiskit-metal/issues/1042)
+  `design.to_python_script()` omits `from numpy import array` from the
+  generated header. One-line fix in the export template. Good first-PR.
+
+**Ansys 2025R1 compatibility cluster** (likely related):
+
+- [#1041](https://github.com/qiskit-community/qiskit-metal/issues/1041)
+  `EPR Analysis: TypeError: tuple indices must be integers or slices,
+  not Quantity` in pyEPR's `DistributedAnalysis`.
+- [#1046](https://github.com/qiskit-community/qiskit-metal/issues/1046)
+  `sim.save_screenshot()` throws COM/RPC error on Ansys 2025R1.
+
+  Both on Metal 0.5.x + old `renderer_ansys` COM path. Worth re-trying
+  with v0.7.x + the new `renderer_ansys_pyaedt` (no COM); may already
+  be resolved.
+
+**Qt6 / native crashes — `qm.view()` headless alternative now exists:**
+
+- [#1048](https://github.com/qiskit-community/qiskit-metal/issues/1048)
+  MetalGUI segfaults at `main_window.show()` on Ubuntu 24.04 + PySide6
+  6.11.0. Plain `QMainWindow().show()` works, so it's a Metal-specific
+  Qt6 interaction. v0.7.0's `qm.view()` is the documented headless path
+  for these users; longer-term plan is the Jupyter `qm.gui()` widget.
+
+**Needs reproducer:**
+
+- [#1052](https://github.com/qiskit-community/qiskit-metal/issues/1052)
+  Xmon angle bug — bus angle 270° doesn't put pin at bottom. Reporter
+  posted screenshots but left "Steps to reproduce" + "Expected behavior"
+  sections blank.
+
+**Filed by us (info-only, needs external action):**
+
+- [#1079](https://github.com/qiskit-community/qiskit-metal/issues/1079)
+  HFSS / Q3D runtime validation needed for the lite-flip lazy-imports
+  (PR #1078). Needs someone with an AEDT license to spot-check.
+
+---
+
+## External workshops & training `[reference]`
+
+Curated workshop materials that exercise Metal end-to-end.  Not maintained
+as part of this repo — version pins float independently.
+
+- **QDW 2025 — `tutorials_quantum_device_design`** `[frozen, pre-v0.5]`
+  https://github.com/zlatko-minev/tutorials_quantum_device_design
+
+  4-notebook walkthrough: layout → transmon+resonator → qubit-qubit
+  coupling → end-to-end project. Uses **Palace** (open FEM) via
+  **SQDMetal**. Pinned to `pyepr-quantum==0.8.5.7` + `pyaedt==0.6.46`,
+  Metal pre-v0.5 era. Historical reference — bringing it forward would
+  mean re-validating against current SQDMetal + Palace + Metal chain
+  (high effort, not planned).
+
+- **QDW 2026 — `qdw26-workshop-materials`** `[active, near-mainline]`
+  https://github.com/quantum-device-consortium/qdw26-workshop-materials
+
+  Same 4-notebook progression, now Dockerized with `uv` lockfile.
+  Currently pinned to `abhishekchak52/qiskit-metal@gui-import-isolation`
+  (a pre-release fork of what is now v0.7.0 lite-flip). **Quick
+  follow-up:** swap that pin for mainline `quantum-metal>=0.7.1` from
+  PyPI (one-line change, removes the fork dependency).
+
+---
+
+## GUI / UX wishes `[wish-list]`
+
+Small UX improvements collected from real use. Lower priority than the
+roadmap items above, but tracked here so they don't get lost.
+
+- **Thumbnail icons for every qubit / component in the GUI library
+  toolbar** `[wish]` — the left-side component browser currently shows
+  a flat text list of `TransmonPocket`, `TransmonCross`,
+  `TransmonInterdigitated`, etc. A small (~64×64) preview icon next to
+  each name would let users pick a geometry visually instead of having
+  to remember which class is which shape. Applies to both the Qt
+  `MetalGUI` (`src/qiskit_metal/_gui/widgets/qlibrary_display/`) and
+  the future Jupyter `qm.gui()` library panel (planning in
+  `_dev/jupyter_gui/feature-map.md`). Implementation: render each
+  component once headlessly via `qm.view(component)` and cache as PNG
+  in `docs/_static/component_icons/` — same reproducible-asset pattern
+  the hero GIF (`scripts/make_hero_gif.py`) uses. Existing assets in
+  `_imgs/components/` may already cover some.
 
 ---
 

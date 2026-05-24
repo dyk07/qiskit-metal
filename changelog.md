@@ -6,6 +6,87 @@ For the offical user-facing changelog for a particular release can be found in t
 
 The changelog for all releases can be found in the release page: [![Releases](https://img.shields.io/github/release/Qiskit/qiskit-metal.svg?style=popout-square)](https://github.com/Qiskit/qiskit-metal/releases)
 
+## Quantum Metal v0.7.1 (UX + docs polish; no breaking changes)
+
+**Follow-up to v0.7.0** focused on adoption / DevRel polish, build-time
+quality, and a friendlier ElmerFEM error surface. No breaking changes —
+v0.7.0 users can upgrade in place.
+
+### Highlights
+
+- **ElmerFEM UX**: missing-binary errors now print actionable install
+  instructions (platform-specific) instead of a bare ``FileNotFoundError``
+  from ``subprocess.run``. Windows install-path lookup unpinned from
+  Elmer 9.0 (globs ``Elmer *-Release/bin/``, so Elmer 10.x ships
+  cleanly with no code change). Also fixed a pre-existing bug where
+  passing an explicit ``elmersolver=`` path silently skipped the
+  subprocess call.
+- **New ``[mesh]`` extra** for the gmsh dependency (canonical name for
+  the universal mesher — used by Elmer today, will feed Palace and
+  future open FEM backends). ``[fem]`` kept as a backward-compatible
+  alias; both extras install gmsh.
+- **Docs build: zero warnings.** Previously failed with ~50+ warnings
+  + several errors (heading hierarchy, nbformat validation, duplicate
+  substitutions, ambiguous cross-refs). All fixed at source.
+- **README modernization**: 482 → 225 lines, headless-first Quick Start,
+  Colab + Codespaces "try it now" buttons, hero animated GIF showing a
+  4-qubit chip built in 5 frames.
+- **``CITATION.cff``** added for GitHub's "Cite this repository" widget.
+
+### Bug fixes
+
+- ``elmer_runner._resolve_elmer_binary`` — friendly errors when ElmerFEM
+  binaries are missing; auto-detects newer Windows release directories.
+- ``elmer_runner.run_elmersolver`` — explicit-path code path no longer
+  skipped due to indentation bug; ``encoding="utf=8"`` typo fixed.
+- ``analyses/__init__.py`` — added missing autosummary blocks so the
+  rendered Analyses overview page is actually useful.
+- ``_gui/main_window*.py`` — RST docstring lint pass (bullet lists,
+  paragraph spacing); PySide2 → PySide6 in docstrings (we've shipped
+  PySide6 since v0.5).
+- ``contributor-guide.rst`` — example directives no longer accidentally
+  fire at build time and generate phantom RST files.
+
+### Docs
+
+- Sphinx ``conf.py``: added ``intersphinx`` for python/matplotlib/numpy/
+  pandas, ``nitpick_ignore`` for ``logger``/``figure``,
+  ``nbsphinx_codecell_lexer="python3"`` (silenced ~1500 warnings).
+- Tutorial notebook normalisation (nbformat cell IDs across 108
+  notebooks) + heading-hierarchy fixes across 1.1/1.2/4.05.
+- New ``scripts/check_tutorials_sync.py`` CI gate ensures ``tutorials/``
+  and ``docs/tut/`` cell content stays byte-identical.
+- ``README_Gmsh_Elmer.md`` → ``README_Open_FEM_Stack.md`` (broader scope:
+  gmsh + Elmer + future Palace).
+- Stripped v0.5/v0.6 era qualifiers across installation, migration,
+  headless-usage, workflow, contributor-guide, FAQ.
+- Dead links fixed (gohlke wheels site retired in 2022); rebrand pass
+  across all auxiliary READMEs.
+
+### Hygiene
+
+- ``[tool.ruff]`` — added ``extend-exclude`` for ``_dev/``, ``docs/_archive/``,
+  ``docs/_build/`` (scratch / generated dirs).
+- ``ipython>=8.0`` and ``ipywidgets>=8.1`` added to docs deps (silence
+  nbsphinx lexer and ipywidgets-path warnings).
+- ``ROADMAP.md`` — new "Adoption, DevRel, and onboarding" section
+  capturing follow-up ideas (Colab embeds, JupyterLite, gallery page,
+  SUPPORT.md / GOVERNANCE.md, devcontainer, recipes section, etc.).
+- CI matrix: ``tests-extras`` now runs both ``mesh`` and ``fem`` (alias)
+  paths so neither can regress silently.
+
+### Compatibility matrix
+
+| | v0.7.0 | **v0.7.1** |
+|---|---|---|
+| Python | 3.10 / 3.11 / 3.12 | 3.10 / 3.11 / 3.12 |
+| Default install | lite (no Qt / Ansys / gmsh) | same |
+| ``[gui]`` extra | PySide6, qdarkstyle | same |
+| ``[ansys]`` extra | pyaedt, pyEPR-quantum | same |
+| ``[fem]`` extra | gmsh | same (alias for new ``[mesh]``) |
+| ``[mesh]`` extra | — | **new** (canonical name; gmsh) |
+| ``[full]`` extra | all of above | same |
+
 ## Quantum Metal v0.6.2 (deprecation-notice release)
 
 **Pre-flip release.** All v0.6.x install behaviour is unchanged
@@ -48,66 +129,101 @@ full v0.7.0 install behaviour ahead of the actual deps flip.
 The next release (v0.7.0) will flip `pyproject.toml`'s base
 dependencies and the warning becomes truth.
 
-## Quantum Metal v0.7.0 (Unreleased — planned)
+## Quantum Metal v0.7.0 (lite-by-default release)
 
-**Headline: lite-by-default install.** This release moves the heavy
-optional dependencies (`pyside6`, `qdarkstyle`, `pyaedt`,
-`pyEPR-quantum`, `gmsh`) out of `[project.dependencies]` and into
-extras. `pip install quantum-metal` becomes the small,
-orchestration-friendly base install; the GUI / Ansys / FEM stacks
-are opt-in.
+**Headline: lite-by-default install.** `pip install quantum-metal`
+no longer pulls PySide6, qdarkstyle, pyaedt, pyEPR-quantum, or gmsh
+— those move into opt-in extras (`[gui]` / `[ansys]` / `[fem]` /
+`[full]`). The base install is now small, fast, and friendly to AI
+orchestration, Colab / Binder, cloud Jupyter, headless CI, and any
+non-interactive workflow.
 
-See [ROADMAP.md](./ROADMAP.md) and
+See [`ROADMAP.md`](./ROADMAP.md) and
 [`docs/migration-to-v0.7.0.rst`](./docs/migration-to-v0.7.0.rst) for
-the full picture.
+the full migration recipes.
 
-### Breaking changes — read this if you upgrade
+### Breaking change — what to do
 
-- `pip install quantum-metal` no longer pulls PySide6, AEDT, gmsh,
-  pyEPR, or qdarkstyle. If you used `MetalGUI` or any HFSS/Q3D /
-  gmsh / pyEPR-EPR code path, run one of:
-  - `pip install quantum-metal[full]` — restore the v0.6.x
-    all-batteries-included experience
-  - `pip install quantum-metal[gui]` — just MetalGUI + qdarkstyle
-    + PySide6
-  - `pip install quantum-metal[ansys]` — just AEDT/pyEPR (the EPR
-    analysis code paths and the HFSS/Q3D renderers)
-  - `pip install quantum-metal[fem]` — just gmsh (mesher for the
-    Elmer / Palace path)
+`pip install quantum-metal` no longer pulls the heavies. Pick the
+install command that matches your workflow:
+
+| Command | What you get |
+|---|---|
+| `pip install quantum-metal` | Lite: designs + `qm.view()` + GDS + pure-Python analyses |
+| `pip install "quantum-metal[gui]"` | + `MetalGUI` desktop app (PySide6, qdarkstyle) |
+| `pip install "quantum-metal[ansys]"` | + HFSS/Q3D renderers + EPR analyses (pyaedt, pyEPR) |
+| `pip install "quantum-metal[fem]"` | + gmsh / Elmer mesher |
+| `pip install "quantum-metal[full]"` | All of the above — v0.6.x compatibility set |
+
+The full feature matrix is in `README.md` and `docs/installation.rst`.
 
 ### Why
 
-- AI orchestration loops, Colab / Binder, cloud Jupyter, headless
-  CI, and any non-interactive workflow no longer have to install or
-  ignore hundreds of MB of Qt + AEDT they'll never use.
-- Designs build, render to GDS, view inline (via `qm.view(design)`),
-  and feed downstream solvers with a base install of a few dozen MB
-  instead of ~1 GB.
+- **AI orchestration loops**, cloud Jupyter, Colab / Binder, and
+  headless CI no longer install or ignore hundreds of MB of Qt + AEDT
+  they'll never use. Base install drops from ~1 GB to a few dozen MB.
+- **Academic and educational users** without Ansys licenses can now
+  install + use the full design/analysis path without artificially
+  needing pyaedt.
+- **Tutorial notebooks** that don't need Ansys / gmsh now run on lite.
 
 ### What didn't change
 
-- `import qiskit_metal` (the package name stays for backward
-  compatibility through the v0.6.x / v0.7.x line)
+- `import qiskit_metal` (the import path stays for v0.7.x; see the
+  upcoming import-rename heads-up below)
 - Public API on `QDesign`, `QComponent`, `QRenderer`
-- Tutorial notebooks (the analysis ones need the relevant extras to
-  run; this is now spelled out in each notebook's install cell)
+- The Python API surface — every class, function, and method is
+  unchanged
 
-### In-flight as of this entry
+### Upcoming next: import path rename
 
-- pyEPR-in-analyses: lazified (PR #1074, landed)
-- Wirebond E712 audit note recorded in lessons-learned (PR #1073)
-- gmsh-in-renderer_gmsh: lazification PR pending
-- pyEPR/pyaedt-in-renderer_ansys*: lazification PR pending — these
-  live in the hard-touch HFSS zones, separate PR for review care
-- The actual `pyproject.toml` deps flip (the user-visible change):
-  blocked on the lazification PRs landing first
+A future major release (**target v0.8 or v1.0**) will rename the
+Python import path from `qiskit_metal` to `quantum_metal` to match
+the PyPI package name. A `FutureWarning` now fires on
+`import qiskit_metal` advertising this. Plan to update your imports
+ahead of that release; an alias/shim period will be considered
+during the cutover. See the README rebrand notice for details.
 
-### Deprecation path
+Silence the warning with `QISKIT_METAL_SUPPRESS_RENAME_WARNING=1`.
 
-A v0.6.2 release before v0.7.0 will ship a
-`DeprecationWarning` on `import qiskit_metal` if it detects an
-"installed but won't be in v0.7.0 base" set, pointing users at
-`quantum-metal[full]` for a no-op migration.
+### CI
+
+- **`tests-extras` matrix added** — exercises `[gui]`, `[ansys]`,
+  and `[fem]` install pathways individually so a regression on any
+  one extra surfaces in CI (previously only the full + lite paths
+  were tested).
+
+### Docs
+
+- **README** redesigned with a 5-card install-pathway grid + feature
+  matrix.
+- **`docs/installation.rst`** expanded with the same 5-card grid and
+  a more thorough install-pathway breakdown.
+- **`docs/index.rst`** updated to reflect the v0.5 → v0.7
+  transition state and the upcoming import-rename heads-up.
+- Various "Qiskit Metal" → "Quantum Metal" rebrand cleanups
+  throughout README / docs / install pages.
+
+## Quantum Metal v0.6.2 (deprecation-notice release)
+
+**Pre-flip release.** All v0.6.x install behaviour was unchanged
+— but a `FutureWarning` fired on `import qiskit_metal` advising
+users of the upcoming v0.7.0 lite-flip. Also lazified the last
+remaining eager heavy-dep import (gmsh) and tightened the gmsh pin
+to `>=4.15.0,<5`.
+
+### What landed
+
+- **gmsh lazification** in `renderer_gmsh/gmsh_utils.py` and
+  `renderer_gmsh/gmsh_renderer.py`: same `try/except` +
+  `_require_gmsh()` pattern as the pyEPR/pyaedt lazification.
+- **gmsh version pin tighten**: `gmsh>=4.11.1` → `gmsh>=4.15.0,<5`.
+- **`FutureWarning` on `import qiskit_metal`** advertising the
+  v0.7.0 lite-flip. Repurposed in v0.7.0 to advertise the upcoming
+  import path rename.
+- **Docs CI**: `docs.yml` now also runs on PRs (build-only; deploy
+  only on push-to-main).
+- **Version bumped** to 0.6.2.
 
 ## Quantum Metal v0.6.1 (May 2026)
 

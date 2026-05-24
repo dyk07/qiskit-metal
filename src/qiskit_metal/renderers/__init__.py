@@ -90,6 +90,12 @@ from qiskit_metal.renderers.setup_default import setup_renderers
 from qiskit_metal import config
 
 if config.is_building_docs():
+    # Expose renderer classes to Sphinx autodoc. As of v0.7.0
+    # (lite-by-default) the docs tox env installs only the base
+    # package — pyside6, pyaedt, gmsh, etc. are NOT installed in
+    # CI. Those imports are mocked via ``autodoc_mock_imports`` in
+    # ``docs/conf.py`` so the autodoc walk doesn't blow up trying
+    # to follow native-extension symbols.
     from qiskit_metal.renderers.renderer_base.renderer_base import QRenderer
     from qiskit_metal.renderers.renderer_base.renderer_gui_base import QRendererGui
     from qiskit_metal.renderers.renderer_base.rndr_analysis import QRendererAnalysis

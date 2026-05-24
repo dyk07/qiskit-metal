@@ -40,6 +40,47 @@ os.environ["QISKIT_METAL_DOCS_BUILD"] = "1"
 os.environ.setdefault("QT_API", "pyside6")
 
 
+# Pre-mock heavy / native-extension dependencies BEFORE importing
+# qiskit_metal. As of v0.7.0 the docs tox env installs only the
+# lite package — PySide6, pyaedt, pyEPR, gmsh, qdarkstyle, IPython
+# are not on disk. ``autodoc_mock_imports`` (set further down) only
+# kicks in for autodoc's cross-reference walk; it does not protect
+# THIS file's own ``import qiskit_metal`` below, which transitively
+# touches ``mpl_canvas`` → ``matplotlib.backends.backend_qt5agg`` →
+# ``from PySide6 import ...`` and various ``_gui/`` widgets that
+# subclass ``QTableView`` etc.
+#
+# Use sphinx's own ``_MockObject`` (rather than ``unittest.mock.
+# MagicMock``) because the former handles being used as a class
+# base — Python's ``MagicMock`` triggers ``TypeError: metaclass
+# conflict`` when two mocked classes are listed as bases.
+import sys
+from sphinx.ext.autodoc.mock import _MockModule
+
+_MOCKED_MODULES = [
+    "PySide6",
+    "PySide6.QtCore",
+    "PySide6.QtGui",
+    "PySide6.QtWidgets",
+    "qdarkstyle",
+    "gmsh",
+    "pyEPR",
+    "pyaedt",
+    "ansys",
+    "ansys.aedt",
+    "ansys.aedt.core",
+    "IPython",
+    "IPython.core",
+    "IPython.core.magic",
+    "IPython.display",
+    "matplotlib.backends.backend_qt5agg",
+    "matplotlib.backends.backend_qtagg",
+    "matplotlib.backends.qt_compat",
+]
+for _mod in _MOCKED_MODULES:
+    sys.modules.setdefault(_mod, _MockModule(_mod))
+
+
 import qiskit_metal
 import qiskit_sphinx_theme
 
@@ -126,13 +167,78 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
+    "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
     "sphinx.ext.extlinks",
     "nbsphinx",
     "qiskit_sphinx_theme",
     "sphinx_design",
+    # JupyterLite — builds an in-browser Jupyter runtime into the docs
+    # site so visitors can run any tutorial without installing anything.
+    # See the ``jupyterlite_*`` config block further down for content
+    # selection and kernel choice.
+    "jupyterlite_sphinx",
 ]
+
+# --- JupyterLite ----------------------------------------------------------
+# Ship a JupyterLite instance under ``/lite/`` on the docs site with the
+# tutorial notebooks pre-loaded. nbsphinx pages automatically gain a
+# "Try it live" / "Launch in JupyterLite" button.
+#
+# Trade-off: build time +1-2 min, output size +~20 MB. Worth it — every
+# tutorial becomes a zero-install try-it experience for newcomers, which
+# is the single biggest adoption lever for a library that already has a
+# lite-by-default install path.
+#
+# The Pyodide kernel runs Python in WebAssembly. Quantum Metal's lite
+# install (no Qt / Ansys / gmsh) works in Pyodide; the GUI / Ansys / FEM
+# extras don't, so we only surface the lite-compatible tutorials by
+# default (Section 1 + most of Section 2).
+jupyterlite_contents = ["tutorials/"]
+jupyterlite_dir = "."
+jupyterlite_silence = True  # quiet build-time chatter
+# Each tutorial notebook gets a "Launch in JupyterLite" link in its header
+# (default behavior — no extra config needed since contents include
+# the ``tutorials/`` tree).
+
+# Intersphinx — resolve cross-references to external project docs so that
+# type annotations like ``logging.Logger`` and ``matplotlib.figure.Figure``
+# in docstrings become hyperlinks instead of "unresolved reference"
+# warnings. Without this, bare names like ``logger`` and ``figure`` in
+# Napoleon-style docstrings get resolved against every ``logger`` /
+# ``figure`` attribute in our own codebase, causing the "more than one
+# target found" ambiguity warnings that previously flooded the build.
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "pandas": ("https://pandas.pydata.org/docs/", None),
+}
+
+# When autodoc encounters a bare type name in a docstring that matches an
+# attribute on many of our classes (``logger``, ``figure``, ...), Sphinx
+# emits "more than one target found for cross-reference" warnings. The
+# real fix is in the docstrings themselves (use qualified types like
+# ``logging.Logger`` or ``matplotlib.figure.Figure``), but this list
+# keeps stragglers from breaking builds and matches the patterns that
+# have shown up historically.
+nitpick_ignore = [
+    ("py:attr", "logger"),
+    ("py:attr", "figure"),
+    ("py:class", "logger"),
+    ("py:class", "figure"),
+]
+
+# Suppress specific warning categories that are unavoidable trade-offs:
+#
+# - ``toc.not_included``: the ``docs/apidocs/qiskit_metal.analyses.*.rst``
+#   stubs are not toctreed (see comment block in ``docs/apidocs/analyses.rst``
+#   for the rationale — adding a toctree there would re-document each class
+#   via two paths and trigger 600+ ``duplicate object description`` warnings).
+#   Re-classify these stubs as orphans by suppressing the warning instead.
+# - ``misc.highlighting_failure``: occasional Pygments hiccups on
+#   notebook code that has unicode quirks; harmless.
 
 html_static_path = ["_static"]
 templates_path = ["_templates"]
@@ -153,6 +259,10 @@ nbsphinx_execute_arguments = [
 
 nbsphinx_execute = os.getenv("QISKIT_DOCS_BUILD_TUTORIALS", "never")
 
+# The "ipython3" Pygments lexer that nbsphinx emits for code cells is
+# registered by the ``ipython`` package — see the ``ipython`` entry in
+# pyproject.toml's ``[dependency-groups] docs`` for the reason.
+
 # Let Sphinx/nbsphinx choose the appropriate parser for each suffix.
 # source_suffix = ['.rst', '.ipynb']
 source_suffix = {".rst": "restructuredtext"}
@@ -166,7 +276,6 @@ nbsphinx_thumbnails = {
     "tut/4-Analysis/4.33-Transmon-analytics": "_static/4-33-transmon-analytics.png",
     "tut/4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis": "_static/4-34-transmon-cpb.png",
     "tut/4-Analysis/4.15-CPW-kappa-calculation": "_static/4-15-kappa-calc.png",
-    "tut/1-Overview/1.3-Saving-Your-Chip-Design": "_static/1-3-save.png",
 }
 
 # -----------------------------------------------------------------------------
@@ -190,7 +299,23 @@ numfig = True
 
 # Mock heavy/external modules so autodoc does not pull in their docstrings
 # (e.g., matplotlib roles that are not defined in our docs build).
-autodoc_mock_imports = ["matplotlib"]
+#
+# As of v0.7.0 the docs tox env installs only the base/lite package
+# (no [full] extras). The heavies below are not on disk during a docs
+# build; mocking them keeps autodoc's cross-reference walk from blowing
+# up when it follows type hints into Qt / pyEPR / pyaedt / gmsh /
+# IPython symbols. With these mocks in place, the renderer modules can
+# import cleanly under autodoc even though their native libs are absent.
+autodoc_mock_imports = [
+    "matplotlib",
+    "PySide6",
+    "qdarkstyle",
+    "pyEPR",
+    "pyaedt",
+    "ansys",  # ansys.aedt.core etc.
+    "gmsh",
+    "IPython",  # Jupyter-environment only; lazified in display.py
+]
 
 # A dictionary mapping 'figure', 'table', 'code-block' and 'section' to
 # strings that are used for format of figure numbers. As a special character,
