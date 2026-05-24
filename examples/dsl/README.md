@@ -24,6 +24,7 @@
 | `transmon_pocket_2q.metal.yaml` | 模板示例：`type: transmon_pocket` 自动生成几何 |
 | `primitive_native_demo.ipynb` | Notebook：primitive-native 构建流程 |
 | `transmon_pocket_demo.ipynb` | Notebook：模板构建流程 |
+| `bidirectional_traversal_proof.{py,ipynb}` | 演示 circuit ↔ geometry ↔ netlist 双向追踪与 `overrides` round-trip |
 | `run_chain_demo.py` | 命令行脚本，兼 smoke test |
 | `run_transmon_pocket_demo.py` | 命令行脚本，兼 smoke test |
 | `.note/` | 开发笔记，不影响运行 |

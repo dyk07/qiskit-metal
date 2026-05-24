@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Proof of bidirectional traversal for the chain DSL (2x2 example).
+"""DSL v3 双向追踪验证（基于 chain_2q_native.metal.yaml）。
 
-Checks:
-  1) Circuit -> geometry (pad width propagation)
-  2) Geometry -> netlist (routes populate net_info)
-  3) Geometry -> circuit (explicit extractor)
-  4) Round-trip (override circuit, rebuild, geometry updates)
+证明四条链路:
+
+  1) circuit -> geometry: circuit.Q*.pad_width 通过 ${...} 插值传到 primitive 尺寸
+  2) netlist  -> net_info: netlist.connections 写入 design.net_info
+  3) geometry -> circuit:  从 derived metadata 取出 bus 的实际 path 长度
+  4) round-trip:           overrides 改 circuit 后重建，geometry 同步更新
 """
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 _HERE = Path(__file__).resolve()
 _REPO = _HERE.parents[2]
@@ -20,58 +21,50 @@ if _SRC.exists() and str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 
-def extract_geometry_to_circuit(design) -> dict:
-    """Collect geometry-derived values and store them in the chain metadata."""
-    chain = design.metadata.get("dsl_chain", {})
-    circuit = chain.setdefault("circuit", {})
-
-    route_names = ["top_bus", "left_bus", "bottom_bus", "right_bus"]
-    route_lengths: dict[str, str] = {}
-    for name in route_names:
-        if name in design.components:
-            length = design.components[name].options.get("_actual_length")
-            if length:
-                route_lengths[name] = str(length)
-
-    circuit["route_lengths"] = route_lengths
-    return route_lengths
+def _pad_left_x_extent(derived, qubit: str) -> float:
+    bounds = derived["circuit"]["geometry"][qubit]["primitives"]["pad_left"]["bounds"]
+    return bounds[2] - bounds[0]
 
 
 def main() -> int:
-    from qiskit_metal.toolbox_metal.design_dsl import build_design
+    from qiskit_metal.toolbox_metal.dsl import build_design
 
-    yaml_path = _HERE.with_name("2x2_4qubit.chain.metal.yaml")
+    yaml_path = _HERE.with_name("chain_2q_native.metal.yaml")
     design = build_design(yaml_path)
-    chain = design.metadata.get("dsl_chain", {})
+    chain = design.metadata["dsl_chain"]
+    derived = chain["derived"]
 
-    # 1) Circuit -> geometry
-    pad_circuit = str(chain["circuit"]["Q1"]["pad_width"])
-    pad_geom = str(design.components["Q1"].options.get("pad_width"))
-    assert pad_geom == pad_circuit, "Circuit -> geometry propagation failed"
+    # 1) circuit -> geometry：pad_width 从 circuit 插值到 primitive
+    pad_circuit = chain["circuit"]["Q1"]["pad_width"]          # "420um"
+    pad_geom_mm = _pad_left_x_extent(derived, "Q1")            # 0.42
+    assert abs(pad_geom_mm - 0.42) < 1e-9, (
+        f"circuit -> geometry 失败: pad_width={pad_circuit}, geom={pad_geom_mm}")
 
-    # 2) Geometry -> netlist (routes populate net_info)
-    assert len(design.net_info) > 0, "Routes did not populate net_info"
+    # 2) netlist -> net_info：connections 写入 net_info
+    assert len(design.net_info) > 0, "netlist -> net_info 失败：net_info 为空"
 
-    # 3) Geometry -> circuit (explicit extractor)
-    route_lengths = extract_geometry_to_circuit(design)
-    assert route_lengths, "No route lengths extracted from geometry"
+    # 3) geometry -> circuit：从 derived 取 bus path 长度，写回 circuit
+    bus_length_mm = derived["circuit"]["geometry"]["bus"]["primitives"]["center_trace"]["length"]
+    chain["circuit"].setdefault("bus", {})["actual_length"] = f"{bus_length_mm}mm"
+    assert bus_length_mm > 0, "geometry -> circuit 失败：bus 长度为 0"
 
-    # 4) Round-trip: override circuit and rebuild
-    override_circuit = dict(chain["circuit"])
-    for qubit in ("Q1", "Q2", "Q3", "Q4"):
-        override_circuit[qubit] = dict(override_circuit[qubit])
-        override_circuit[qubit]["pad_width"] = "450um"
+    # 4) round-trip：覆盖 circuit.Q1.pad_width 后重建，geometry 同步变化
+    design2 = build_design(
+        yaml_path,
+        overrides={"circuit": {"Q1": {"pad_width": "500um"}}},
+    )
+    pad_geom_mm_2 = _pad_left_x_extent(
+        design2.metadata["dsl_chain"]["derived"], "Q1")
+    assert abs(pad_geom_mm_2 - 0.5) < 1e-9, (
+        f"round-trip 失败：override 后 geom pad_width={pad_geom_mm_2}")
 
-    design2 = build_design(yaml_path, overrides={"circuit": override_circuit})
-    pad_geom_2 = str(design2.components["Q1"].options.get("pad_width"))
-    assert pad_geom_2 == "450um", "Round-trip override failed"
-
-    print("PASS: circuit -> geometry")
-    print("PASS: geometry -> netlist")
-    print("PASS: geometry -> circuit (extractor)")
-    print("PASS: circuit override -> geometry (round-trip)")
+    print("PASS: circuit -> geometry            "
+          f"(Q1.pad_width={pad_circuit} -> pad_left x-span={pad_geom_mm}mm)")
+    print(f"PASS: netlist  -> net_info            (net rows={len(design.net_info)})")
+    print(f"PASS: geometry -> circuit (extractor) (bus length={bus_length_mm}mm)")
+    print(f"PASS: circuit override -> geometry    (Q1 pad_width 420um -> 500um)")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    sys.exit(main())
