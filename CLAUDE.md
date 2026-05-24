@@ -1,109 +1,80 @@
-# CLAUDE.md — Quantum Metal repo guide for AI agents
+# CLAUDE.md
 
-> If you are a Claude (or other AI agent) opening this repo for the first
-> time, **read this file end-to-end before touching anything**. It points
-> at the rest of the context that will save you hours.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## What this repo is
+## What this directory is
 
-**Quantum Metal** (formerly Qiskit Metal) is an open-source Python framework
-for designing and analysing superconducting quantum chips. The PyPI package
-is `quantum-metal`; the import path is still `qiskit_metal` for backward
-compatibility. The community-maintained successor to IBM's original
-Qiskit Metal — the rebrand is in progress through the v0.6.x line.
+A git **worktree** of [qiskit-metal](https://github.com/qiskit-community/qiskit-metal) (Quantum Metal v0.5.3.post1), checked out on branch `full_chain`. The `.git` here is a pointer file → `../../qiskit-metal/.git/worktrees/dyk07-main`; both this worktree and the sibling `qiskit-metal/` study copy share the same object database.
 
-Stack: Python 3.10–3.12 · `shapely` for geometry · `geopandas` /
-`pandas` for storage · `matplotlib` for headless viewing · `PySide6` for
-the optional desktop GUI · `pyEPR-quantum` / `pyaedt` / `gmsh` /
-`Elmer` for analysis backends.
+Remotes:
+- `origin`  → https://github.com/dyk07/qiskit-metal (user fork)
+- `upstream` → https://github.com/qiskit-community/qiskit-metal
 
-## Architecture map (skim these first)
+This worktree is the **active development copy** — new features and behavior changes go here. The sibling `qiskit-metal/` tree (on branch `main`) is for reading/study and Chinese learning annotations. See the parent `../../CLAUDE.md` for the workspace-wide layout.
 
-| Path | What lives there |
-|------|------------------|
-| `src/qiskit_metal/qlibrary/` | All `QComponent` subclasses (transmons, terminations, lumped, couplers, routes, sample shapes). The user-visible catalogue. |
-| `src/qiskit_metal/qlibrary/core/base.py` | `QComponent` — the load-bearing base class. Read end-to-end before touching any component. |
-| `src/qiskit_metal/designs/` | `QDesign` and subclasses (`DesignPlanar`, `DesignFlipChip`, ...). Components attach to a design. |
-| `src/qiskit_metal/renderers/renderer_base/` | `QRenderer` and `QRendererAnalysis` — the two abstract bases. See `docs/architecture/renderer_protocol.md`. |
-| `src/qiskit_metal/renderers/renderer_ansys/` | Legacy COM-based HFSS/Q3D renderer. Hard-touch zone. |
-| `src/qiskit_metal/renderers/renderer_ansys_pyaedt/` | New pyaedt-based HFSS/Q3D renderer. Migration in progress. |
-| `src/qiskit_metal/renderers/renderer_gds/` | `QGDSRenderer` — export to GDS. Pure-Python; safe to touch. |
-| `src/qiskit_metal/renderers/renderer_mpl/` | The matplotlib renderer used by both the Qt GUI and `qm.view`. `QMplRenderer` no longer requires Qt as of v0.6.1. |
-| `src/qiskit_metal/renderers/renderer_gmsh/`, `renderer_elmer/` | Open-source FEM path. Depends on `gmsh` (optional). |
-| `src/qiskit_metal/viewer/` | New (v0.6.1) — `qm.view(design)` headless entry point. |
-| `src/qiskit_metal/_gui/` | The Qt desktop GUI (`MetalGUI`). Hard-touch zone unless you have a Qt session to test in. |
-| `src/qiskit_metal/analyses/` | Pure-Python analyses (Hamiltonian, capacitance, EPR). qutip 5+. |
-| `tests/` | unittest-style suite. `pytest tests/` to run; gated in CI on every PR. |
-| `tutorials/` | 40+ Jupyter notebooks. Numbered (1-Overview / 2-Components / 3-Renderers / 4-Analysis). |
-| `docs/` | Sphinx. `tox -e docs` to build. |
-| `scripts/check_env_consistency.py` | CI gate that asserts `environment.yml` and `pyproject.toml` agree. |
+Source lives under `src/qiskit_metal/` (uv build backend; `tool.uv.build-backend.module-name = "qiskit_metal"` keeps the legacy import path).
 
-## Hard constraints — do not touch without explicit human approval
+## Active feature on this branch: DSL v3
 
-1. **`renderers/renderer_ansys/`** — COM-based HFSS/Q3D. Requires Ansys
-   AEDT on Windows to validate. Even type-comparison changes have
-   shipped silent bugs.
-2. **`renderers/renderer_ansys_pyaedt/`** — same constraint for the
-   pyaedt-based replacement.
-3. **`_gui/` and everything inside it** — requires interactive Qt
-   session to verify behavior.
-4. **The pyEPR integration bridge** (`renderer_ansys/parse.py`,
-   `solution_types.py` interaction with `pyEPR.solution_types`).
-   Cross-repo coordination required.
-5. **Public method signatures on `QComponent`, `QDesign`,
-   `QRenderer`** — no breaking changes without deprecation path.
+The `full_chain` branch is building a **native YAML DSL** that resolves a single `.metal.yaml` file into a Metal `QDesign` without going through qlibrary Python classes (no `TransmonPocket(...)` instantiation). Key entry points:
 
-**If you find a real bug in any of the above, document it (e.g. in a
-test's `KNOWN_*` skip list, see `tests/test_qlibrary_pin_sanity.py`)
-rather than silently fixing.** A drive-by "fix" without HFSS / Qt
-validation is how silent S-parameter errors ship.
+- `src/qiskit_metal/toolbox_metal/dsl/` — implementation:
+  - `builder.py` — `build_ir(yaml)` parses YAML → `DesignIR` (primitives, pins, netlist, derived); `build_design(yaml)` exports the IR to a real `QDesign` (writes qgeometry tables, pins, calls `connect_pins`).
+  - `component_templates.py` + `template_registry.py` + `template_model.py` — resolve `type: transmon_pocket` style component templates by walking the inheritance chain `qcomponent → base_qubit → transmon_pocket`.
+  - `expression.py` — `${...}` interpolation and safe AST evaluation (uses `parsing.parse_value` for unit literals like `12um`, `1.2mm`, `18GHz`).
+  - `geometry_ops.py` — shapely operations used by template-generated geometry.
+  - `_helpers.py` — YAML loader (rejects duplicate keys), unit parsing, deep merge.
+- `src/qiskit_metal/toolbox_metal/dsl_templates/` — built-in component YAML templates (`core/qcomponent.yaml`, `core/base_qubit.yaml`, `qubits/transmon_pocket.yaml`).
+- `src/qiskit_metal/toolbox_metal/design_dsl.py` — thin backward-compat facade that re-exports the `dsl` package API.
+- `examples/dsl/*.metal.yaml` + notebooks + `run_*_demo.py` smoke-test scripts (notebooks prepend `../../src` to `sys.path` so no install needed).
+- `tests/test_design_dsl*.py` — three test files covering IR, templates, and the transmon_pocket parity case.
+- `.codex/dsl_v3_*.md` — design-review notes from prior agent rounds. **Read-only context**; not generated files but not production code either.
 
-## Read these next — context files
+Schema header for DSL files: `schema: qiskit-metal/design-dsl/3`. Top-level sections: `vars`, `hamiltonian`, `circuit`, `netlist`, `geometry` (with sub-keys `design`, `templates`, `components`, `transforms`). Component templates use `type:` and `options:`; primitive-native components use `primitives:` + `pins:` directly.
 
-| File | Read when |
-|------|-----------|
-| `.claude/context/lessons-learned.md` | **Always.** Every hard-won fix from real debugging — pandas-2.2 indexing, qutip-5 API, lazy Qt, uv-auto-sync, the v0.6.0 release failure, etc. Avoids re-discovering each from scratch. |
-| `.claude/context/architecture.md` | When you need to make structural changes — class hierarchy, option flow, renderer dispatch, lazy-Qt design. |
-| `.claude/context/ecosystem.md` | When making roadmap / API / version decisions — who the users are, the pyEPR/pyaedt/AWS-Palace relationships, the v0.7.0 lite-by-default plan. |
-| `docs/architecture/renderer_protocol.md` | When adding or modifying a renderer. The full inheritance map and override matrix. |
-| `docs/headless-usage.rst` | When working on the Qt-free path or onboarding flow. |
+When editing the DSL: the schema is centralized as `CURRENT_SCHEMA` and the per-section allowed keys as `ROOT_KEYS`, `GEOMETRY_KEYS`, `DESIGN_KEYS`, `TRANSFORM_KEYS`, `COMPONENT_KEYS` at the top of `builder.py`. Update these together when adding YAML surface area.
 
-## Recurring tasks — slash commands
+## Running
 
-| Command | What it does |
-|---------|--------------|
-| `.claude/commands/health-check.md` | `/health-check` — broad repo audit: CI status, deps, lint, test coverage, drift, recent activity. |
-| `.claude/commands/release.md` | `/release` — step-by-step release procedure including the post-mortem of the v0.6.0 failure. |
-| `.claude/commands/headless-check.md` | `/headless-check` — verify `import qiskit_metal` and `qm.view(design)` work without PySide6. Reproduces the `tests-lite` CI job locally. |
-| `.claude/commands/refresh-tutorial.md` | `/refresh-tutorial` — apply the standard "no-Qt callout" to a tutorial or batch of tutorials. |
+This worktree uses `uv` + `tox` for dev tasks (configured in `pyproject.toml`, no separate `tox.ini`). Tests set `QISKIT_METAL_HEADLESS=1` so PySide6 windows do not pop up. CI matrix is Python 3.10/3.11/3.12 × ubuntu-24.04/macos-15/windows-2025.
 
-## Testing & CI quick reference
+```powershell
+tox -m test                          # pytest across all configured Python versions
+tox -e py3.12                        # one Python version
+tox -e py3.12 -- tests/test_design_dsl.py::test_build_design_round_trip   # one test
+tox -e lint                          # ruff check on qiskit_metal
+tox -e format                        # ruff format on qiskit_metal
+tox -e docs                          # sphinx HTML build
+```
 
-- Full suite: `QISKIT_METAL_HEADLESS=1 uv run pytest tests/` (~30s)
-- Lint: `uvx ruff check src` (currently 13 known findings, all in
-  HFSS/`_gui/` zones — see lessons-learned)
-- Format: `uvx ruff format src`
-- Docs build: `tox -e docs`
-- Env-drift check: `uv run scripts/check_env_consistency.py`
+Demo scripts are run with the conda env that has Quantum Metal + PySide6 installed (the parent project's `.venv` is Python 3.13, which is **outside** the supported `>=3.10,<3.13` range — do not use it for these):
 
-CI matrix on every PR: 9 test combos (py3.10/3.11/3.12 ×
-ubuntu/macos/windows) + `lint` + `env-consistency` + `coverage` +
-`tests-lite` (including notebook-execute).
+```powershell
+C:\ProgramData\anaconda3\envs\metal-env\python.exe examples\dsl\run_chain_demo.py
+C:\ProgramData\anaconda3\envs\metal-env\python.exe examples\dsl\run_transmon_pocket_demo.py
+```
 
-## Status snapshot (as of v0.6.1, May 2026)
+Notebooks in `examples/dsl/` open with the `metal-env` Jupyter kernel; they self-bootstrap `sys.path` to point at `src/`, so no `pip install` of this worktree is required to iterate on the DSL.
 
-- Latest release: **v0.6.1** on PyPI (after the v0.6.0 tag-only
-  failure — see `.claude/commands/release.md`)
-- Test count: **~475 passing**, 0 failing, 0 flaky
-- New no-Qt path: `qm.view(design)` works with `pip install
-  quantum-metal[lite]` (and the default install too — additive in
-  v0.6.x; planned default flip in v0.7.0)
-- HFSS 2024.1+ solution-type rename: handled via
-  `solution_types.py` + pyEPR 0.9.5 normalisation
-- qutip 5+ compatibility: shipped in v0.6.0/0.6.1
-- 13 ruff findings deferred (all in HFSS/`_gui/` zones — need
-  validation)
-- 1 known HFSS bug deferred: `LaunchpadWirebondDriven.in` pin points
-  inward (see `tests/test_qlibrary_pin_sanity.py` `KNOWN_INWARD_PINS`)
-- AWS Palace integration on the roadmap — will unblock HFSS-free
-  validation of the above
+## qiskit-metal big-picture architecture (for orientation)
+
+`src/qiskit_metal/` modules and how they fit together:
+
+- `designs/` — `QDesign` and its subclasses (`DesignPlanar`, `DesignFlipChip`, `DesignMultiPlanar`). Owns `components` registry, `qgeometry` tables, `net_info`, chip metadata.
+- `qlibrary/` — pre-built `QComponent`s (`qubits/`, `couplers/`, `lumped/`, `resonators/`, `sample_shapes/`, `terminations/`, `tlines/`, plus `core/` base classes and `user_components/`). The DSL v3 work deliberately bypasses this layer.
+- `renderers/` — exporters (`QGDSRenderer`, `QAnsysRenderer`, `QHFSSRenderer`, `QQ3DRenderer`, `QPyaedt`, `QGmshRenderer`, `QElmerRenderer`) all extending `QRenderer`.
+- `analyses/` — Hamiltonian / EPR / lumped-element / scattering / sweep helpers.
+- `_gui/` — `MetalGUI` (PySide6; v0.5 dropped PySide2). Headless mode flag: `QISKIT_METAL_HEADLESS=1`.
+- `toolbox_metal/` — Metal-specific utilities: `parsing.parse_value` (unit strings), `import_export`, `layer_stack_handler`, and the **DSL** (above).
+- `toolbox_python/`, `draw/`, `qgeometries/` — generic helpers, drawing primitives, geometry-table layer.
+
+`README_Architecture.md` has the upstream mermaid diagram and the contract for custom `QComponent` / `QRenderer` subclasses.
+
+## Conventions
+
+- **Language**: code under `src/qiskit_metal/` is English — this is the upstream dev tree and changes here are intended to flow upstream. The DSL example YAMLs, demo notebooks, and `.codex/` notes are user-authored extensions and use Chinese comments; keep that style when adding to those areas.
+- **PySide binding**: PySide6 only. `qiskit_metal/__init__.py` sets `os.environ["QT_API"] = "pyside6"` at import time. Do not "fix" code to use PySide2.
+- **Headless tests**: anything that touches `MetalGUI` must respect `QISKIT_METAL_HEADLESS`. `tox` env_run_base already sets it.
+- **Ruff**: lint config is in `pyproject.toml` under `[tool.ruff.lint]` and is a deliberate work-in-progress (`E402, F401, F841, E731, F403, E712, E722, E741, F821` are currently ignored). Do not "clean up" violations of those rules wholesale — they are tracked tech-debt, not the current bar.
+- **YAML DSL keys**: built-in template ids (`qcomponent`, `base_qubit`, `transmon_pocket`) are registered in `BUILTIN_COMPONENT_TEMPLATE_PATHS` in `template_registry.py`. Adding a new template means dropping a `.yaml` under `dsl_templates/` and registering it there.
+- **DSL changes that touch examples**: keep `examples/dsl/*.metal.yaml` and the matching notebooks/`run_*_demo.py` scripts in sync — they double as documentation and as smoke tests.
