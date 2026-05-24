@@ -22,11 +22,25 @@ class UniqueKeyYamlLoader(yaml.SafeLoader):
 
 
 def _construct_unique_mapping(loader: UniqueKeyYamlLoader, node, deep=False):
+    # Step 1: detect genuinely duplicated explicit keys before anchor expansion.
+    # Skip merge keys (<<:) — they are not duplicate explicit keys.
+    explicit_keys: set = set()
+    for key_node, _val_node in node.value:
+        if getattr(key_node, 'tag', None) == 'tag:yaml.org,2002:merge':
+            continue
+        key = loader.construct_object(key_node, deep=False)
+        if key in explicit_keys:
+            raise DesignDslError(f"Duplicate YAML mapping key: {key!r}")
+        explicit_keys.add(key)
+
+    # Step 2: expand <<: anchors — prepends merged pairs before explicit pairs.
+    loader.flatten_mapping(node)
+
+    # Step 3: build mapping with last-wins semantics so explicit keys override
+    # merged keys (merged pairs are at the start, explicit pairs at the end).
     mapping = {}
     for key_node, value_node in node.value:
         key = loader.construct_object(key_node, deep=deep)
-        if key in mapping:
-            raise DesignDslError(f"Duplicate YAML mapping key: {key!r}")
         mapping[key] = loader.construct_object(value_node, deep=deep)
     return mapping
 

@@ -6,6 +6,34 @@ For the offical user-facing changelog for a particular release can be found in t
 
 The changelog for all releases can be found in the release page: [![Releases](https://img.shields.io/github/release/Qiskit/qiskit-metal.svg?style=popout-square)](https://github.com/Qiskit/qiskit-metal/releases)
 
+## Unreleased — Native DSL → Gmsh adapter
+
+A new DSL-native path goes from a `.metal.yaml` file straight to a Gmsh
+`.msh` file, bypassing `QDesign`, `QGmshRenderer`, and `LayerStackHandler`.
+Mainline `QGmshRenderer` is untouched; both paths coexist.
+
+### Highlights
+
+- **New entry point** `qiskit_metal.toolbox_metal.dsl.gmsh_adapter.build_mesh(source, *, output_path=None, options=None, show_gui=False, generate=True)` accepts a YAML path / YAML string / pre-built `DesignIR` and returns a `GmshMeshResult` with `mesh_path`, `physical_groups`, and `bounding_box_m`.
+- **YAML schema extension**: `simulation.gmsh.{layer_stack, airbox, ports, symmetry, mesh, output}`. Schema validation is shared between YAML parsing and the `options=` kwarg — `kwarg` cannot bypass hard constraints (at least one metal layer, primitive layers ⊆ stack layers, non-zero thickness, port pin references must resolve).
+- **Stages**: shapely → OCC PlaneSurface (A) → extrude (B) → endcap/port box for open + declared port pins (B') → ground per layer + vacuum (C) → symmetry half-space cut (C') → cut subtract primitives + endcap boxes (D) → port face resolution (D') → fragment for coplanar stitching (E) → physical groups (F) → distance + threshold size fields + mesh.generate + write (G).
+- **Lumped port face is the single outer vertical wall** of the endcap box (perpendicular to current flow, the standard EM lumped port position). Filter is `_face_is_outer_wall` using `pin_normal_xy` recorded in `_PortBoxSpec`.
+- **mesh kwarg unit guard**: any length in `simulation.gmsh.mesh.*` outside `[10 nm, 10 cm]` (in mm) raises `ValueError` — kwarg and IR fields share the same mm-float contract. See `examples/dsl/.note/gmsh_walkthrough.md §5.2` for the trap (SI-meter values silently get `× 1e-3`-ed into nanometer mesh sizes).
+- **Naming convention** registered in `PHYSICAL_GROUP_NAMING` (e.g. `gnd_layer{N}`, `{component}_{primitive}`, `port_{component}_{pin}`, `symmetry_{plane}`, `vacuum`, `vacuum_outer`). Names sanitized to `^[A-Za-z][A-Za-z0-9_]*$`; duplicate names raise.
+
+### Tests / demos
+
+- `tests/test_design_dsl_gmsh.py`: 24 integration tests covering input branches, schema-aware kwarg validation, M3 full pipeline, M4 ports / symmetry / endcap, M5 unit guard, plus `meshio.read()` reload (gmsh + meshio both `importorskip`-ed).
+- `tests/test_design_dsl_gmsh_simulation_schema.py`: 26 schema tests.
+- `examples/dsl/run_chain_gmsh_demo.py`: smoke runner (`--output`, `--gui`, `--fine`) — chain_2q produces 17 physical groups.
+- `examples/dsl/.note/gmsh_walkthrough.md`: ~400-line user-facing walkthrough.
+
+### Architecture notes
+
+`README_Architecture.md` gains a "Native DSL → Gmsh adapter" section listing the contracts and stage table.
+
+---
+
 ## Quantum Metal v0.7.1 (UX + docs polish; no breaking changes)
 
 **Follow-up to v0.7.0** focused on adoption / DevRel polish, build-time

@@ -211,3 +211,36 @@ In addition to the attributes and methods that must be overwritten by any QRende
 | render_connectors | Render connectors.          |
 | clear_axis        | Clear the axis.             |
 | clear_figure      | Clear the figure.           |
+
+## Native DSL → Gmsh adapter
+
+A native DSL → Gmsh path lives at `qiskit_metal.toolbox_metal.dsl.gmsh_adapter.build_mesh`. It bypasses `QDesign` / `QGmshRenderer` / `LayerStackHandler` entirely: input is a `.metal.yaml` file (or a pre-built `DesignIR`), output is a `.msh` file plus a `physical_groups` dict.
+
+```
+.metal.yaml ──► build_ir() ──► DesignIR ──► build_mesh() ──► .msh + physical_groups
+```
+
+Key contracts (full design doc: `.claude/scratch/gmsh-interface/02_plan.md`; user-facing walkthrough: `examples/dsl/.note/gmsh_walkthrough.md`):
+
+- **Sole entry point** = `build_ir()` / `DesignIR`. `build_mesh` rejects `QDesign` with `TypeError`.
+- **No qlibrary / designs / renderer_gmsh** imports inside the adapter (see plan §0 deny-list + the `test_adapter_does_not_import_renderer_gmsh_or_renderer_base` subprocess test).
+- **YAML schema** adds an optional `simulation:` top-level section. Subkeys: `gmsh.layer_stack`, `gmsh.airbox`, `gmsh.ports`, `gmsh.symmetry`, `gmsh.mesh`, `gmsh.output`. Schema validation is shared between YAML parsing and the `options=` kwarg via `_parse_gmsh_simulation`.
+- **Units**: YAML / IR values are mm float; adapter normalizes once to SI meters at entry. `.msh` output is SI with `Mesh.ScalingFactor=1`.
+- **Pipeline stages** (`gmsh_adapter.build_mesh`):
+
+  | Stage | Where | What |
+  | --- | --- | --- |
+  | A   | `_gmsh_geometry.render_component` | shapely → OCC PlaneSurface (poly / path / junction) |
+  | B   | (same)                          | extrude 2D surface to 3D volume per layer thickness |
+  | B'  | `_stage_endcaps_and_ports`        | open-pin endcap box + lumped/ground port box (M4) |
+  | C   | `_gmsh_layers.render_layer_grounds` + `render_vacuum_box` | ground per layer + vacuum |
+  | C'  | `_gmsh_layers.apply_symmetry_cuts` | half-space cut for `simulation.gmsh.symmetry` (M4) |
+  | D   | `_gmsh_layers.apply_cuts`         | subtract primitives + endcap boxes from ground |
+  | D'  | `_gmsh_geometry.resolve_port_surfaces` | filter port face (outer vertical wall) from ground boundary (M4 + M5) |
+  | E   | `_gmsh_layers.fragment_everything` | OCC fragment for coplanar interface stitching |
+  | F   | `_gmsh_physical.assign_physical_groups` | named groups (`gnd_layer{N}`, `port_{c}_{pin}`, `symmetry_{plane}`, …) |
+  | G   | `_gmsh_mesh.define_size_fields` + `generate_mesh` + `write_mesh` | distance + threshold size fields, mesh.generate(3), `.msh` write |
+
+- **Coexistence with `QGmshRenderer`**: the legacy renderer remains for qlibrary-based designs; the DSL adapter is the DSL-native path. They share only the pure helpers in `renderer_gmsh.gmsh_utils` (`render_path_curves`, `line_width_offset_pts`, `Vec3DArray`, `_require_gmsh`) — no class inheritance, no method calls.
+
+End-to-end demo: `examples/dsl/run_chain_gmsh_demo.py --output build/chain_2q.msh [--gui] [--fine]`.

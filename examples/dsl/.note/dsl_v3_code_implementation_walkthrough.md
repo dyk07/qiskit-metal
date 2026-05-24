@@ -39,9 +39,11 @@ dsl.builder.build_design()
   |
   v
 dsl.builder.build_ir()
-  |-- _load_yaml()
+  |-- _load_yaml()-- spec, basedir
   |-- _expand_includes()
+        -- 只认可$include作为单独键, 嵌套递归实现并用seen避免循环
   |-- schema/root key validation
+   更多校验*啥东西都要_reject_unknown, 然后用
   |-- walk_substitute(vars/circuit/hamiltonian/netlist)
   |-- _design_variable_context()
   |-- ComponentTemplateRegistry(...)

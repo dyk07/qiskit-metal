@@ -122,3 +122,24 @@ geometry:
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
         - {name: end, points: [["${qx} - ${bus_attach}", -6um], ["${qx} - ${bus_attach}", 6um]],
            width: "${circuit.bus.width}", gap: "${circuit.bus.gap}"}
+
+# 仿真前端 (Gmsh) 元数据。所有长度字面量解析进 IR 后保持 mm float, 与
+# PrimitiveIR.geometry 单位一致; adapter 入口 (build_mesh) 会一次性
+# × 1e-3 转 SI。不写 simulation: 段时 DesignIR.simulation == {}, 与旧
+# YAML 100% 向后兼容; 这里给出 chain_2q 的最小可用值, 仅供 gmsh adapter
+# 烟囱测试参考。
+#
+# M4 已经支持 ports / symmetry / 自动 open-pin endcap。chain_2q 的 4 个
+# pin (Q1.bus / Q2.bus / bus.start / bus.end) 都被 netlist.connections
+# 覆盖, 不存在 open pin, 所以这里不加 endcap; 端口 / 对称面是仿真期决策
+# 不强行写进 design yaml — 想跑端口示例请看 `tests/test_design_dsl_gmsh.py::
+# test_m4_*` 中的 `_M4_YAML` 片段。
+simulation:
+  gmsh:
+    layer_stack:
+      1: {kind: metal, thickness: 2um, z: 0um, material: pec}
+      3: {kind: dielectric, thickness: -750um, z: 0um, material: silicon, eps_r: 11.45}
+    airbox:
+      top: 890um
+      bottom: 1650um
+      side_buffer: 200um
