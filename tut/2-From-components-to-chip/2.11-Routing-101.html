@@ -1,26 +1,28 @@
 <!doctype html>
-<html class="no-js" lang="en">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Simple Meander" href="2.12-Simple-Meander.html" /><link rel="prev" title="How to copy a QComponent" href="2.02-How-to-copy-a-QComponent.html" />
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="2.12 Simple Meander" href="2.12-Simple-Meander.html"><link rel="prev" title="2.01 QComponent lifecycle — use, copy, delete, rename" href="2.01-How-to-use-a-QComponent.html">
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Routing 101 - Quantum Metal 0.5.3.post1</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>2.11 Routing 101 - Quantum Metal 0.7.3</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/qiskit-sphinx-theme.css?v=8ff9dcb6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
@@ -139,14 +141,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -156,17 +154,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">Quantum Metal 0.5.3.post1</div></a>
+      <a href="../../index.html"><div class="brand">Quantum Metal 0.7.3</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -174,8 +170,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -185,7 +180,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">Quantum Metal 0.5.3.post1</span>
+  <span class="sidebar-brand-text">Quantum Metal 0.7.3</span>
   
 </a>
 <form class="sidebar-search-container" method="get" action="../../search.html" role="search">
@@ -194,76 +189,70 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installing Qiskit Metal</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Roadmap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#qiskit-metal-workflow">Qiskit Metal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installing Quantum Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-Overview/1.1-Quick-start.html">Quick Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../videoseducation.html">Videos &amp; Education</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.1-Bird%27s-eye-view-of-Qiskit-Metal.html">Bird’s eye view of Qiskit Metal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.2-Quick-start.html">Quick Start: Build your first 4-qubit processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.3-Saving-Your-Chip-Design.html">Save your chip design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html">How to use a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#QComponent-Default-Options">QComponent Default Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Modifying-the-Options">Modifying the Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Copying-a-QComponent">Copying a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Deleting-a-QComponent">Deleting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Renaming-a-QComponent">Renaming a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Overwriting-a-QComponent">Overwriting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Closing-the-Qiskit-Metal-GUI">Closing the Qiskit Metal GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.02-How-to-copy-a-QComponent.html">How to copy a QComponent</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Routing 101</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html">Simple Meander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html#Using-CPW-meanders-to-connect-the-3-Qbits">Using CPW meanders to connect the 3 Qbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.13-Hybrid-Auto-and-AStar.html">Hybrid Auto and AStar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.14-Get-them-all-with-MixedRoute.html">Get them all with MixedRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.21-Design-a-4-qubit-full-chip.html">Design a 4 qubit full chip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.22-Design-100-qubits-programmatically.html">Design 100 qubits programmatically</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.23-Modify-chip-options.html">Modify chip options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.31-Create-a-QComponent-Basic.html">Create a QComponent - Basic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.32-Create-a-QComponent-Advanced.html">Create a QComponent - Advanced</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.33-Add-my-QComponent-to-a-reusable-python-file.html">Add my QComponent to a reusable python file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html">Introduction to QRenderers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html#Note:">Note:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.2-Export-your-design-to-GDS.html">Export your design to GDS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.3-Render-your-design-to-Ansys.html">Render your design to Ansys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">How do I make my custom QRenderer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.01-Capacitance-and-LOM.html">Capacitance matrix and LOM analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.02-Eigenmode-and-EPR.html">Eigenmode and EPR analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.03-Impedance.html">Impedance, admittance and scattering analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html">Analyzing and tuning a transmon qubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html#1.-Create-the-Qbit-design">1. Create the Qbit design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.12-Analyze-a-resonator.html">Analyzing and tuning a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.13-Analyze-transmon-and-resonator.html">Analyzing and tuning a transmon qubit with a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">Analyzing a double hanger resonator (S Param)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.15-CPW-kappa-calculation.html">CPW Kappa Calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html">Sweeps - Capacitance matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html#READ-THIS-BEFORE-running-the-cell.">READ THIS BEFORE running the cell.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.22-Eigenmode-matrix.html">Sweeps - Eigenmode matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.32-Transmon-analytics-HCPB.html">Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.33-Transmon-analytics.html">Transmon Analytics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.1-Quick-start.html">1.1 Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.2-Bird%27s-eye-view-of-Quantum-Metal.html">1.2 Bird’s eye view of Quantum Metal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.3-Build-a-4-qubit-chip.html">1.3 Build a 4-qubit chip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.4-Saving-Your-Chip-Design.html">1.4 Saving Your Chip Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.5-Parametric-design---iterate-and-compare.html">1.5 Parametric Design: Iterate and Compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html">2.01 QComponent lifecycle — use, copy, delete, rename</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.11 Routing 101</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html">2.12 Simple Meander</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.13-Hybrid-Auto-and-AStar.html">2.13 Hybrid Auto and AStar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.14-Get-them-all-with-MixedRoute.html">2.14 Get them all with MixedRoute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.21-Design-a-4-qubit-full-chip.html">2.21 Design a 4 qubit full chip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.22-Design-100-qubits-programmatically.html">2.22 Design 100 qubits programmatically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.23-Modify-chip-options.html">2.23 Modify chip options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.31-Create-a-QComponent-Basic.html">2.31 Create a QComponent - Basic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.32-Create-a-QComponent-Advanced.html">2.32 Create a QComponent - Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.33-Add-my-QComponent-to-a-reusable-python-file.html">2.33 Add my QComponent to a reusable python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html">3.1 Introduction to QRenderers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.2-Export-your-design-to-GDS.html">3.2 Export your design to GDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.3-Render-your-design-to-Ansys.html">3.3 Render your design to Ansys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">3.4 How do I make my custom QRenderer?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.5-Render-your-design-to-Gmsh.html">3.5 Render your design to Gmsh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.01-Capacitance-and-LOM.html">4.01 Capacitance matrix and LOM analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.02-Eigenmode-and-EPR.html">4.02 Eigenmode and EPR analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.03-Impedance.html">4.03 Impedance, admittance and scattering analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.04-New-LOM-and-Fluxonium-Example.html">4.04 New LOM and Fluxonium Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example.html">4.05 New LOM and Two Coupled Transmon Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example-with-sequence.html">4.05 New LOM and Two Coupled Transmon Example with sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html">4.11 Analyzing and tuning a transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.12-Analyze-a-resonator.html">4.12 Analyzing and tuning a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.13-Analyze-transmon-and-resonator.html">4.13 Analyzing and tuning a transmon qubit with a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">4.14 Analyzing a double hanger resonator (S Param)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.15-CPW-kappa-calculation.html">4.15 CPW Kappa Calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.16-Analyze-S21-of-Hange-Geometry-with-WirebondLunchpadDriven.html">4.16 S21 simulation of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.17-Fit-S21-of-Hanger-Resonator-Geometry.html">4.17 S21 simulation and fitting of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.18-Analyse-a-Resonator-with-Ports.html">4.18 Eigenmode simulation with Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.19-Analyze-a-transmon-using-ElmerFEM.html">4.19 Analyse a Transmon Qubit using ElmerFEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html">4.21 Sweeps - Capacitance matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.22-Eigenmode-matrix.html">4.22 Sweeps - Eigenmode matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">4.23 Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">4.31 Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.32-Transmon-analytics-HCPB.html">4.32 Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.33-Transmon-analytics.html">4.33 Transmon Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">4.34 Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/Design-and-Simulation-of-a-Cross-Resonance-Gate.html">The Cross Resonance (CR) Gate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/cQED-with-the-Jaynes-Cummings-Interaction-Model.html">Circuit Quantum Electrodynamics (cQED) and the Jaynes-Cummings Interaction Model Using the HCPB Class and QuTip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/JJ-Demo-Notebook.html">Josephson Junction QComponent Demo Notebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Managing-pins.html">Managing pins</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Managing-variables.html">Managing variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Opening-documentation.html">Opening the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/QComponent-3-fingers-capacitor.html">QComponent - 3-fingers capacitor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/QComponent-Interdigitated-transmon.html">QComponent - Interdigitated transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quick-topics/Testing-QComponents-for-overlap-and-collisions.html">Demo Notebook Demonstrating How to Test for Component/CPW Overlap</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../circuit-examples/index.html">Example Designs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Example Designs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../qcomponents-gallery.html">QComponent Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../circuit-examples/index.html">Example Designs</a><input aria-label="Toggle navigation of Example Designs" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/01-Transmon_cross.html">Single Transmon - Grounded (xmon)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/02-Transmon_floating.html">Single Transmon - Floating</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/03-concentric_transmon.html">Concentric Transmon</a></li>
@@ -291,65 +280,23 @@
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/full-design-flow-examples/Exercise-for-the-South-Korea-Hackathon%2720.html">South Korea Qiskit Hackathon’20 - Qiskit Metal exercise</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../videoseducation.html">Videos &amp; Education</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<p class="caption" role="heading"><span class="caption-text">Ecosystem</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">All Quantum Devices</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of All Quantum Devices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRoute.html">QRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRouteLead.html">QRouteLead</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRoutePoint.html">QRoutePoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CircleCaterpillar.html">CircleCaterpillar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CircleRaster.html">CircleRaster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.NGon.html">NGon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.NSquareSpiral.html">NSquareSpiral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.Rectangle.html">Rectangle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RectangleHollow.html">RectangleHollow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.Cap3Interdigital.html">Cap3Interdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CapNInterdigital.html">CapNInterdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ResonatorCoilRect.html">ResonatorCoilRect</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CoupledLineTee.html">CoupledLineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LineTee.html">LineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CapNInterdigitalTee.html">CapNInterdigitalTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler02.html">TunableCoupler02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ReadoutResFC.html">ReadoutResFC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ResonatorLumped.html">ResonatorLumped</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebond.html">LaunchpadWirebond</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebondCoupled.html">LaunchpadWirebondCoupled</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebondDriven.html">LaunchpadWirebondDriven</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.OpenToGround.html">OpenToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ShortToGround.html">ShortToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteStraight.html">RouteStraight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteFramed.html">RouteFramed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteMeander.html">RouteMeander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteAnchors.html">RouteAnchors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteMixed.html">RouteMixed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RoutePathfinder.html">RoutePathfinder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.jj_dolan.html">jj_dolan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.jj_manhattan.html">jj_manhattan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonConcentric.html">TransmonConcentric</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonConcentricType2.html">TransmonConcentricType2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonCross.html">TransmonCross</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonCrossFL.html">TransmonCrossFL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonInterdigitated.html">TransmonInterdigitated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocket.html">TransmonPocket</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketCL.html">TransmonPocketCL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocket6.html">TransmonPocket6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecosystem.html">Built on / with Quantum Metal</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantum-metal-workflow">Quantum Metal Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/designs.html">QDesigns</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of QDesigns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/designs.html">QDesigns</a><input aria-label="Toggle navigation of QDesigns" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.QDesign.html">QDesign</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.DesignPlanar.html">DesignPlanar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.MultiPlanar.html">MultiPlanar</a></li>
@@ -358,7 +305,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.Components.html">Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">QComponents</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of QComponents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">QComponents</a><input aria-label="Toggle navigation of QComponents" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
@@ -405,12 +352,30 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SNAIL.html">SNAIL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../apidocs/analyses.html">Analyses</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/renderers.html">QRenderers</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of QRenderers</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/analyses.html">Analyses</a><input aria-label="Toggle navigation of Analyses" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.QAnalysis.html">QAnalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.QSimulation.html">QSimulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.LOManalysis.html">LOManalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.EPRanalysis.html">EPRanalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.LumpedElementsSim.html">LumpedElementsSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.EigenmodeSim.html">EigenmodeSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.ScatteringImpedanceSim.html">ScatteringImpedanceSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Hcpb.html">Hcpb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Hcpb_analytic.html">Hcpb_analytic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.HO_wavefunctions.html">HO_wavefunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.transmon_analytics.html">transmon_analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.cpw_calculations.html">cpw_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.kappa_calculation.html">kappa_calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.lumped_capacitive.html">lumped_capacitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Sweeper.html">Sweeper</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/renderers.html">QRenderers</a><input aria-label="Toggle navigation of QRenderers" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRenderer.html">QRenderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRendererGui.html">QRendererGui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRendererAnalysis.html">QRendererAnalysis</a></li>
@@ -434,7 +399,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.Vec3DArray.html">Vec3DArray</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/toolbox_metal.html">Toolbox</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Toolbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/toolbox_metal.html">Toolbox</a><input aria-label="Toggle navigation of Toolbox" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.QiskitMetalExceptions.html">QiskitMetalExceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.QiskitMetalDesignError.html">QiskitMetalDesignError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.about.html">about</a></li>
@@ -446,16 +411,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.determine_larger_box.html">determine_larger_box</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qgeometries.html">QGeometry</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of QGeometry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qgeometries.html">QGeometry</a><input aria-label="Toggle navigation of QGeometry" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qgeometries.QGeometryTables.html">QGeometryTables</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/gui.html">GUI</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of GUI</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/gui.html">GUI</a><input aria-label="Toggle navigation of GUI" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal._gui.MetalGUI.html">MetalGUI</a></li>
 </ul>
 </li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Community &amp; Contributing</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../headless-usage.html">Using Quantum Metal without Qt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration-to-v0.7.0.html">Migrating to v0.7.0 (lite-by-default install)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration-to-v0.7.0.html#v0-7-2-follow-on-prefer-qm-gui-design-over-metalgui-design">v0.7.2 follow-on: prefer <code class="docutils literal notranslate"><span class="pre">qm.gui(design)</span></code> over <code class="docutils literal notranslate"><span class="pre">MetalGUI(design)</span></code></a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a></li>
 </ul>
 
@@ -481,8 +452,7 @@
   </a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -490,8 +460,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -499,8 +468,28 @@
 <p class="admonition-title">Note</p>
 <p>This page was generated from <a class="reference external" href="https://github.com/Qiskit/qiskit-metal/blob/main/docs/tut/2-From-components-to-chip/2.11-Routing-101.ipynb">tut/2-From-components-to-chip/2.11-Routing-101.ipynb</a>.</p>
 </div>
-<section id="Routing-101">
-<h1>Routing 101<a class="headerlink" href="#Routing-101" title="Link to this heading">¶</a></h1>
+<section id="2.11-Routing-101">
+<h1>2.11 Routing 101<a class="headerlink" href="#2.11-Routing-101" title="Link to this heading">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/qiskit-community/qiskit-metal/blob/main/tutorials/2%20From%20components%20to%20chip/B.%20Routing%20between%20QComponents/2.11%20Routing%20101.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a> <a class="reference external" href="https://mybinder.org/v2/gh/qiskit-community/qiskit-metal/main?labpath=tutorials%2F2%20From%20components%20to%20chip%2FB.%20Routing%20between%20QComponents%2F2.11%20Routing%20101.ipynb"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
+<blockquote>
+<div><p>💡 <strong>Running in Colab or Binder?</strong> Skip the desktop GUI install — the cell below grabs the lite (no-Qt) wheel, and <code class="docutils literal notranslate"><span class="pre">qm.gui(design)</span></code> auto-picks an inline matplotlib viewer with the same API (<code class="docutils literal notranslate"><span class="pre">gui.rebuild()</span></code>, <code class="docutils literal notranslate"><span class="pre">gui.screenshot()</span></code>, <code class="docutils literal notranslate"><span class="pre">gui.edit_component(...)</span></code>) as the desktop <code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code>.</p>
+</div></blockquote>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In Colab / Binder, uncomment to install Quantum Metal (lite, no Qt).</span>
+<span class="c1"># Locally you should already have it via `pip install quantum-metal` or</span>
+<span class="c1"># `pip install &#39;quantum-metal[gui]&#39;` for the desktop GUI.</span>
+<span class="c1"># !pip install -q quantum-metal</span>
+</pre></div>
+</div>
+</div>
+<blockquote>
+<div><p>💡 <strong>Using this tutorial without the Qt GUI</strong></p>
+<p>This tutorial uses the desktop <code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code>. To follow along on Colab, Binder, JupyterHub, or any environment where Qt isn’t available, <strong>replace any ``gui.rebuild()`` / ``gui.screenshot()`` call with ``qm.view(design)``</strong> — it renders the design to a matplotlib <code class="docutils literal notranslate"><span class="pre">Figure</span></code> you can display inline or save with <code class="docutils literal notranslate"><span class="pre">fig.savefig(...)</span></code>.</p>
+<p>See <a class="reference internal" href="../1-Overview/1.1-Quick-start.html"><span class="doc">1.1 Quick start</span></a> for a complete runnable walkthrough and <code class="docutils literal notranslate"><span class="pre">`docs/headless-usage.rst</span></code> &lt;../../docs/headless-usage.rst&gt;`__ for the full reference.</p>
+</div></blockquote>
 <p>In this tutorial, we will show how to connect two points with a transmission line route.</p>
 <section id="Introduction">
 <h2>Introduction<a class="headerlink" href="#Introduction" title="Link to this heading">¶</a></h2>
@@ -514,29 +503,27 @@
 <section id="Prerequisite">
 <h2>Prerequisite<a class="headerlink" href="#Prerequisite" title="Link to this heading">¶</a></h2>
 <p>Initialize metal</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reload_ext</span> autoreload
-<span class="o">%</span><span class="k">autoreload</span> 2
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">designs</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">MetalGUI</span><span class="p">,</span> <span class="n">Dict</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">designs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span>
 
 <span class="n">design</span> <span class="o">=</span> <span class="n">designs</span><span class="o">.</span><span class="n">DesignPlanar</span><span class="p">()</span>
-<span class="n">gui</span> <span class="o">=</span> <span class="n">MetalGUI</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">qm</span><span class="o">.</span><span class="n">gui</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
 
-<span class="n">design</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;cpw_width&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;10 um&#39;</span>
-<span class="n">design</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;cpw_gap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;6 um&#39;</span>
+<span class="n">design</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;cpw_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;10 um&quot;</span>
+<span class="n">design</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s2">&quot;cpw_gap&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;6 um&quot;</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div style='border-left:4px solid #6929C4;padding:8px 12px;background:#f4f1fb;color:#222;font-family:sans-serif;font-size:13px;line-height:1.4;margin:4px 0;'><b>Quantum Metal — headless viewer active.</b> Rendering inline via <code>qm.view(design)</code>; <code>gui.rebuild()</code>, <code>gui.screenshot()</code>, <code>gui.edit_component(...)</code> work as in the desktop GUI.<br>For the full desktop experience (Qt window, dockable panels): <code>pip install 'quantum-metal[gui]'</code> and re-import.</div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
@@ -554,9 +541,11 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for pins:</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal.qlibrary.terminations.open_to_ground</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenToGround</span>
+
 <span class="c1"># for routing:</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal.qlibrary.tlines.straight_path</span><span class="w"> </span><span class="kn">import</span> <span class="n">RouteStraight</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal.qlibrary.tlines.framed_path</span><span class="w"> </span><span class="kn">import</span> <span class="n">RouteFramed</span>
+
 <span class="c1"># for jogs:</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 </pre></div>
@@ -567,84 +556,146 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pin_opt</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">pin_inputs</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span><span class="n">start_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
-                                    <span class="n">component</span><span class="o">=</span><span class="s1">&#39;open1i&#39;</span><span class="p">,</span>
-                                    <span class="n">pin</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">),</span>
-                                <span class="n">end_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
-                                    <span class="n">component</span><span class="o">=</span><span class="s1">&#39;open1o&#39;</span><span class="p">,</span>
-                                    <span class="n">pin</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="p">)))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pin_opt</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span>
+    <span class="n">pin_inputs</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
+        <span class="n">start_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">&quot;open1i&quot;</span><span class="p">,</span> <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;open&quot;</span><span class="p">),</span>
+        <span class="n">end_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="s2">&quot;open1o&quot;</span><span class="p">,</span> <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;open&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <section id="Example-1:-Straight-routing-between-two-pins">
 <h3>Example 1: Straight routing between two pins<a class="headerlink" href="#Example-1:-Straight-routing-between-two-pins" title="Link to this heading">¶</a></h3>
 <p>First, we make sure our design contains two pins to connect to.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span><span class="o">.</span><span class="n">delete_all_components</span><span class="p">()</span>  <span class="c1">#needed only for rebuilds. will get a warning</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span><span class="o">.</span><span class="n">delete_all_components</span><span class="p">()</span>  <span class="c1"># needed only for rebuilds. will get a warning</span>
 
-<span class="n">otg11</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open1i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg12</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open1o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.5mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;0&#39;</span><span class="p">))</span>
+<span class="n">otg11</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open1i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg12</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open1o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.5mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
 <span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_14_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_14_0.png" />
 </div>
 </div>
 <p>Then we create the route in between them. Notice we are using the previously defined <code class="docutils literal notranslate"><span class="pre">pin_opt</span></code> to indicate which pins to connect to.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">route1</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_1&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">route1</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_1&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
 <span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">highlight_components</span><span class="p">([</span><span class="s1">&#39;open1i&#39;</span><span class="p">,</span><span class="s1">&#39;open1o&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">highlight_components</span><span class="p">([</span><span class="s2">&quot;open1i&quot;</span><span class="p">,</span> <span class="s2">&quot;open1o&quot;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_16_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_16_0.png" />
 </div>
 </div>
 </section>
 <section id="Example-2:-Any-direction">
 <h3>Example 2: Any direction<a class="headerlink" href="#Example-2:-Any-direction" title="Link to this heading">¶</a></h3>
 <p>Let’s add a few pins that we can use to connect in pairs. We here align them following a variety of orientations.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg21</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open2i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;2mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
-<span class="n">otg22</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open2o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.5mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;-90&#39;</span><span class="p">))</span>
-<span class="n">otg31</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open3i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.35mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.55mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;45&#39;</span><span class="p">))</span>
-<span class="n">otg32</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open3o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.2mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;-135&#39;</span><span class="p">))</span>
-<span class="n">otg41</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open4i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;135&#39;</span><span class="p">))</span>
-<span class="n">otg42</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open4o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.35mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.45mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;-45&#39;</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg21</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open2i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;2mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg22</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open2o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.5mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;-90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg31</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open3i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.35mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.55mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;45&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg32</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open3o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.2mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;-135&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg41</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open4i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;135&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg42</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open4o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.35mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.45mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;-45&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
 <span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_18_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_18_0.png" />
 </div>
 </div>
 <p>Then we connect pair of pins using a straight route. Notice how we update the <code class="docutils literal notranslate"><span class="pre">pin_opt</span></code> component names to the new pair, for each new <code class="docutils literal notranslate"><span class="pre">RouteStraight</span></code>. Indeed, we can only use a pin for one single connection, and we will get an error if we try to connect a second route to the same pin.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open2i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open2o&#39;</span>
-<span class="n">route2</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_2&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open3i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open3o&#39;</span>
-<span class="n">route3</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_3&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open4i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open4o&#39;</span>
-<span class="n">route4</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_4&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open2i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open2o&quot;</span>
+<span class="n">route2</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_2&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open3i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open3o&quot;</span>
+<span class="n">route3</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_3&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open4i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open4o&quot;</span>
+<span class="n">route4</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_4&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
 <span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_20_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_20_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_21_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_21_0.png" />
 </div>
 </div>
 </section>
@@ -652,125 +703,241 @@
 <h3>Example 3: Angles and leads<a class="headerlink" href="#Example-3:-Angles-and-leads" title="Link to this heading">¶</a></h3>
 <p>If the two pins to connect are not facing each other, the router will create the necessary jogs. Here is a simple example that shows 45° jogs.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">RouteStraight</span></code> will use a single straight line in any orientation to connect the two pins. Feel free to try using other algorithms, by replacing the class to any other <code class="docutils literal notranslate"><span class="pre">QRoute</span></code> subclass (image at the start of this notebook).</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg51</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open5i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.9mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg52</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open5o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;2.0mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
-
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open5i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open5o&#39;</span>
-<span class="n">route5</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_5&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
-
-<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_5&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
-</pre></div>
-</div>
-</div>
-<p>Let’s make another connection. This time, we add a lead extension to both pins. An extension is a route segment that begins from the pin coordinates and extends straight in the pin direction by the given length.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg61</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open6i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.7mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg62</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open6o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.8mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg51</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open5i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.9mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg52</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open5o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;2.0mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open6i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open6o&#39;</span>
-
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s1">&#39;0.04mm&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s1">&#39;0.06mm&#39;</span>
-<span class="n">route6</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_6&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open5i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open5o&quot;</span>
+<span class="n">route5</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_5&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_6&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_5&quot;</span><span class="p">])</span>
+<span class="c1"># gui.screenshot()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_23_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_23_1.png" />
+</div>
+</div>
+<p>Let’s make another connection. This time, we add a lead extension to both pins. An extension is a route segment that begins from the pin coordinates and extends straight in the pin direction by the given length.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg61</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open6i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.7mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg62</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open6o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.8mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open6i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open6o&quot;</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s2">&quot;0.04mm&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s2">&quot;0.06mm&quot;</span>
+<span class="n">route6</span> <span class="o">=</span> <span class="n">RouteStraight</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_6&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+
+<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_6&quot;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_25_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_25_1.png" />
 </div>
 </div>
 </section>
 <section id="Example-4:-90°-angles">
 <h3>Example 4: 90° angles<a class="headerlink" href="#Example-4:-90°-angles" title="Link to this heading">¶</a></h3>
 <p>In most applications, you might want to limit the jogs to 90° angles. In the following example we use the same <code class="docutils literal notranslate"><span class="pre">pin_opts</span></code> of the previous example, but we replace <code class="docutils literal notranslate"><span class="pre">RouteStraight</span></code> with <code class="docutils literal notranslate"><span class="pre">RouteFramed</span></code>. You will notice that our route now has only one 90° jog.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg71</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open7i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.5mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg72</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open7o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.6mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
-
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open7i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open7o&#39;</span>
-
-<span class="n">route7</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_7&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
-
-<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_7&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
-</pre></div>
-</div>
-</div>
-<p>The route resulting from the cell above, had no trace of the lead segments. That is because the length of the lead segments was less than the edge of the corner. By extending the <code class="docutils literal notranslate"><span class="pre">start_straight</span></code> for example, we can see the effect of the lead again.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg81</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open8i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.3mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg82</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open8o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.4mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg71</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open7i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.5mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg72</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open7o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.6mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open8i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open8o&#39;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open7i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open7o&quot;</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s1">&#39;0.15mm&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s1">&#39;0.05mm&#39;</span>
-<span class="n">route8</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_8&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">route7</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_7&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_8&#39;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_7&quot;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_27_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_27_1.png" />
+</div>
+</div>
+<p>The route resulting from the cell above, had no trace of the lead segments. That is because the length of the lead segments was less than the edge of the corner. By extending the <code class="docutils literal notranslate"><span class="pre">start_straight</span></code> for example, we can see the effect of the lead again.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg81</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open8i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.3mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg82</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open8o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.4mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open8i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open8o&quot;</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s2">&quot;0.15mm&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s2">&quot;0.05mm&quot;</span>
+<span class="n">route8</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_8&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+
+<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_8&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_29_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_29_1.png" />
 </div>
 </div>
 <p>Notice how the <code class="docutils literal notranslate"><span class="pre">RouteFramed</span></code> executed in the previous cell needs to create 2 jogs to complete the routing, as opposed to the previous single 90° job example.</p>
 <p>This algorithm helps also connecting pins not facing each other, like in the next cell.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg91</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open9i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.05mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg92</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open9o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;1.15mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;270&#39;</span><span class="p">))</span>
-
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open9i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open9o&#39;</span>
-
-<span class="n">route9</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_9&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
-
-<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_9&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
-</pre></div>
-</div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">RouteFramed</span></code> can create up to 3 segments. Observe the following case of opposing pins.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg101</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open10i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;90&#39;</span><span class="p">))</span>
-<span class="n">otg102</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open10o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.9mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;270&#39;</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg91</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open9i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.05mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg92</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open9o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;1.15mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;270&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open10i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open10o&#39;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open9i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open9o&quot;</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s1">&#39;0.03mm&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s1">&#39;0.03mm&#39;</span>
-<span class="n">route10</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_10&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">route9</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_9&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_10&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_9&quot;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_31_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_31_1.png" />
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">RouteFramed</span></code> can create up to 3 segments. Observe the following case of opposing pins.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg101</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open10i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;90&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg102</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open10o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.9mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;270&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open10i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open10o&quot;</span>
+
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s2">&quot;0.03mm&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s2">&quot;0.03mm&quot;</span>
+<span class="n">route10</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_10&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+
+<span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_10&quot;</span><span class="p">])</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed x limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_33_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_33_1.png" />
 </div>
 </div>
 </section>
@@ -784,44 +951,64 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">angle</span></code> describe the direction in which to take the step</p></li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">angle</span></code> can be described in several ways, to accommodate different coding styles. For example, all of the options above will lead to the same 90° left turn: &gt; “L”, “L90”, “R-90”, 90, “90”, “A,90”, “left”, “left90”, “right-90”</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg111</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open11i&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.7mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.5mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;180&#39;</span><span class="p">))</span>
-<span class="n">otg112</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;open11o&#39;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s1">&#39;0.8mm&#39;</span><span class="p">,</span>  <span class="n">pos_y</span><span class="o">=</span><span class="s1">&#39;0.6mm&#39;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;270&#39;</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">otg111</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open11i&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.7mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.5mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;180&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">otg112</span> <span class="o">=</span> <span class="n">OpenToGround</span><span class="p">(</span>
+    <span class="n">design</span><span class="p">,</span> <span class="s2">&quot;open11o&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span><span class="s2">&quot;0.8mm&quot;</span><span class="p">,</span> <span class="n">pos_y</span><span class="o">=</span><span class="s2">&quot;0.6mm&quot;</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;270&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open11i&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s1">&#39;open11o&#39;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">start_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open11i&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">pin_inputs</span><span class="o">.</span><span class="n">end_pin</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="s2">&quot;open11o&quot;</span>
 
 <span class="c1"># the first step is always stright, let&#39;s define by how much (minimum is half the route width):</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s1">&#39;0.03mm&#39;</span>
-<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s1">&#39;0.04mm&#39;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_straight</span> <span class="o">=</span> <span class="s2">&quot;0.03mm&quot;</span>
+<span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_straight</span> <span class="o">=</span> <span class="s2">&quot;0.04mm&quot;</span>
 
 <span class="c1"># any subsequent step of the lead_start</span>
 <span class="n">jogsS</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s1">&#39;20um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s1">&#39;50um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="s1">&#39;30um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="s1">&#39;60um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;90&quot;</span><span class="p">,</span> <span class="s1">&#39;40um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-90&quot;</span><span class="p">,</span> <span class="s1">&#39;70um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L30&quot;</span><span class="p">,</span> <span class="s1">&#39;30um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A,30&quot;</span><span class="p">,</span> <span class="s1">&#39;30um&#39;</span><span class="p">]</span>
-<span class="n">jogsS</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left30&quot;</span><span class="p">,</span> <span class="s1">&#39;50um&#39;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;20um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;50um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;30um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;60um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;90&quot;</span><span class="p">,</span> <span class="s2">&quot;40um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-90&quot;</span><span class="p">,</span> <span class="s2">&quot;70um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L30&quot;</span><span class="p">,</span> <span class="s2">&quot;30um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;A,30&quot;</span><span class="p">,</span> <span class="s2">&quot;30um&quot;</span><span class="p">]</span>
+<span class="n">jogsS</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;left30&quot;</span><span class="p">,</span> <span class="s2">&quot;50um&quot;</span><span class="p">]</span>
 
 <span class="c1"># single jog on the lead_end, just for kicks</span>
 <span class="n">jogsE</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
-<span class="n">jogsE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s1">&#39;30um&#39;</span><span class="p">]</span>
+<span class="n">jogsE</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;30um&quot;</span><span class="p">]</span>
 
 <span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">start_jogged_extension</span> <span class="o">=</span> <span class="n">jogsS</span>
 <span class="n">pin_opt</span><span class="o">.</span><span class="n">lead</span><span class="o">.</span><span class="n">end_jogged_extension</span> <span class="o">=</span> <span class="n">jogsE</span>
-<span class="n">route10</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s1">&#39;cpw_11&#39;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
+<span class="n">route10</span> <span class="o">=</span> <span class="n">RouteFramed</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;cpw_11&quot;</span><span class="p">,</span> <span class="n">pin_opt</span><span class="p">)</span>
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
-<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s1">&#39;cpw_11&#39;</span><span class="p">])</span>
-<span class="c1">#gui.screenshot()</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">zoom_on_components</span><span class="p">([</span><span class="s2">&quot;cpw_11&quot;</span><span class="p">])</span>
+<span class="c1"># gui.screenshot()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+Ignoring fixed y limits to fulfill fixed data aspect with adjustable data limits.
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_35_1.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_35_1.png" />
 </div>
 </div>
 <p>This notebook explains the basics of <code class="docutils literal notranslate"><span class="pre">QRoute</span></code>, illustrating <strong>custom</strong> methods to route. In this same tutorial folder you will find other notebooks describing the use of more automated routing options:</p>
@@ -831,27 +1018,20 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">RouteAnchors</span></code> to guarantee routing through a given set of non-oriented points</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">RouteMixed</span></code> to be able to specify what other auto-route algorithm to use in between each pair of anchors</p></li>
 </ul>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
 <div class="output_area docutils container">
-<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_35_0.png" class="no-scaled-link" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_35_0.png" style="width: 500px;" />
+<img alt="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_37_0.png" src="../../_images/tut_2-From-components-to-chip_2.11-Routing-101_37_0.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -904,18 +1084,18 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Simple Meander</div>
+                <div class="title">2.12 Simple Meander</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="2.02-How-to-copy-a-QComponent.html">
+          <a class="prev-page" href="2.01-How-to-use-a-QComponent.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">How to copy a QComponent</div>
+                <div class="title">2.01 QComponent lifecycle — use, copy, delete, rename</div>
                 
               </div>
             </a>
@@ -929,7 +1109,7 @@
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026/01/24</div>
+              Last updated on 2026/06/07</div>
           </div>
           <div class="right-details">
             
@@ -950,7 +1130,7 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Routing 101</a><ul>
+<li><a class="reference internal" href="#">2.11 Routing 101</a><ul>
 <li><a class="reference internal" href="#Introduction">Introduction</a></li>
 <li><a class="reference internal" href="#Prerequisite">Prerequisite</a><ul>
 <li><a class="reference internal" href="#Example-1:-Straight-routing-between-two-pins">Example 1: Straight routing between two pins</a></li>
@@ -971,13 +1151,14 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=ba424fd7"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="../../_static/documentation_options.js?v=c98573da"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>

@@ -1,25 +1,27 @@
 <!doctype html>
-<html class="no-js" lang="en">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Roadmap" href="workflow.html" /><link rel="prev" title="Quantum Metal (formerly Qiskit Metal)" href="index.html" />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="1.1 Quick start" href="tut/1-Overview/1.1-Quick-start.html"><link rel="prev" title="Quantum Metal (formerly Qiskit Metal)" href="index.html">
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Installation - Quantum Metal 0.5.3.post1</title>
-      <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>Installation - Quantum Metal 0.7.3</title>
+      <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/qiskit-sphinx-theme.css?v=8ff9dcb6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
@@ -138,14 +140,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -155,17 +153,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="index.html"><div class="brand">Quantum Metal 0.5.3.post1</div></a>
+      <a href="index.html"><div class="brand">Quantum Metal 0.7.3</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -173,8 +169,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -184,7 +179,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
   
   
-  <span class="sidebar-brand-text">Quantum Metal 0.5.3.post1</span>
+  <span class="sidebar-brand-text">Quantum Metal 0.7.3</span>
   
 </a>
 <form class="sidebar-search-container" method="get" action="search.html" role="search">
@@ -193,76 +188,70 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="index.html">About</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installing Qiskit Metal</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Overview</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html">Roadmap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html#qiskit-metal-workflow">Qiskit Metal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
+  <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installing Quantum Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tut/1-Overview/1.1-Quick-start.html">Quick Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="videoseducation.html">Videos &amp; Education</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="tut/index.html">Tutorials</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.1-Bird%27s-eye-view-of-Qiskit-Metal.html">Bird’s eye view of Qiskit Metal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.2-Quick-start.html">Quick Start: Build your first 4-qubit processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.3-Saving-Your-Chip-Design.html">Save your chip design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html">How to use a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#QComponent-Default-Options">QComponent Default Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Modifying-the-Options">Modifying the Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Copying-a-QComponent">Copying a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Deleting-a-QComponent">Deleting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Renaming-a-QComponent">Renaming a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Overwriting-a-QComponent">Overwriting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html#Closing-the-Qiskit-Metal-GUI">Closing the Qiskit Metal GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.02-How-to-copy-a-QComponent.html">How to copy a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.11-Routing-101.html">Routing 101</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.12-Simple-Meander.html">Simple Meander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.12-Simple-Meander.html#Using-CPW-meanders-to-connect-the-3-Qbits">Using CPW meanders to connect the 3 Qbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.13-Hybrid-Auto-and-AStar.html">Hybrid Auto and AStar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.14-Get-them-all-with-MixedRoute.html">Get them all with MixedRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.21-Design-a-4-qubit-full-chip.html">Design a 4 qubit full chip</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.22-Design-100-qubits-programmatically.html">Design 100 qubits programmatically</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.23-Modify-chip-options.html">Modify chip options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.31-Create-a-QComponent-Basic.html">Create a QComponent - Basic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.32-Create-a-QComponent-Advanced.html">Create a QComponent - Advanced</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.33-Add-my-QComponent-to-a-reusable-python-file.html">Add my QComponent to a reusable python file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.1-Introduction-to-QRenderers.html">Introduction to QRenderers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.1-Introduction-to-QRenderers.html#Note:">Note:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.2-Export-your-design-to-GDS.html">Export your design to GDS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.3-Render-your-design-to-Ansys.html">Render your design to Ansys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">How do I make my custom QRenderer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.01-Capacitance-and-LOM.html">Capacitance matrix and LOM analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.02-Eigenmode-and-EPR.html">Eigenmode and EPR analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.03-Impedance.html">Impedance, admittance and scattering analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.11-Analyze-and-tune-a-transmon.html">Analyzing and tuning a transmon qubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.11-Analyze-and-tune-a-transmon.html#1.-Create-the-Qbit-design">1. Create the Qbit design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.12-Analyze-a-resonator.html">Analyzing and tuning a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.13-Analyze-transmon-and-resonator.html">Analyzing and tuning a transmon qubit with a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">Analyzing a double hanger resonator (S Param)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.15-CPW-kappa-calculation.html">CPW Kappa Calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.21-Capacitance-matrix.html">Sweeps - Capacitance matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.21-Capacitance-matrix.html#READ-THIS-BEFORE-running-the-cell.">READ THIS BEFORE running the cell.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.22-Eigenmode-matrix.html">Sweeps - Eigenmode matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.32-Transmon-analytics-HCPB.html">Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.33-Transmon-analytics.html">Transmon Analytics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="tut/index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.1-Quick-start.html">1.1 Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.2-Bird%27s-eye-view-of-Quantum-Metal.html">1.2 Bird’s eye view of Quantum Metal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.3-Build-a-4-qubit-chip.html">1.3 Build a 4-qubit chip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.4-Saving-Your-Chip-Design.html">1.4 Saving Your Chip Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/1-Overview/1.5-Parametric-design---iterate-and-compare.html">1.5 Parametric Design: Iterate and Compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.01-How-to-use-a-QComponent.html">2.01 QComponent lifecycle — use, copy, delete, rename</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.11-Routing-101.html">2.11 Routing 101</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.12-Simple-Meander.html">2.12 Simple Meander</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.13-Hybrid-Auto-and-AStar.html">2.13 Hybrid Auto and AStar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.14-Get-them-all-with-MixedRoute.html">2.14 Get them all with MixedRoute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.21-Design-a-4-qubit-full-chip.html">2.21 Design a 4 qubit full chip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.22-Design-100-qubits-programmatically.html">2.22 Design 100 qubits programmatically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.23-Modify-chip-options.html">2.23 Modify chip options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.31-Create-a-QComponent-Basic.html">2.31 Create a QComponent - Basic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.32-Create-a-QComponent-Advanced.html">2.32 Create a QComponent - Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/2-From-components-to-chip/2.33-Add-my-QComponent-to-a-reusable-python-file.html">2.33 Add my QComponent to a reusable python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.1-Introduction-to-QRenderers.html">3.1 Introduction to QRenderers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.2-Export-your-design-to-GDS.html">3.2 Export your design to GDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.3-Render-your-design-to-Ansys.html">3.3 Render your design to Ansys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">3.4 How do I make my custom QRenderer?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/3-Renderers/3.5-Render-your-design-to-Gmsh.html">3.5 Render your design to Gmsh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.01-Capacitance-and-LOM.html">4.01 Capacitance matrix and LOM analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.02-Eigenmode-and-EPR.html">4.02 Eigenmode and EPR analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.03-Impedance.html">4.03 Impedance, admittance and scattering analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.04-New-LOM-and-Fluxonium-Example.html">4.04 New LOM and Fluxonium Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example.html">4.05 New LOM and Two Coupled Transmon Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example-with-sequence.html">4.05 New LOM and Two Coupled Transmon Example with sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.11-Analyze-and-tune-a-transmon.html">4.11 Analyzing and tuning a transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.12-Analyze-a-resonator.html">4.12 Analyzing and tuning a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.13-Analyze-transmon-and-resonator.html">4.13 Analyzing and tuning a transmon qubit with a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">4.14 Analyzing a double hanger resonator (S Param)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.15-CPW-kappa-calculation.html">4.15 CPW Kappa Calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.16-Analyze-S21-of-Hange-Geometry-with-WirebondLunchpadDriven.html">4.16 S21 simulation of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.17-Fit-S21-of-Hanger-Resonator-Geometry.html">4.17 S21 simulation and fitting of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.18-Analyse-a-Resonator-with-Ports.html">4.18 Eigenmode simulation with Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.19-Analyze-a-transmon-using-ElmerFEM.html">4.19 Analyse a Transmon Qubit using ElmerFEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.21-Capacitance-matrix.html">4.21 Sweeps - Capacitance matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.22-Eigenmode-matrix.html">4.22 Sweeps - Eigenmode matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">4.23 Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">4.31 Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.32-Transmon-analytics-HCPB.html">4.32 Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.33-Transmon-analytics.html">4.33 Transmon Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">4.34 Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/Design-and-Simulation-of-a-Cross-Resonance-Gate.html">The Cross Resonance (CR) Gate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/4-Analysis/cQED-with-the-Jaynes-Cummings-Interaction-Model.html">Circuit Quantum Electrodynamics (cQED) and the Jaynes-Cummings Interaction Model Using the HCPB Class and QuTip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/JJ-Demo-Notebook.html">Josephson Junction QComponent Demo Notebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/Managing-pins.html">Managing pins</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/Managing-variables.html">Managing variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/Opening-documentation.html">Opening the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/QComponent-3-fingers-capacitor.html">QComponent - 3-fingers capacitor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/QComponent-Interdigitated-transmon.html">QComponent - Interdigitated transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tut/quick-topics/Testing-QComponents-for-overlap-and-collisions.html">Demo Notebook Demonstrating How to Test for Component/CPW Overlap</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="circuit-examples/index.html">Example Designs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Example Designs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="qcomponents-gallery.html">QComponent Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="circuit-examples/index.html">Example Designs</a><input aria-label="Toggle navigation of Example Designs" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="circuit-examples/A.Qubits/01-Transmon_cross.html">Single Transmon - Grounded (xmon)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="circuit-examples/A.Qubits/02-Transmon_floating.html">Single Transmon - Floating</a></li>
 <li class="toctree-l2"><a class="reference internal" href="circuit-examples/A.Qubits/03-concentric_transmon.html">Concentric Transmon</a></li>
@@ -290,65 +279,23 @@
 <li class="toctree-l2"><a class="reference internal" href="circuit-examples/full-design-flow-examples/Exercise-for-the-South-Korea-Hackathon%2720.html">South Korea Qiskit Hackathon’20 - Qiskit Metal exercise</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="videoseducation.html">Videos &amp; Education</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<p class="caption" role="heading"><span class="caption-text">Ecosystem</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/qlibrary.html">All Quantum Devices</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of All Quantum Devices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.QRoute.html">QRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.QRouteLead.html">QRouteLead</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.QRoutePoint.html">QRoutePoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.CircleCaterpillar.html">CircleCaterpillar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.CircleRaster.html">CircleRaster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.NGon.html">NGon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.NSquareSpiral.html">NSquareSpiral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.Rectangle.html">Rectangle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RectangleHollow.html">RectangleHollow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.Cap3Interdigital.html">Cap3Interdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.CapNInterdigital.html">CapNInterdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ResonatorCoilRect.html">ResonatorCoilRect</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.CoupledLineTee.html">CoupledLineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.LineTee.html">LineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.CapNInterdigitalTee.html">CapNInterdigitalTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TunableCoupler02.html">TunableCoupler02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ReadoutResFC.html">ReadoutResFC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ResonatorLumped.html">ResonatorLumped</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.LaunchpadWirebond.html">LaunchpadWirebond</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.LaunchpadWirebondCoupled.html">LaunchpadWirebondCoupled</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.LaunchpadWirebondDriven.html">LaunchpadWirebondDriven</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.OpenToGround.html">OpenToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ShortToGround.html">ShortToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RouteStraight.html">RouteStraight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RouteFramed.html">RouteFramed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RouteMeander.html">RouteMeander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RouteAnchors.html">RouteAnchors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RouteMixed.html">RouteMixed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.RoutePathfinder.html">RoutePathfinder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.jj_dolan.html">jj_dolan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.jj_manhattan.html">jj_manhattan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonConcentric.html">TransmonConcentric</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonConcentricType2.html">TransmonConcentricType2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonCross.html">TransmonCross</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonCrossFL.html">TransmonCrossFL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonInterdigitated.html">TransmonInterdigitated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonPocket.html">TransmonPocket</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonPocketCL.html">TransmonPocketCL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonPocket6.html">TransmonPocket6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecosystem.html">Built on / with Quantum Metal</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html#quantum-metal-workflow">Quantum Metal Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">Frequently Asked Questions</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/designs.html">QDesigns</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of QDesigns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/designs.html">QDesigns</a><input aria-label="Toggle navigation of QDesigns" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.designs.QDesign.html">QDesign</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.designs.DesignPlanar.html">DesignPlanar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.designs.MultiPlanar.html">MultiPlanar</a></li>
@@ -357,7 +304,7 @@
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.designs.Components.html">Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/qlibrary.html">QComponents</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of QComponents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/qlibrary.html">QComponents</a><input aria-label="Toggle navigation of QComponents" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
@@ -404,12 +351,30 @@
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.SNAIL.html">SNAIL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="apidocs/analyses.html">Analyses</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/renderers.html">QRenderers</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of QRenderers</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/analyses.html">Analyses</a><input aria-label="Toggle navigation of Analyses" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.QAnalysis.html">QAnalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.QSimulation.html">QSimulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.LOManalysis.html">LOManalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.EPRanalysis.html">EPRanalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.LumpedElementsSim.html">LumpedElementsSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.EigenmodeSim.html">EigenmodeSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.ScatteringImpedanceSim.html">ScatteringImpedanceSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.Hcpb.html">Hcpb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.Hcpb_analytic.html">Hcpb_analytic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.HO_wavefunctions.html">HO_wavefunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.transmon_analytics.html">transmon_analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.cpw_calculations.html">cpw_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.kappa_calculation.html">kappa_calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.lumped_capacitive.html">lumped_capacitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.analyses.Sweeper.html">Sweeper</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/renderers.html">QRenderers</a><input aria-label="Toggle navigation of QRenderers" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.renderers.QRenderer.html">QRenderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.renderers.QRendererGui.html">QRendererGui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.renderers.QRendererAnalysis.html">QRendererAnalysis</a></li>
@@ -433,7 +398,7 @@
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.renderers.Vec3DArray.html">Vec3DArray</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/toolbox_metal.html">Toolbox</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Toolbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/toolbox_metal.html">Toolbox</a><input aria-label="Toggle navigation of Toolbox" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.toolbox_metal.QiskitMetalExceptions.html">QiskitMetalExceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.toolbox_metal.QiskitMetalDesignError.html">QiskitMetalDesignError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.toolbox_metal.about.html">about</a></li>
@@ -445,16 +410,22 @@
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.toolbox_metal.determine_larger_box.html">determine_larger_box</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/qgeometries.html">QGeometry</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of QGeometry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/qgeometries.html">QGeometry</a><input aria-label="Toggle navigation of QGeometry" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal.qgeometries.QGeometryTables.html">QGeometryTables</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/gui.html">GUI</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of GUI</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidocs/gui.html">GUI</a><input aria-label="Toggle navigation of GUI" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="apidocs/qiskit_metal._gui.MetalGUI.html">MetalGUI</a></li>
 </ul>
 </li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Community &amp; Contributing</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="headless-usage.html">Using Quantum Metal without Qt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration-to-v0.7.0.html">Migrating to v0.7.0 (lite-by-default install)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration-to-v0.7.0.html#v0-7-2-follow-on-prefer-qm-gui-design-over-metalgui-design">v0.7.2 follow-on: prefer <code class="docutils literal notranslate"><span class="pre">qm.gui(design)</span></code> over <code class="docutils literal notranslate"><span class="pre">MetalGUI(design)</span></code></a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a></li>
 </ul>
 
@@ -480,8 +451,7 @@
   </a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -489,8 +459,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -498,10 +467,21 @@
 <span id="id1"></span><h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
 <section id="outline-of-installation">
 <h2>Outline of Installation<a class="headerlink" href="#outline-of-installation" title="Link to this heading">¶</a></h2>
+<p class="rubric">Try it now — zero install</p>
+<a class="reference external image-reference" href="https://colab.research.google.com/github/qiskit-community/qiskit-metal/blob/main/tutorials/1%20Overview/1.1%20Quick%20start.ipynb"><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg" />
+</a>
+<a class="reference external image-reference" href="https://mybinder.org/v2/gh/qiskit-community/qiskit-metal/main?labpath=tutorials%2F1%20Overview%2F1.1%20Quick%20start.ipynb"><img alt="Open in Binder" src="https://mybinder.org/badge_logo.svg" />
+</a>
+<a class="reference external image-reference" href="https://codespaces.new/qiskit-community/qiskit-metal"><img alt="Open in GitHub Codespaces" src="https://img.shields.io/badge/Open_in-Codespaces-181717?logo=github&amp;logoColor=white&amp;style=flat-square" />
+</a>
+<p>One click → working Quantum Metal in your browser. The Colab and Binder
+buttons launch the Quick Start tutorial with the lite (no-Qt) install
+auto-installed in the first cell; <code class="docutils literal notranslate"><span class="pre">qm.gui(design)</span></code> returns an inline
+matplotlib viewer with the same API as the desktop <code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code>.</p>
 <div class="sd-container-fluid sd-sphinx-override sd-mt-1 sd-mb-0 sd-ml-2 sd-mr-0 docutils">
 <div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-3 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
 <div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-bg-light sd-border docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
 <div class="sd-card-body docutils">
 <p class="sd-card-text"><strong>Basic Installation (PyPI)</strong></p>
 <p class="sd-card-text">Install the current Quantum Metal release from PyPI.</p>
@@ -513,13 +493,13 @@
 </div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-bg-light sd-border docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
 <div class="sd-card-body docutils">
-<p class="sd-card-text"><strong>Installation from source (v0.5)</strong></p>
+<p class="sd-card-text"><strong>Installation from source</strong></p>
 <p class="sd-card-text">Install the active Quantum Metal source tree.</p>
 <p class="sd-card-text"><strong>Options:</strong></p>
 <ul class="simple">
-<li><p class="sd-card-text"><strong>Fast path: uv</strong> (recommended during the v0.5 transition)</p></li>
+<li><p class="sd-card-text"><strong>Fast path: uv</strong> (recommended)</p></li>
 <li><p class="sd-card-text"><strong>Conda environment setup</strong> (best for Windows / binary-heavy stacks)</p></li>
 <li><p class="sd-card-text"><strong>Without conda</strong> (standard Python <code class="docutils literal notranslate"><span class="pre">venv</span></code>)</p></li>
 </ul>
@@ -527,14 +507,14 @@
 </div>
 </div>
 <div class="sd-col sd-d-flex-row docutils">
-<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-bg-light sd-border docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
 <div class="sd-card-body docutils">
 <p class="sd-card-text"><strong>Other Setup Topics</strong></p>
 <ul class="simple">
 <li><p class="sd-card-text">Optional Jupyter Lab integration</p></li>
 <li><p class="sd-card-text">Installation hints and tips</p></li>
 <li><p class="sd-card-text">Common Issues / FAQ</p></li>
-<li><p class="sd-card-text">Video instructions for legacy package (<code class="docutils literal notranslate"><span class="pre">qiskit-metal&lt;0.5</span></code>)</p></li>
+<li><p class="sd-card-text">Video instructions for legacy package (<code class="docutils literal notranslate"><span class="pre">qiskit-metal</span></code>)</p></li>
 </ul>
 </div>
 </div>
@@ -544,7 +524,7 @@
 </section>
 <section id="basic-installation">
 <h2>Basic Installation<a class="headerlink" href="#basic-installation" title="Link to this heading">¶</a></h2>
-<p>Quantum Metal v0.5+ is available on PyPI (Project page: <a class="reference external" href="https://pypi.org/project/quantum-metal/">https://pypi.org/project/quantum-metal/</a>).</p>
+<p>Quantum Metal is available on PyPI (Project page: <a class="reference external" href="https://pypi.org/project/quantum-metal/">https://pypi.org/project/quantum-metal/</a>).</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
 <label class="sd-tab-label" for="sd-tab-item-0">
@@ -570,7 +550,204 @@ Add to a Pixi workspace</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-<p>If you specifically need the legacy pre-0.5 package, install <code class="docutils literal notranslate"><span class="pre">qiskit-metal</span></code> instead. Otherwise, use <code class="docutils literal notranslate"><span class="pre">quantum-metal</span></code> to get the current release.</p>
+<p>If you specifically need the legacy pre-v0.5 package (archived), install <code class="docutils literal notranslate"><span class="pre">qiskit-metal</span></code> instead. Otherwise, use <code class="docutils literal notranslate"><span class="pre">quantum-metal</span></code> for the current release.</p>
+</section>
+<section id="choose-your-install-pathway">
+<h2>Choose your install pathway<a class="headerlink" href="#choose-your-install-pathway" title="Link to this heading">¶</a></h2>
+<p>Quantum Metal v0.7.0+ is <strong>lite by default</strong>. The base install is
+small, fast, and contains just the core API (designs, components,
+GDS export, headless <code class="docutils literal notranslate"><span class="pre">qm.view</span></code>, pure-Python analyses). Heavy
+backends — the desktop GUI, the Ansys HFSS / Q3D bridge, the gmsh
+mesher — are opt-in <strong>extras</strong>.</p>
+<div class="sd-container-fluid sd-sphinx-override sd-mt-1 sd-mb-0 sd-ml-2 sd-mr-0 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-2 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🪶 Lite (default)</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>quantum-metal
+</pre></div>
+</div>
+<p class="sd-card-text">Core API, <code class="docutils literal notranslate"><span class="pre">qm.view(design)</span></code> headless viewer, GDS export,
+pure-Python analyses.</p>
+<p class="sd-card-text"><strong>Best for:</strong> AI orchestration loops, Colab / Binder, cloud
+Jupyter, CI, headless / non-interactive workflows.</p>
+<p class="sd-card-text"><em>No Qt, no Ansys, no gmsh — small, fast, no GUI surprises.</em></p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🖥️ GUI</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[gui]&quot;</span>
+</pre></div>
+</div>
+<p class="sd-card-text"><strong>Adds:</strong> <code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code> desktop application (PySide6,
+qdarkstyle).</p>
+<p class="sd-card-text"><strong>Best for:</strong> interactive design work, GUI-driven editing.</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🧲 Ansys / HFSS / Q3D</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[ansys]&quot;</span>
+</pre></div>
+</div>
+<p class="sd-card-text"><strong>Adds:</strong> HFSS / Q3D renderers, EPR analyses (pyaedt,
+pyEPR-quantum).</p>
+<p class="sd-card-text"><strong>Best for:</strong> Ansys-driven simulation. Requires an Ansys
+AEDT license (typically Windows).</p>
+</div>
+</div>
+</div>
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+🔺 Open FEM mesher (gmsh)</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[mesh]&quot;</span>
+</pre></div>
+</div>
+<p class="sd-card-text"><strong>Adds:</strong> gmsh-based meshing — the foundation for the
+open FEM toolchain (Elmer today, Palace on the roadmap).</p>
+<p class="sd-card-text"><strong>Best for:</strong> open-source FEM workflow without an Ansys
+license. (<code class="docutils literal notranslate"><span class="pre">[fem]</span></code> is a backward-compatible alias.)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mt-2 sd-mb-0 sd-ml-2 sd-mr-0 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-1 sd-row-cols-lg-1 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-row docutils">
+<div class="sd-card sd-sphinx-override sd-w-100 sd-shadow-sm sd-text-left sd-border docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+📦 Everything</div>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[full]&quot;</span>
+</pre></div>
+</div>
+<p class="sd-card-text">All of the above — GUI + Ansys + FEM. Use this if you’re
+upgrading from v0.6.x and want <strong>zero</strong> behavior change.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Extras compose</strong> — combine them with comma-separated names:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[gui,ansys]&quot;</span><span class="w">   </span><span class="c1"># MetalGUI + HFSS/Q3D</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;quantum-metal[gui,mesh]&quot;</span><span class="w">    </span><span class="c1"># MetalGUI + gmsh</span>
+</pre></div>
+</div>
+</div>
+<p><strong>Feature matrix</strong> — what each install gives you, at a glance:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 37.5%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+<col style="width: 12.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>lite</p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">[gui]</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">[ansys]</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">[mesh]</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">[full]</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">qiskit_metal</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qm.view(design)</span></code> (headless matplotlib)</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>Build designs + components from <code class="docutils literal notranslate"><span class="pre">qlibrary</span></code></p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>GDS export</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LOManalysis</span></code>, LOM math, capacitance reductions</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code> desktop app</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>HFSS / Q3D renderers</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPR analyses (<code class="docutils literal notranslate"><span class="pre">EigenmodeSim</span></code>, <code class="docutils literal notranslate"><span class="pre">LumpedElementsSim</span></code>)</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p>gmsh mesher (foundation for Elmer / Palace)</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Migrating from v0.6.x?</strong> See <a class="reference internal" href="migration-to-v0.7.0.html"><span class="doc">Migrating to v0.7.0 (lite-by-default install)</span></a> for
+per-persona migration recipes (GUI user / HFSS user / FEM user /
+AI orchestrator) and common-error fixes.</p>
+<p><strong>CI coverage:</strong> the <code class="docutils literal notranslate"><span class="pre">tests-lite</span></code> CI job validates the lite
+path on every commit; the <code class="docutils literal notranslate"><span class="pre">tests-extras</span></code> job exercises
+<code class="docutils literal notranslate"><span class="pre">[gui]</span></code>, <code class="docutils literal notranslate"><span class="pre">[ansys]</span></code>, <code class="docutils literal notranslate"><span class="pre">[mesh]</span></code>, and <code class="docutils literal notranslate"><span class="pre">[fem]</span></code> (alias)
+independently so a regression on any one extra surfaces
+before release.</p>
+</div>
+<p>For the headless / Qt-free workflow that the lite install supports
+out of the box, see <a class="reference internal" href="headless-usage.html"><span class="doc">Using Quantum Metal without the Qt GUI</span></a>.</p>
 </section>
 <section id="installation-from-source">
 <h2>Installation from source<a class="headerlink" href="#installation-from-source" title="Link to this heading">¶</a></h2>
@@ -695,7 +872,7 @@ Be sure to select the latest versions of <code class="docutils literal notransla
 <p>Here are some things to consider when setting up a development environment:</p>
 <ul class="simple">
 <li><p>If using a virtual environment, make sure <code class="docutils literal notranslate"><span class="pre">pip</span></code> is up to date.</p></li>
-<li><p>Add the path of your qiskit-metal folder to your PATH.</p></li>
+<li><p>Add the path of your quantum-metal folder to your PATH.</p></li>
 <li><p>Library errors when activating conda environments or initializing Jupyter Notebook/Lab indicate a conflict between Python libraries in the base and sub-environments. Go ahead and manually delete the library from the base environment <code class="docutils literal notranslate"><span class="pre">site-packages</span></code> folder shown in the error message. You might need to reinstall them in the sub-environment or create a new one.</p></li>
 </ul>
 </section>
@@ -712,11 +889,11 @@ Be sure to select the latest versions of <code class="docutils literal notransla
 <h2>Common Issues<a class="headerlink" href="#common-issues" title="Link to this heading">¶</a></h2>
 <p>If you run into problems, consult the FAQ’s page <a class="reference internal" href="faq.html#faq-setup"><span class="std std-ref">here</span></a>, or open a <a class="reference external" href="https://github.com/qiskit-community/qiskit-metal/issues">GitHub issue</a>.</p>
 </section>
-<section id="video-instructions-for-legacy-package-qiskit-metal-0-5">
-<h2>Video Instructions for Legacy package (qiskit-metal&lt;0.5)<a class="headerlink" href="#video-instructions-for-legacy-package-qiskit-metal-0-5" title="Link to this heading">¶</a></h2>
+<section id="video-instructions-for-legacy-package-qiskit-metal">
+<h2>Video Instructions for Legacy package (qiskit-metal)<a class="headerlink" href="#video-instructions-for-legacy-package-qiskit-metal" title="Link to this heading">¶</a></h2>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>The following instructions are for the legacy <code class="docutils literal notranslate"><span class="pre">qiskit-metal&lt;0.5</span></code> release. For the latest release and <code class="docutils literal notranslate"><span class="pre">quantum-metal</span></code> v0.5+, please follow the text instructions above. An updated video tutorial will be added soon.</p>
+<p>The following video covers the legacy <code class="docutils literal notranslate"><span class="pre">qiskit-metal</span></code> (pre-v0.5) release. For the current <code class="docutils literal notranslate"><span class="pre">quantum-metal</span></code> release, follow the text instructions above. An updated video tutorial will be added soon.</p>
 </div>
 <a href="https://www.youtube.com/watch?v=sYVDtnJb-ZM&ab_channel=Qiskit">
 Click for YouTube Video</a><br><br>
@@ -734,12 +911,12 @@ Click for YouTube Video</a><br><br>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="workflow.html">
+          <a class="next-page" href="tut/1-Overview/1.1-Quick-start.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Roadmap</div>
+                <div class="title">1.1 Quick start</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -764,7 +941,7 @@ Click for YouTube Video</a><br><br>
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026/01/24</div>
+              Last updated on 2026/06/07</div>
           </div>
           <div class="right-details">
             
@@ -788,6 +965,7 @@ Click for YouTube Video</a><br><br>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#outline-of-installation">Outline of Installation</a></li>
 <li><a class="reference internal" href="#basic-installation">Basic Installation</a></li>
+<li><a class="reference internal" href="#choose-your-install-pathway">Choose your install pathway</a></li>
 <li><a class="reference internal" href="#installation-from-source">Installation from source</a><ul>
 <li><a class="reference internal" href="#choose-an-install-method">Choose an install method</a><ul>
 <li><a class="reference internal" href="#optional-jupyter-lab">(Optional) Jupyter Lab</a></li>
@@ -799,7 +977,7 @@ Click for YouTube Video</a><br><br>
 </ul>
 </li>
 <li><a class="reference internal" href="#common-issues">Common Issues</a></li>
-<li><a class="reference internal" href="#video-instructions-for-legacy-package-qiskit-metal-0-5">Video Instructions for Legacy package (qiskit-metal&lt;0.5)</a></li>
+<li><a class="reference internal" href="#video-instructions-for-legacy-package-qiskit-metal">Video Instructions for Legacy package (qiskit-metal)</a></li>
 </ul>
 </li>
 </ul>
@@ -811,10 +989,11 @@ Click for YouTube Video</a><br><br>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=ba424fd7"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="_static/documentation_options.js?v=c98573da"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     </body>

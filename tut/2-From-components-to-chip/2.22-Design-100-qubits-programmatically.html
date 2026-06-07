@@ -1,26 +1,28 @@
 <!doctype html>
-<html class="no-js" lang="en">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="Modify chip options" href="2.23-Modify-chip-options.html" /><link rel="prev" title="Design a 4 qubit full chip" href="2.21-Design-a-4-qubit-full-chip.html" />
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="2.23 Modify chip options" href="2.23-Modify-chip-options.html"><link rel="prev" title="2.21 Design a 4 qubit full chip" href="2.21-Design-a-4-qubit-full-chip.html">
 
-    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>Design 100 qubits programmatically - Quantum Metal 0.5.3.post1</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>2.22 Design 100 qubits programmatically - Quantum Metal 0.7.3</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/qiskit-sphinx-theme.css?v=8ff9dcb6" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Vibur" />
+    <link rel="stylesheet" type="text/css" href="../../_static/jupyterlite_sphinx.css?v=8ee2c72c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
@@ -139,14 +141,10 @@
   </symbol>
 </svg>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
 
@@ -156,17 +154,15 @@
   <header class="mobile-header">
     <div class="header-left">
       <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">Quantum Metal 0.5.3.post1</div></a>
+      <a href="../../index.html"><div class="brand">Quantum Metal 0.7.3</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
           <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
           <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
           <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -174,8 +170,7 @@
         </button>
       </div>
       <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
   </header>
@@ -185,7 +180,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">Quantum Metal 0.5.3.post1</span>
+  <span class="sidebar-brand-text">Quantum Metal 0.7.3</span>
   
 </a>
 <form class="sidebar-search-container" method="get" action="../../search.html" role="search">
@@ -194,76 +189,70 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">About</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installing Qiskit Metal</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+  <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Roadmap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#qiskit-metal-workflow">Qiskit Metal Workflow</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installing Quantum Metal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../1-Overview/1.1-Quick-start.html">Quick Start</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../../videoseducation.html">Videos &amp; Education</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Tutorials</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Tutorials</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.1-Bird%27s-eye-view-of-Qiskit-Metal.html">Bird’s eye view of Qiskit Metal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.2-Quick-start.html">Quick Start: Build your first 4-qubit processor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.3-Saving-Your-Chip-Design.html">Save your chip design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html">How to use a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#QComponent-Default-Options">QComponent Default Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Modifying-the-Options">Modifying the Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Copying-a-QComponent">Copying a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Deleting-a-QComponent">Deleting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Renaming-a-QComponent">Renaming a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Overwriting-a-QComponent">Overwriting a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html#Closing-the-Qiskit-Metal-GUI">Closing the Qiskit Metal GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.02-How-to-copy-a-QComponent.html">How to copy a QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.11-Routing-101.html">Routing 101</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html">Simple Meander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html#Using-CPW-meanders-to-connect-the-3-Qbits">Using CPW meanders to connect the 3 Qbits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.13-Hybrid-Auto-and-AStar.html">Hybrid Auto and AStar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.14-Get-them-all-with-MixedRoute.html">Get them all with MixedRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.21-Design-a-4-qubit-full-chip.html">Design a 4 qubit full chip</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Design 100 qubits programmatically</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.23-Modify-chip-options.html">Modify chip options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.31-Create-a-QComponent-Basic.html">Create a QComponent - Basic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.32-Create-a-QComponent-Advanced.html">Create a QComponent - Advanced</a></li>
-<li class="toctree-l2"><a class="reference internal" href="2.33-Add-my-QComponent-to-a-reusable-python-file.html">Add my QComponent to a reusable python file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html">Introduction to QRenderers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html#Note:">Note:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.2-Export-your-design-to-GDS.html">Export your design to GDS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.3-Render-your-design-to-Ansys.html">Render your design to Ansys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">How do I make my custom QRenderer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.01-Capacitance-and-LOM.html">Capacitance matrix and LOM analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.02-Eigenmode-and-EPR.html">Eigenmode and EPR analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.03-Impedance.html">Impedance, admittance and scattering analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html">Analyzing and tuning a transmon qubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html#1.-Create-the-Qbit-design">1. Create the Qbit design</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.12-Analyze-a-resonator.html">Analyzing and tuning a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.13-Analyze-transmon-and-resonator.html">Analyzing and tuning a transmon qubit with a resonator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">Analyzing a double hanger resonator (S Param)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.15-CPW-kappa-calculation.html">CPW Kappa Calculation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html">Sweeps - Capacitance matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html#READ-THIS-BEFORE-running-the-cell.">READ THIS BEFORE running the cell.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.22-Eigenmode-matrix.html">Sweeps - Eigenmode matrix</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.32-Transmon-analytics-HCPB.html">Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.33-Transmon-analytics.html">Transmon Analytics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.1-Quick-start.html">1.1 Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.2-Bird%27s-eye-view-of-Quantum-Metal.html">1.2 Bird’s eye view of Quantum Metal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.3-Build-a-4-qubit-chip.html">1.3 Build a 4-qubit chip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.4-Saving-Your-Chip-Design.html">1.4 Saving Your Chip Design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../1-Overview/1.5-Parametric-design---iterate-and-compare.html">1.5 Parametric Design: Iterate and Compare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.01-How-to-use-a-QComponent.html">2.01 QComponent lifecycle — use, copy, delete, rename</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.11-Routing-101.html">2.11 Routing 101</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.12-Simple-Meander.html">2.12 Simple Meander</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.13-Hybrid-Auto-and-AStar.html">2.13 Hybrid Auto and AStar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.14-Get-them-all-with-MixedRoute.html">2.14 Get them all with MixedRoute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.21-Design-a-4-qubit-full-chip.html">2.21 Design a 4 qubit full chip</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.22 Design 100 qubits programmatically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.23-Modify-chip-options.html">2.23 Modify chip options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.31-Create-a-QComponent-Basic.html">2.31 Create a QComponent - Basic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.32-Create-a-QComponent-Advanced.html">2.32 Create a QComponent - Advanced</a></li>
+<li class="toctree-l2"><a class="reference internal" href="2.33-Add-my-QComponent-to-a-reusable-python-file.html">2.33 Add my QComponent to a reusable python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.1-Introduction-to-QRenderers.html">3.1 Introduction to QRenderers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.2-Export-your-design-to-GDS.html">3.2 Export your design to GDS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.3-Render-your-design-to-Ansys.html">3.3 Render your design to Ansys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.4-How-do-I-make-my-custom-QRenderer.html">3.4 How do I make my custom QRenderer?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../3-Renderers/3.5-Render-your-design-to-Gmsh.html">3.5 Render your design to Gmsh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.01-Capacitance-and-LOM.html">4.01 Capacitance matrix and LOM analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.02-Eigenmode-and-EPR.html">4.02 Eigenmode and EPR analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.03-Impedance.html">4.03 Impedance, admittance and scattering analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.04-New-LOM-and-Fluxonium-Example.html">4.04 New LOM and Fluxonium Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example.html">4.05 New LOM and Two Coupled Transmon Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.05-New-LOM-and-Two-Coupled-Transmon-Example-with-sequence.html">4.05 New LOM and Two Coupled Transmon Example with sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.11-Analyze-and-tune-a-transmon.html">4.11 Analyzing and tuning a transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.12-Analyze-a-resonator.html">4.12 Analyzing and tuning a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.13-Analyze-transmon-and-resonator.html">4.13 Analyzing and tuning a transmon qubit with a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.14-Analyze-a-double-hanger-resonator.html">4.14 Analyzing a double hanger resonator (S Param)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.15-CPW-kappa-calculation.html">4.15 CPW Kappa Calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.16-Analyze-S21-of-Hange-Geometry-with-WirebondLunchpadDriven.html">4.16 S21 simulation of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.17-Fit-S21-of-Hanger-Resonator-Geometry.html">4.17 S21 simulation and fitting of a resonator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.18-Analyse-a-Resonator-with-Ports.html">4.18 Eigenmode simulation with Ports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.19-Analyze-a-transmon-using-ElmerFEM.html">4.19 Analyse a Transmon Qubit using ElmerFEM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.21-Capacitance-matrix.html">4.21 Sweeps - Capacitance matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.22-Eigenmode-matrix.html">4.22 Sweeps - Eigenmode matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.23-Impedance-and-scattering-Z-S-Y-matrices.html">4.23 Sweeps - Impedance, scattering and admittance (Z S Y) matrices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.31-Plot-quantum-oscillator-wavefunction.html">4.31 Plotting Wavefunctions of the Quantum Harmonic Oscillator (LC Circuit)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.32-Transmon-analytics-HCPB.html">4.32 Transmon Analytics: Plotting Eigenvalues as a Function of Offset Charge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.33-Transmon-analytics.html">4.33 Transmon Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/4.34-Transmon-qubit-CPB-hamiltonian-charge-basis.html">4.34 Modeling transmon qubit Cooper-pair box Hamiltonian in the charge basis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/Design-and-Simulation-of-a-Cross-Resonance-Gate.html">The Cross Resonance (CR) Gate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../4-Analysis/cQED-with-the-Jaynes-Cummings-Interaction-Model.html">Circuit Quantum Electrodynamics (cQED) and the Jaynes-Cummings Interaction Model Using the HCPB Class and QuTip</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/JJ-Demo-Notebook.html">Josephson Junction QComponent Demo Notebook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Managing-pins.html">Managing pins</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Managing-variables.html">Managing variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/Opening-documentation.html">Opening the documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/QComponent-3-fingers-capacitor.html">QComponent - 3-fingers capacitor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../quick-topics/QComponent-Interdigitated-transmon.html">QComponent - Interdigitated transmon qubit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../quick-topics/Testing-QComponents-for-overlap-and-collisions.html">Demo Notebook Demonstrating How to Test for Component/CPW Overlap</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../circuit-examples/index.html">Example Designs</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Example Designs</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../qcomponents-gallery.html">QComponent Gallery</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../circuit-examples/index.html">Example Designs</a><input aria-label="Toggle navigation of Example Designs" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/01-Transmon_cross.html">Single Transmon - Grounded (xmon)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/02-Transmon_floating.html">Single Transmon - Floating</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/A.Qubits/03-concentric_transmon.html">Concentric Transmon</a></li>
@@ -291,65 +280,23 @@
 <li class="toctree-l2"><a class="reference internal" href="../../circuit-examples/full-design-flow-examples/Exercise-for-the-South-Korea-Hackathon%2720.html">South Korea Qiskit Hackathon’20 - Qiskit Metal exercise</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../videoseducation.html">Videos &amp; Education</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Libraries</span></p>
+<p class="caption" role="heading"><span class="caption-text">Ecosystem</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">All Quantum Devices</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of All Quantum Devices</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRoute.html">QRoute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRouteLead.html">QRouteLead</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QRoutePoint.html">QRoutePoint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CircleCaterpillar.html">CircleCaterpillar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CircleRaster.html">CircleRaster</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.NGon.html">NGon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.NSquareSpiral.html">NSquareSpiral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.Rectangle.html">Rectangle</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RectangleHollow.html">RectangleHollow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.Cap3Interdigital.html">Cap3Interdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CapNInterdigital.html">CapNInterdigital</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ResonatorCoilRect.html">ResonatorCoilRect</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CoupledLineTee.html">CoupledLineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LineTee.html">LineTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.CapNInterdigitalTee.html">CapNInterdigitalTee</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler02.html">TunableCoupler02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ReadoutResFC.html">ReadoutResFC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ResonatorLumped.html">ResonatorLumped</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebond.html">LaunchpadWirebond</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebondCoupled.html">LaunchpadWirebondCoupled</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.LaunchpadWirebondDriven.html">LaunchpadWirebondDriven</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.OpenToGround.html">OpenToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ShortToGround.html">ShortToGround</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteStraight.html">RouteStraight</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteFramed.html">RouteFramed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteMeander.html">RouteMeander</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteAnchors.html">RouteAnchors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RouteMixed.html">RouteMixed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.RoutePathfinder.html">RoutePathfinder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.jj_dolan.html">jj_dolan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.jj_manhattan.html">jj_manhattan</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonConcentric.html">TransmonConcentric</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonConcentricType2.html">TransmonConcentricType2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonCross.html">TransmonCross</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonCrossFL.html">TransmonCrossFL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonInterdigitated.html">TransmonInterdigitated</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocket.html">TransmonPocket</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketCL.html">TransmonPocketCL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocket6.html">TransmonPocket6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ecosystem.html">Built on / with Quantum Metal</a></li>
 </ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">Concepts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantum-metal-workflow">Quantum Metal Workflow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../workflow.html#quantization-methods-overview">Quantization Methods Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">Frequently Asked Questions</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API References</span></p>
+<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/designs.html">QDesigns</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of QDesigns</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/designs.html">QDesigns</a><input aria-label="Toggle navigation of QDesigns" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.QDesign.html">QDesign</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.DesignPlanar.html">DesignPlanar</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.MultiPlanar.html">MultiPlanar</a></li>
@@ -358,7 +305,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.designs.Components.html">Components</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">QComponents</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of QComponents</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qlibrary.html">QComponents</a><input aria-label="Toggle navigation of QComponents" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.QComponent.html">QComponent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.ParsedDynamicAttributes_Component.html">ParsedDynamicAttributes_Component</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.BaseQubit.html">BaseQubit</a></li>
@@ -405,12 +352,30 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TransmonPocketTeeth.html">TransmonPocketTeeth</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.TunableCoupler01.html">TunableCoupler01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SQUID_LOOP.html">SQUID_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.SNAIL.html">SNAIL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.StarQubit.html">StarQubit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qlibrary.anchored_path.html">anchored_path</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../../apidocs/analyses.html">Analyses</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/renderers.html">QRenderers</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of QRenderers</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/analyses.html">Analyses</a><input aria-label="Toggle navigation of Analyses" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.QAnalysis.html">QAnalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.QSimulation.html">QSimulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.LOManalysis.html">LOManalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.EPRanalysis.html">EPRanalysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.LumpedElementsSim.html">LumpedElementsSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.EigenmodeSim.html">EigenmodeSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.ScatteringImpedanceSim.html">ScatteringImpedanceSim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Hcpb.html">Hcpb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Hcpb_analytic.html">Hcpb_analytic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.HO_wavefunctions.html">HO_wavefunctions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.transmon_analytics.html">transmon_analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.cpw_calculations.html">cpw_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.kappa_calculation.html">kappa_calculation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.lumped_capacitive.html">lumped_capacitive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.analyses.Sweeper.html">Sweeper</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/renderers.html">QRenderers</a><input aria-label="Toggle navigation of QRenderers" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRenderer.html">QRenderer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRendererGui.html">QRendererGui</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.QRendererAnalysis.html">QRendererAnalysis</a></li>
@@ -434,7 +399,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.renderers.Vec3DArray.html">Vec3DArray</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/toolbox_metal.html">Toolbox</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of Toolbox</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/toolbox_metal.html">Toolbox</a><input aria-label="Toggle navigation of Toolbox" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.QiskitMetalExceptions.html">QiskitMetalExceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.QiskitMetalDesignError.html">QiskitMetalDesignError</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.about.html">about</a></li>
@@ -446,16 +411,22 @@
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.toolbox_metal.determine_larger_box.html">determine_larger_box</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qgeometries.html">QGeometry</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of QGeometry</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/qgeometries.html">QGeometry</a><input aria-label="Toggle navigation of QGeometry" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal.qgeometries.QGeometryTables.html">QGeometryTables</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/gui.html">GUI</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of GUI</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../apidocs/gui.html">GUI</a><input aria-label="Toggle navigation of GUI" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../apidocs/qiskit_metal._gui.MetalGUI.html">MetalGUI</a></li>
 </ul>
 </li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Community &amp; Contributing</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributor-guide.html">Contributor Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../architecture.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../headless-usage.html">Using Quantum Metal without Qt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration-to-v0.7.0.html">Migrating to v0.7.0 (lite-by-default install)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration-to-v0.7.0.html#v0-7-2-follow-on-prefer-qm-gui-design-over-metalgui-design">v0.7.2 follow-on: prefer <code class="docutils literal notranslate"><span class="pre">qm.gui(design)</span></code> over <code class="docutils literal notranslate"><span class="pre">MetalGUI(design)</span></code></a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Qiskit/qiskit/blob/master/CODE_OF_CONDUCT.md">Code of Conduct</a></li>
 </ul>
 
@@ -481,8 +452,7 @@
   </a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
               <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
@@ -490,8 +460,7 @@
             </button>
           </div>
           <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
@@ -499,11 +468,16 @@
 <p class="admonition-title">Note</p>
 <p>This page was generated from <a class="reference external" href="https://github.com/Qiskit/qiskit-metal/blob/main/docs/tut/2-From-components-to-chip/2.22-Design-100-qubits-programmatically.ipynb">tut/2-From-components-to-chip/2.22-Design-100-qubits-programmatically.ipynb</a>.</p>
 </div>
-<section id="Design-100-qubits-programmatically">
-<h1>Design 100 qubits programmatically<a class="headerlink" href="#Design-100-qubits-programmatically" title="Link to this heading">¶</a></h1>
+<section id="2.22-Design-100-qubits-programmatically">
+<h1>2.22 Design 100 qubits programmatically<a class="headerlink" href="#2.22-Design-100-qubits-programmatically" title="Link to this heading">¶</a></h1>
+<blockquote>
+<div><p>💡 <strong>Using this tutorial without the Qt GUI</strong></p>
+<p>This tutorial uses the desktop <code class="docutils literal notranslate"><span class="pre">MetalGUI</span></code>. To follow along on Colab, Binder, JupyterHub, or any environment where Qt isn’t available, <strong>replace any ``gui.rebuild()`` / ``gui.screenshot()`` call with ``qm.view(design)``</strong> — it renders the design to a matplotlib <code class="docutils literal notranslate"><span class="pre">Figure</span></code> you can display inline or save with <code class="docutils literal notranslate"><span class="pre">fig.savefig(...)</span></code>.</p>
+<p>See <a class="reference internal" href="../1-Overview/1.1-Quick-start.html"><span class="doc">1.1 Quick start</span></a> for a complete runnable walkthrough and <code class="docutils literal notranslate"><span class="pre">`docs/headless-usage.rst</span></code> &lt;../../docs/headless-usage.rst&gt;`__ for the full reference.</p>
+</div></blockquote>
 <section id="Prerequisite">
 <h2>Prerequisite<a class="headerlink" href="#Prerequisite" title="Link to this heading">¶</a></h2>
-<p>A working local installation of Ansys</p>
+<p>For the LOM part of this tutorial, a working local installation of Ansys</p>
 <section id="N_x-by-N_y-grid-of-qubits">
 <h3>N_x by N_y grid of qubits<a class="headerlink" href="#N_x-by-N_y-grid-of-qubits" title="Link to this heading">¶</a></h3>
 <p>A simple example of generating a large grid of qubits.</p>
@@ -512,32 +486,30 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
-<span class="o">%</span><span class="k">autoreload</span> 2
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
-</pre></div>
-</div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">metal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">designs</span><span class="p">,</span> <span class="n">MetalGUI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">qm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">designs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Headings</span>
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span> <span class="o">=</span> <span class="n">designs</span><span class="o">.</span><span class="n">DesignPlanar</span><span class="p">()</span>
-<span class="n">gui</span> <span class="o">=</span> <span class="n">MetalGUI</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
+<span class="n">gui</span> <span class="o">=</span> <span class="n">qm</span><span class="o">.</span><span class="n">gui</span><span class="p">(</span><span class="n">design</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div style='border-left:4px solid #6929C4;padding:8px 12px;background:#f4f1fb;color:#222;font-family:sans-serif;font-size:13px;line-height:1.4;margin:4px 0;'><b>Quantum Metal — headless viewer active.</b> Rendering inline via <code>qm.view(design)</code>; <code>gui.rebuild()</code>, <code>gui.screenshot()</code>, <code>gui.edit_component(...)</code> work as in the desktop GUI.<br>For the full desktop experience (Qt window, dockable panels): <code>pip install 'quantum-metal[gui]'</code> and re-import.</div></div>
+</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal.qlibrary.qubits.transmon_pocket</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransmonPocket</span>
@@ -546,7 +518,7 @@
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span><span class="o">.</span><span class="n">overwrite_enabled</span> <span class="o">=</span> <span class="kc">True</span>
@@ -558,43 +530,49 @@
 <h3>Design<a class="headerlink" href="#Design" title="Link to this heading">¶</a></h3>
 <p>We can vary how big we want the grid to be by changing N_x/N_y (number of qubits along the x/y axis). Be careful as very large arrays can take a fair bit of time to generate. We modify the chip size so it contains all of the qubits.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_x</span> <span class="o">=</span><span class="mi">4</span>
-<span class="n">N_y</span> <span class="o">=</span><span class="mi">3</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_x</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">N_y</span> <span class="o">=</span> <span class="mi">10</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">size_x</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;mm&#39;</span>
-<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">size_y</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_y</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;mm&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">design</span><span class="o">.</span><span class="n">delete_all_components</span><span class="p">()</span>
 
-<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">center_x</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;mm&#39;</span>
-<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">center_y</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_y</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;mm&#39;</span>
+<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">size_x</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span>
+<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">size_y</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span>
+
+<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">center_x</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span>
+<span class="n">design</span><span class="o">.</span><span class="n">chips</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">center_y</span> <span class="o">=</span> <span class="nb">str</span><span class="p">((</span><span class="n">N_y</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span>
 </pre></div>
 </div>
 </div>
 <p>First we generate the qubits. We use some simple math to generate the offset pattern in order to make the bus resonators easier to connect.</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Loop to generate and draw the qubits</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Loop to generate and draw the qubits</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_x</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_y</span><span class="p">):</span>
-        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">pos_x</span><span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="mi">3000</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;um&#39;</span><span class="p">,</span> <span class="n">pos_y</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="o">*</span><span class="mi">3000</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="k">2</span>)*1500)+&#39;um&#39;, orientation = &quot;-90&quot;,
-                      <span class="n">connection_pads</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                            <span class="n">B0</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s1">&#39;75um&#39;</span><span class="p">),</span>
-                            <span class="n">B1</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s1">&#39;120um&#39;</span><span class="p">),</span>
-                            <span class="n">B2</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s1">&#39;120um&#39;</span><span class="p">),</span>
-                            <span class="n">B3</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">loc_w</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s1">&#39;90um&#39;</span><span class="p">)))</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">pos_x</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">3000</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;um&quot;</span><span class="p">,</span>
+            <span class="n">pos_y</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="mi">3000</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1500</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;um&quot;</span><span class="p">,</span>
+            <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;-90&quot;</span><span class="p">,</span>
+            <span class="n">connection_pads</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                <span class="n">B0</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s2">&quot;75um&quot;</span><span class="p">),</span>
+                <span class="n">B1</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s2">&quot;120um&quot;</span><span class="p">),</span>
+                <span class="n">B2</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc_W</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s2">&quot;120um&quot;</span><span class="p">),</span>
+                <span class="n">B3</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc_w</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">loc_H</span><span class="o">=+</span><span class="mi">1</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="s2">&quot;90um&quot;</span><span class="p">),</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
 
-
-        <span class="n">obj</span><span class="o">=</span><span class="n">TransmonPocket</span><span class="p">(</span><span class="n">design</span><span class="p">,</span><span class="s1">&#39;Q_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span><span class="n">options</span><span class="p">)</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="n">TransmonPocket</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;Q_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">options</span><span class="p">)</span>
 
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
@@ -602,48 +580,92 @@
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_14_0.png" src="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_14_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">screenshot</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_15_0.png" src="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_15_0.png" />
+</div>
+</div>
 <p>Next, we generate the route meanders. As we used consistent naming schemes for the qubits and pins, we can loop through them with out issue. We also have the length vary based on which qubit is being connected, such that no qubit should be connected to two resonators of the same frequency.</p>
-<div class="nbinput nblast docutils container">
+<div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_x</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_y</span><span class="p">):</span>
-        <span class="c1">#&quot;upward&quot; connection, avoids drawing connectors for &#39;top&#39; row. Changes connector length by +/-50um to avoid frequency collisions</span>
-        <span class="k">if</span> <span class="n">y</span><span class="o">&lt;</span><span class="p">(</span><span class="n">N_y</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-            <span class="n">connectorAD</span> <span class="o">=</span> <span class="n">RouteMeander</span><span class="p">(</span><span class="n">design</span><span class="p">,</span><span class="s1">&#39;CU_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span><span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">total_length</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">7</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">%</span><span class="k">2</span>)*0.5)+&#39;mm&#39;,
-                                                                                    <span class="n">fillet</span> <span class="o">=</span> <span class="s2">&quot;99um&quot;</span><span class="p">,</span><span class="n">lead</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                                                                                    <span class="n">start_straight</span><span class="o">=</span><span class="s1">&#39;0.5mm&#39;</span><span class="p">,</span>
-                                                                                    <span class="n">end_straight</span><span class="o">=</span><span class="s1">&#39;0.25mm&#39;</span><span class="p">),</span>
-                                                                                    <span class="n">meander</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">asymmetry</span><span class="o">=</span><span class="s1">&#39;-700um&#39;</span><span class="p">),</span>
-                                                                                    <span class="n">pin_inputs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-                                                                                        <span class="n">start_pin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                                                                                            <span class="n">component</span> <span class="o">=</span><span class="s1">&#39;Q_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
-                                                                                            <span class="n">pin</span> <span class="o">=</span> <span class="s1">&#39;B0&#39;</span><span class="p">),</span>
-                                                                                        <span class="n">end_pin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-                                                                                            <span class="n">component</span><span class="o">=</span><span class="s1">&#39;Q_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
-                                                                                            <span class="n">pin</span><span class="o">=</span><span class="s1">&#39;B3&#39;</span><span class="p">))))</span>
+        <span class="c1"># &quot;upward&quot; connection, avoids drawing connectors for &#39;top&#39; row. Changes connector length by +/-50um to avoid frequency collisions</span>
+        <span class="k">if</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">N_y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">connectorAD</span> <span class="o">=</span> <span class="n">RouteMeander</span><span class="p">(</span>
+                <span class="n">design</span><span class="p">,</span>
+                <span class="s2">&quot;CU_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">total_length</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="mi">7</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
+                    <span class="n">fillet</span><span class="o">=</span><span class="s2">&quot;99um&quot;</span><span class="p">,</span>
+                    <span class="n">lead</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">start_straight</span><span class="o">=</span><span class="s2">&quot;0.5mm&quot;</span><span class="p">,</span> <span class="n">end_straight</span><span class="o">=</span><span class="s2">&quot;0.25mm&quot;</span><span class="p">),</span>
+                    <span class="n">meander</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">asymmetry</span><span class="o">=</span><span class="s2">&quot;-700um&quot;</span><span class="p">),</span>
+                    <span class="n">pin_inputs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">start_pin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                            <span class="n">component</span><span class="o">=</span><span class="s2">&quot;Q_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;B0&quot;</span>
+                        <span class="p">),</span>
+                        <span class="n">end_pin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                            <span class="n">component</span><span class="o">=</span><span class="s2">&quot;Q_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;B3&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
 
-        <span class="c1">#&quot;sideways&quot; connection, avoids drawing for far right col, and for top qubit in odd col. Changes connector length by +/- 25um</span>
-        <span class="c1">#to avoid frequency collisions</span>
-        <span class="k">if</span> <span class="n">x</span><span class="o">&lt;</span><span class="p">(</span><span class="n">N_x</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="k">2</span> and y==(N_y-1))):
-            <span class="n">connectorBC</span> <span class="o">=</span> <span class="n">RouteMeander</span><span class="p">(</span><span class="n">design</span><span class="p">,</span><span class="s1">&#39;CS_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span><span class="n">options</span><span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">total_length</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">6</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">%</span><span class="k">2</span>)*0.5)+&#39;mm&#39;,
-                                                                                    <span class="n">fillet</span> <span class="o">=</span> <span class="s2">&quot;99um&quot;</span><span class="p">,</span><span class="n">lead</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
-                                                                                        <span class="n">start_straight</span><span class="o">=</span><span class="s1">&#39;0.3mm&#39;</span><span class="p">,</span>
-                                                                                        <span class="n">end_straight</span><span class="o">=</span><span class="s1">&#39;0.25mm&#39;</span><span class="p">),</span>
-                                                                                    <span class="n">meander</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">asymmetry</span><span class="o">=</span><span class="s1">&#39;-200um&#39;</span><span class="p">),</span>
-                                                                                    <span class="n">pin_inputs</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span>
-                                                                                        <span class="n">start_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
-                                                                                            <span class="n">component</span> <span class="o">=</span><span class="s1">&#39;Q_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
-                                                                                            <span class="n">pin</span> <span class="o">=</span> <span class="s1">&#39;B1&#39;</span><span class="p">),</span>
-                                                                                        <span class="n">end_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
-                                                                                            <span class="n">component</span><span class="o">=</span><span class="s1">&#39;Q_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">%</span><span class="k">2</span>)),
-                                                                                             <span class="n">pin</span><span class="o">=</span><span class="s1">&#39;B2&#39;</span><span class="p">))))</span>
+        <span class="c1"># &quot;sideways&quot; connection, avoids drawing for far right col, and for top qubit in odd col. Changes connector length by +/- 25um</span>
+        <span class="c1"># to avoid frequency collisions</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">N_x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">==</span> <span class="p">(</span><span class="n">N_y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))):</span>
+            <span class="n">connectorBC</span> <span class="o">=</span> <span class="n">RouteMeander</span><span class="p">(</span>
+                <span class="n">design</span><span class="p">,</span>
+                <span class="s2">&quot;CS_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+                <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">total_length</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="mi">6</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
+                    <span class="n">fillet</span><span class="o">=</span><span class="s2">&quot;99um&quot;</span><span class="p">,</span>
+                    <span class="n">lead</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span><span class="n">start_straight</span><span class="o">=</span><span class="s2">&quot;0.3mm&quot;</span><span class="p">,</span> <span class="n">end_straight</span><span class="o">=</span><span class="s2">&quot;0.25mm&quot;</span><span class="p">),</span>
+                    <span class="n">meander</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span><span class="n">asymmetry</span><span class="o">=</span><span class="s2">&quot;-200um&quot;</span><span class="p">),</span>
+                    <span class="n">pin_inputs</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
+                        <span class="n">start_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
+                            <span class="n">component</span><span class="o">=</span><span class="s2">&quot;Q_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;B1&quot;</span>
+                        <span class="p">),</span>
+                        <span class="n">end_pin</span><span class="o">=</span><span class="n">Dict</span><span class="p">(</span>
+                            <span class="n">component</span><span class="o">=</span><span class="s2">&quot;Q_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)),</span>
+                            <span class="n">pin</span><span class="o">=</span><span class="s2">&quot;B2&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
 
 
 <span class="n">gui</span><span class="o">.</span><span class="n">rebuild</span><span class="p">()</span>
 <span class="n">gui</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_17_0.png" src="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_17_0.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
@@ -658,9 +680,10 @@
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_17_0.png" class="no-scaled-link" src="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_17_0.png" style="width: 500px;" />
+<img alt="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_18_0.png" src="../../_images/tut_2-From-components-to-chip_2.22-Design-100-qubits-programmatically_18_0.png" />
 </div>
 </div>
+<p>100 qubits in a 10x10 grid with bus couplers</p>
 </section>
 <section id="Analysis">
 <h3>Analysis<a class="headerlink" href="#Analysis" title="Link to this heading">¶</a></h3>
@@ -670,6 +693,7 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">qiskit_metal.analyses.quantization</span><span class="w"> </span><span class="kn">import</span> <span class="n">LOManalysis</span>
+
 <span class="n">c1</span> <span class="o">=</span> <span class="n">LOManalysis</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="s2">&quot;q3d&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -710,14 +734,14 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;LOM&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;LOM&quot;</span>
 <span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">max_passes</span> <span class="o">=</span> <span class="mi">14</span>
 
-<span class="c1">#To change multiple settings use the following method:</span>
-<span class="c1">#c1.sim.setup_update(name = &#39;LOM&#39;, max_passes = 14)</span>
+<span class="c1"># To change multiple settings use the following method:</span>
+<span class="c1"># c1.sim.setup_update(name = &#39;LOM&#39;, max_passes = 14)</span>
 
 <span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">setup</span>
-<br/></pre></div>
+</pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -747,7 +771,110 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Q_0_0&#39;</span><span class="p">],</span> <span class="n">open_terminations</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;Q_0_0&#39;</span><span class="p">,</span> <span class="s1">&#39;B0&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Q_0_0&#39;</span><span class="p">,</span> <span class="s1">&#39;B1&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Q_0_0&#39;</span><span class="p">,</span> <span class="s1">&#39;B2&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Q_0_0&#39;</span><span class="p">,</span> <span class="s1">&#39;B3&#39;</span><span class="p">)])</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="n">components</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Q_0_0&quot;</span><span class="p">],</span>
+    <span class="n">open_terminations</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;Q_0_0&quot;</span><span class="p">,</span> <span class="s2">&quot;B0&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;Q_0_0&quot;</span><span class="p">,</span> <span class="s2">&quot;B1&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;Q_0_0&quot;</span><span class="p">,</span> <span class="s2">&quot;B2&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;Q_0_0&quot;</span><span class="p">,</span> <span class="s2">&quot;B3&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[14]</span><span class="ansi-green-fg">, line 1</span>
+<span class="ansi-green-fg">----&gt; </span><span class="ansi-green-fg">1</span> <span class="ansi-yellow-bg">c1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">sim</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">run</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">      2</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">components</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">Q_0_0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      3</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">open_terminations</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">[</span>
+<span class="ansi-green-fg">      4</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">Q_0_0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">B0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      5</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">Q_0_0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">B1</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      6</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">Q_0_0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">B2</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      7</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">Q_0_0</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-fg ansi-yellow-bg">B3</span><span class="ansi-yellow-fg ansi-yellow-bg">&#34;</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      8</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">      9</span> <span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/CODE_REPOS/quantum_hardware/qiskit-metal/src/qiskit_metal/analyses/core/simulation.py:205</span>, in <span class="ansi-cyan-fg">QSimulation.run</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
+<span class="ansi-green-fg">    201</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">run</span>(<span style="color: rgb(0,135,0)">self</span>, *args, **kwargs):
+<span class="ansi-green-fg">    202</span> <span style="color: rgb(188,188,188)">    </span><span class="ansi-yellow-fg">&#34;&#34;&#34;Alias for run_sim() necessary to implement super-class method, while</span>
+<span class="ansi-green-fg">    203</span> <span class="ansi-yellow-fg">    preventing method name collision when sim and non-sim QAnalysis classes are inherited.</span>
+<span class="ansi-green-fg">    204</span> <span class="ansi-yellow-fg">    &#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">205</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">run_sim</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/CODE_REPOS/quantum_hardware/qiskit-metal/src/qiskit_metal/analyses/simulation/lumped_elements.py:138</span>, in <span class="ansi-cyan-fg">LumpedElementsSim.run_sim</span><span class="ansi-blue-fg">(self, name, components, open_terminations, box_plus_buffer)</span>
+<span class="ansi-green-fg">    135</span> <span style="color: rgb(0,135,0)">self</span>.clear_data()
+<span class="ansi-green-fg">    137</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">self</span>.renderer_initialized:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">138</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_initialize_renderer</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    140</span> renderer_design_name = <span style="color: rgb(0,135,0)">self</span>._render(
+<span class="ansi-green-fg">    141</span>     name=name,
+<span class="ansi-green-fg">    142</span>     solution_type=<span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">capacitive</span><span class="ansi-yellow-fg">&#34;</span>,
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    146</span>     vars_to_initialize=Dict(),
+<span class="ansi-green-fg">    147</span> )
+<span class="ansi-green-fg">    149</span> <span style="color: rgb(0,135,0)">self</span>._analyze()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/CODE_REPOS/quantum_hardware/qiskit-metal/src/qiskit_metal/analyses/core/simulation.py:146</span>, in <span class="ansi-cyan-fg">QSimulation._initialize_renderer</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">    144</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">_initialize_renderer</span>(<span style="color: rgb(0,135,0)">self</span>):
+<span class="ansi-green-fg">    145</span> <span style="color: rgb(188,188,188)">    </span><span class="ansi-yellow-fg">&#34;&#34;&#34;Starts the renderer by executing the routine of the selected renderer.&#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">146</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">start</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/CODE_REPOS/quantum_hardware/qiskit-metal/src/qiskit_metal/renderers/renderer_base/renderer_base.py:382</span>, in <span class="ansi-cyan-fg">QRenderer.start</span><span class="ansi-blue-fg">(self, force)</span>
+<span class="ansi-green-fg">    377</span>         <span style="color: rgb(0,135,0)">self</span>._close_renderer()
+<span class="ansi-green-fg">    379</span> <span style="color: rgb(95,135,135)"># TODO: move the code line below to inside the `if force or not initiated`,</span>
+<span class="ansi-green-fg">    380</span> <span style="color: rgb(95,135,135)">#  but only after the TODO before the `if` is completed</span>
+<span class="ansi-green-fg">    381</span> <span style="color: rgb(95,135,135)"># try to initialize the renderer</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">382</span> <span style="color: rgb(0,135,0)">self</span>.initiated = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_initiate_renderer</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    384</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span style="color: rgb(0,135,0)">self</span>.initiated
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/CODE_REPOS/quantum_hardware/qiskit-metal/src/qiskit_metal/renderers/renderer_ansys/ansys_renderer.py:343</span>, in <span class="ansi-cyan-fg">QAnsysRenderer._initiate_renderer</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">    341</span>     <span style="color: rgb(0,135,0)">self</span>.rapp = HfssApp()
+<span class="ansi-green-fg">    342</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">NameError</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">343</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    344</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">Cannot connect to Ansys HFSS — win32com (Windows COM) is not available.</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    345</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">This renderer requires:</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    346</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  1. Microsoft Windows  (COM automation is Windows-only)</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    347</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  2. Ansys Electronics Desktop (HFSS) installed and licensed</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    348</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  3. pywin32 installed:  pip install pywin32</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    349</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">Running on macOS or Linux? Use one of these alternatives instead:</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    350</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  • ElmerFEM open-source FEM:  see tutorial 4.19 (tutorials/4-Analysis/)</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    351</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  • Export to GDS and simulate externally:  see tutorial 3.2</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    352</span>         <span class="ansi-yellow-fg">&#34;</span><span class="ansi-yellow-fg">  • pyaedt-based renderer (Windows + Ansys 2022+):  QAnsysPyaedtRenderer</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">&#34;</span>
+<span class="ansi-green-fg">    353</span>     ) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
+<span class="ansi-green-fg">    354</span> <span style="color: rgb(0,135,0)">self</span>.rdesktop = <span style="color: rgb(0,135,0)">self</span>.rapp.get_app_desktop()
+<span class="ansi-green-fg">    355</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span>.rdesktop.project_count() == <span class="ansi-green-fg">0</span>:
+
+<span class="ansi-red-fg">RuntimeError</span>:
+
+Cannot connect to Ansys HFSS — win32com (Windows COM) is not available.
+
+This renderer requires:
+  1. Microsoft Windows  (COM automation is Windows-only)
+  2. Ansys Electronics Desktop (HFSS) installed and licensed
+  3. pywin32 installed:  pip install pywin32
+
+Running on macOS or Linux? Use one of these alternatives instead:
+  • ElmerFEM open-source FEM:  see tutorial 4.19 (tutorials/4-Analysis/)
+  • Export to GDS and simulate externally:  see tutorial 3.2
+  • pyaedt-based renderer (Windows + Ansys 2022+):  QAnsysPyaedtRenderer
+
+</pre></div></div>
+</div>
+<p>We then use the results of that simulation to complete a LOM analysis. The input values should be modified based on the simulation passes and the set frequencies of the resonators.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">junctions</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">({</span><span class="s2">&quot;Lj&quot;</span><span class="p">:</span> <span class="mf">12.31</span><span class="p">,</span> <span class="s2">&quot;Cj&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">freq_readout</span> <span class="o">=</span> <span class="mf">6.6</span>
+<span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">freq_bus</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">6.2</span><span class="p">,</span> <span class="mf">6.4</span><span class="p">]</span>
+
+<span class="n">c1</span><span class="o">.</span><span class="n">run_lom</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -756,245 +883,8 @@
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-INFO 09:14PM [connect_project]: Connecting to Ansys Desktop API...
-INFO 09:14PM [load_ansys_project]:      Opened Ansys App
-INFO 09:14PM [load_ansys_project]:      Opened Ansys Desktop v2020.2.0
-INFO 09:14PM [load_ansys_project]:      Opened Ansys Project
-        Folder:    C:/Users/LocalAdmin/Documents/Ansoft/
-        Project:   Project3
-INFO 09:14PM [connect_design]: No active design found (or error getting active design).
-INFO 09:14PM [connect]:          Connected to project &#34;Project3&#34;. No design detected
-INFO 09:14PM [connect_design]:  Opened active design
-        Design:    Design_q3d [Solution type: Q3D]
-WARNING 09:14PM [connect_setup]:        No design setup detected.
-WARNING 09:14PM [connect_setup]:        Creating Q3D default setup.
-INFO 09:14PM [get_setup]:       Opened setup `Setup`  (&lt;class &#39;pyEPR.ansys.AnsysQ3DSetup&#39;&gt;)
-INFO 09:14PM [get_setup]:       Opened setup `LOM`  (&lt;class &#39;pyEPR.ansys.AnsysQ3DSetup&#39;&gt;)
-INFO 09:14PM [analyze]: Analyzing setup LOM
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmp_hlqtijq.txt, C, , LOM:LastAdaptive, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 1, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmpm6o1w2x7.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 1, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmp8li0tjtq.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 2, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmpupxqipgp.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 3, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmpkjbblmmc.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 4, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmp239ustm9.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 5, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmp77k7odfy.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 6, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmpbga72yox.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 7, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmppkxuaoh7.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 8, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmpan3h64py.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 9, False
-INFO 09:15PM [get_matrix]: Exporting matrix data to (C:\Users\LOCALA~1\AppData\Local\Temp\tmperxra0to.txt, C, , LOM:AdaptivePass, &#34;Original&#34;, &#34;ohm&#34;, &#34;nH&#34;, &#34;fF&#34;, &#34;mSie&#34;, 5000000000, Maxwell, 10, False
+07:22PM 55s WARNING [run_lom]: Please initialize the capacitance_matrix before executing this method.`self.sim.capacitance_matrix = pd.DataFrame(...)`
 </pre></div></div>
-</div>
-<p>We then use the results of that simulation to complete a LOM analysis. The input values should be modified based on the simulation passes and the set frequencies of the resonators.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">junctions</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">({</span><span class="s1">&#39;Lj&#39;</span><span class="p">:</span> <span class="mf">12.31</span><span class="p">,</span> <span class="s1">&#39;Cj&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
-<span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">freq_readout</span> <span class="o">=</span> <span class="mf">6.6</span>
-<span class="n">c1</span><span class="o">.</span><span class="n">setup</span><span class="o">.</span><span class="n">freq_bus</span> <span class="o">=</span> <span class="p">[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">6.2</span><span class="p">,</span><span class="mf">6.4</span><span class="p">]</span>
-
-<span class="n">c1</span><span class="o">.</span><span class="n">run_lom</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-[4, 5] [6 0 1 2]
-Predicted Values
-
-Transmon Properties
-f_Q 4.738954 [GHz]
-EC 233.980931 [MHz]
-EJ 13.273404 [GHz]
-alpha -265.921577 [MHz]
-dispersion 2.961037 [KHz]
-Lq 12.305036 [nH]
-Cq 82.785499 [fF]
-T1 38.984271 [us]
-
-**Coupling Properties**
-
-tCqbus1 -14.941228 [fF]
-gbus1_in_MHz -171.865495 [MHz]
-χ_bus1 -4.093768 [MHz]
-1/T1bus1 3932.655118 [Hz]
-T1bus1 40.470099 [us]
-
-tCqbus2 1.214466 [fF]
-gbus2_in_MHz 12.829544 [MHz]
-χ_bus2 -0.046240 [MHz]
-1/T1bus2 4.837406 [Hz]
-T1bus2 32900.886145 [us]
-
-tCqbus3 7.440809 [fF]
-gbus3_in_MHz 81.008269 [MHz]
-χ_bus3 -1.413122 [MHz]
-1/T1bus3 143.085528 [Hz]
-T1bus3 1112.306360 [us]
-
-tCqbus4 -0.961558 [fF]
-gbus4_in_MHz -10.815462 [MHz]
-χ_bus4 -0.019950 [MHz]
-1/T1bus4 1.964458 [Hz]
-T1bus4 81017.238470 [us]
-Bus-Bus Couplings
-gbus1_2 30.753259 [MHz]
-gbus1_3 54.127186 [MHz]
-gbus1_4 37.699733 [MHz]
-gbus2_3 13.610983 [MHz]
-gbus2_4 18.527072 [MHz]
-gbus3_4 16.145313 [MHz]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
-</pre></div>
-</div>
-<div class="output_area rendered_html docutils container">
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>fQ</th>
-      <th>EC</th>
-      <th>EJ</th>
-      <th>alpha</th>
-      <th>dispersion</th>
-      <th>gbus</th>
-      <th>chi_in_MHz</th>
-      <th>χr MHz</th>
-      <th>gr MHz</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
-      <td>5.044089</td>
-      <td>267.10336</td>
-      <td>13.273404</td>
-      <td>-306.945764</td>
-      <td>11.079517</td>
-      <td>[-161.15808571895315, 9.870283884905112, 71.93...</td>
-      <td>[-5.621652036035947, -0.05004703405751782, -1....</td>
-      <td>5.621652</td>
-      <td>161.158086</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>4.95129</td>
-      <td>256.767469</td>
-      <td>13.273404</td>
-      <td>-294.059523</td>
-      <td>7.54795</td>
-      <td>[-146.4624487976284, 6.691015658791751, 73.940...</td>
-      <td>[-4.035714553638353, -0.01892349474338407, -1....</td>
-      <td>4.035715</td>
-      <td>146.462449</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>4.872128</td>
-      <td>248.132548</td>
-      <td>13.273404</td>
-      <td>-283.352888</td>
-      <td>5.376871</td>
-      <td>[-155.3563666804045, 10.251305545805131, 74.91...</td>
-      <td>[-4.042454405786888, -0.037933542547650835, -1...</td>
-      <td>4.042454</td>
-      <td>155.356367</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>4.846487</td>
-      <td>245.371362</td>
-      <td>13.273404</td>
-      <td>-279.940522</td>
-      <td>4.805843</td>
-      <td>[-160.4881170954147, 9.098286776764787, 76.290...</td>
-      <td>[-4.157072524571879, -0.02843345284637578, -1....</td>
-      <td>4.157073</td>
-      <td>160.488117</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>4.804421</td>
-      <td>240.879201</td>
-      <td>13.273404</td>
-      <td>-274.400635</td>
-      <td>3.986857</td>
-      <td>[-163.84899918863601, 10.723100629455065, 77.9...</td>
-      <td>[-4.080058098970338, -0.03646057667869494, -1....</td>
-      <td>4.080058</td>
-      <td>163.848999</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>4.782051</td>
-      <td>238.509452</td>
-      <td>13.273404</td>
-      <td>-271.484001</td>
-      <td>3.604898</td>
-      <td>[-166.45252998445875, 11.937440533798032, 78.9...</td>
-      <td>[-4.079413824028787, -0.04333548934732217, -1....</td>
-      <td>4.079414</td>
-      <td>166.452530</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>4.762294</td>
-      <td>236.427395</td>
-      <td>13.273404</td>
-      <td>-268.92477</td>
-      <td>3.295459</td>
-      <td>[-168.75220986791896, 12.216219488988354, 79.9...</td>
-      <td>[-4.0778710744752615, -0.04375451018537349, -1...</td>
-      <td>4.077871</td>
-      <td>168.752210</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>4.749929</td>
-      <td>235.129578</td>
-      <td>13.273404</td>
-      <td>-267.331082</td>
-      <td>3.114259</td>
-      <td>[-170.2243348027099, 12.30778022628425, 80.502...</td>
-      <td>[-4.078025496422903, -0.043416356394959575, -1...</td>
-      <td>4.078025</td>
-      <td>170.224335</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>4.738954</td>
-      <td>233.980931</td>
-      <td>13.273404</td>
-      <td>-265.921577</td>
-      <td>2.961037</td>
-      <td>[-171.86549487771424, 12.829544193035785, 81.0...</td>
-      <td>[-4.093768494072426, -0.04623997642648877, -1....</td>
-      <td>4.093768</td>
-      <td>171.865495</td>
-    </tr>
-  </tbody>
-</table>
-</div></div>
 </div>
 <p>Once you are done with your analysis, please close it with <code class="docutils literal notranslate"><span class="pre">close()</span></code>. This will free up resources currently occupied by qiskit-metal to communiate with the tool.</p>
 <div class="nbinput nblast docutils container">
@@ -1020,8 +910,8 @@ gbus3_4 16.145313 [MHz]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chip_gds</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;no_cheese&#39;</span><span class="p">][</span><span class="s1">&#39;buffer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;50um&#39;</span>
-<span class="n">chip_gds</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s1">&#39;path_filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;../../resources/Fake_Junctions.GDS&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chip_gds</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;no_cheese&quot;</span><span class="p">][</span><span class="s2">&quot;buffer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;50um&quot;</span>
+<span class="n">chip_gds</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;path_filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;../../resources/Fake_Junctions.GDS&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1033,6 +923,14 @@ gbus3_4 16.145313 [MHz]
 </pre></div>
 </div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+07:22PM 59s WARNING [import_junction_gds_file]: Not able to find file:&#34;../../resources/Fake_Junctions.GDS&#34;.  Not used to replace junction. Checked directory:&#34;/Users/zlatkominev/CODE_REPOS/quantum_hardware/qiskit-metal/docs/resources&#34;.
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
@@ -1043,22 +941,13 @@ gbus3_4 16.145313 [MHz]
 </pre></div></div>
 </div>
 <p>We can close the GUI now that we have finished the design.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gui</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
-</pre></div>
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-True
-</pre></div></div>
 </div>
 </section>
 </section>
@@ -1102,7 +991,7 @@ True
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Modify chip options</div>
+                <div class="title">2.23 Modify chip options</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1113,7 +1002,7 @@ True
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Design a 4 qubit full chip</div>
+                <div class="title">2.21 Design a 4 qubit full chip</div>
                 
               </div>
             </a>
@@ -1127,7 +1016,7 @@ True
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026/01/24</div>
+              Last updated on 2026/06/07</div>
           </div>
           <div class="right-details">
             
@@ -1148,7 +1037,7 @@ True
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Design 100 qubits programmatically</a><ul>
+<li><a class="reference internal" href="#">2.22 Design 100 qubits programmatically</a><ul>
 <li><a class="reference internal" href="#Prerequisite">Prerequisite</a><ul>
 <li><a class="reference internal" href="#N_x-by-N_y-grid-of-qubits">N_x by N_y grid of qubits</a></li>
 <li><a class="reference internal" href="#Design">Design</a></li>
@@ -1167,13 +1056,14 @@ True
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=ba424fd7"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
+</div><script src="../../_static/documentation_options.js?v=c98573da"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/jupyterlite_sphinx.js?v=96e329c5"></script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>
